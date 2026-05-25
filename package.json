@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 57170 --strictPort",
     "build": "vite build",
+    "smoke": "node scripts/smoke-workshop.mjs",
     "preview": "vite preview --host 127.0.0.1 --port 57170",
     "water": "vite --host 127.0.0.1 --port 57170 --strictPort"
   },
@@ -18,6 +19,8 @@
     "three": "^0.170.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "playwright": "^1.60.0",
     "vite": "^6.0.0"
   },
   "//": "Phase-2 deps added when this lab reaches that phase: postprocessing ^6.36.7, @takram/three-clouds, @takram/three-atmosphere, @takram/three-geospatial."

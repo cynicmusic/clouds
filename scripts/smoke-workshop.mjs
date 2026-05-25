@@ -1,0 +1,51 @@
+import { chromium } from 'playwright';
+import { WORKSHOP_CAPTURE_SETTLE_MS } from '../src/config/captureTiming.js';
+
+const url = process.env.SKY_LAB_URL || 'http://127.0.0.1:57170/';
+
+const browser = await chromium.launch({ headless: true });
+const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+
+try {
+  page.on('pageerror', (err) => {
+    console.error(`pageerror: ${err.message}`);
+  });
+
+  const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
+  if (!response?.ok()) {
+    throw new Error(`HTTP ${response?.status() ?? 'unknown'} from ${url}`);
+  }
+
+  await page.waitForFunction(() => Boolean(window.skyLab && window.waterWorkshop), null, {
+    timeout: 30000,
+  });
+
+  await page.waitForTimeout(WORKSHOP_CAPTURE_SETTLE_MS);
+
+  const result = await page.evaluate(() => {
+    const text = document.body?.innerText || '';
+    const skyLab = window.skyLab;
+    const wanted = ['takram atmosphere', 'sun', 'atmosphere', 'lighting'];
+    return {
+      captureSettleMs: skyLab?.captureSettleMs,
+      checks: Object.fromEntries(wanted.map((label) => [label, text.includes(label)])),
+      panelSequence: text
+        .split('\n')
+        .map((line) => line.trim().toLowerCase())
+        .filter((line) => wanted.includes(line)),
+    };
+  });
+
+  const missing = Object.entries(result.checks)
+    .filter(([, ok]) => !ok)
+    .map(([label]) => label);
+
+  if (missing.length) {
+    throw new Error(`Missing panel labels after settle: ${missing.join(', ')}`);
+  }
+
+  console.log(`sky lab smoke ok (${result.captureSettleMs}ms settle)`);
+  console.log(`panel sequence: ${result.panelSequence.join(' > ')}`);
+} finally {
+  await browser.close();
+}

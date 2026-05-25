@@ -28,6 +28,20 @@ npm run dev
 # headless-friendly local URL: http://127.0.0.1:57170/
 ```
 
+Headless checks use Playwright:
+
+```sh
+npm run smoke
+```
+
+Canonical capture timing: wait **10 seconds** after the workshop boots or after
+loading a scene preset before taking screenshots, sampling pixels, or judging a
+UI state. The shared value lives at
+`src/config/captureTiming.js` as `WORKSHOP_CAPTURE_SETTLE_MS`; `window.skyLab`
+also exposes it as `captureSettleMs`. This matters on the target MacBook, where
+the island/cloud scene can still be building for several seconds after the page
+looks alive.
+
 The root page now boots a local fork of the `~/isometric` water workshop
 through `src/skyWorkshop.js`. The copied `src/workshop/water/` route is
 also present for reference, but the sky lab entry is no longer a blank

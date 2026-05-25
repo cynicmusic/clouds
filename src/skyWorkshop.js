@@ -15,6 +15,7 @@ import { PerfOverlay } from './ui/PerfOverlay.js';
 import { BuildConsole } from './ui/BuildConsole.js';
 import { loadPresets } from './config/presets.js';
 import { loadSticky, setSticky } from './config/sticky.js';
+import { WORKSHOP_CAPTURE_SETTLE_MS } from './config/captureTiming.js';
 import { loadSkyLabAssets } from './AssetLoader.js';
 import { TakramSkyRig } from './TakramSkyRig.js';
 import { WaterWorkshopSea } from './workshop/water/WaterWorkshopSea.js';
@@ -38,8 +39,8 @@ const schema = makeWorkshopSchema();
 const tuningSections = isWavesLab ? ['waves', 'chaos', 'lod', 'layers'] : ['waves'];
 const cloudSections = ['cloudsRender', 'takramAtmosphere', 'cloudWeather', 'cloudLayer0', 'cloudLighting', 'cloudShadows', 'cloudDebug', 'cloudFinishing'];
 const sectionOrder = isWavesLab
-  ? ['skyDiagnosis', ...cloudSections, 'water', 'waves', 'chaos', 'lod', 'sun', 'lighting', 'island', 'voxel', 'seasons', 'tree', 'shadows', 'render', 'godrays']
-  : ['skyDiagnosis', ...cloudSections, 'water', 'waves', 'sun', 'lighting', 'island', 'voxel', 'seasons', 'tree', 'shadows', 'render', 'godrays'];
+  ? ['skyDiagnosis', ...cloudSections, 'water', 'waves', 'chaos', 'lod', 'sun', 'atmosphere', 'lighting', 'island', 'voxel', 'seasons', 'tree', 'shadows', 'render', 'godrays']
+  : ['skyDiagnosis', ...cloudSections, 'water', 'waves', 'sun', 'atmosphere', 'lighting', 'island', 'voxel', 'seasons', 'tree', 'shadows', 'render', 'godrays'];
 const workshopDefaults = buildDefaults(schema, defaultParams);
 
 const buildConsole = new BuildConsole({ parent: uiRoot, label: `${workshopName} build` });
@@ -329,12 +330,14 @@ function applyCloudMode(mode) {
     'cloudsRender.clouds': true,
     'cloudsRender.aerialPerspective': true,
     'cloudsRender.exposure': 10,
+    'cloudFinishing.toneMapping': 0,
     'cloudFinishing.dithering': true,
   } : {
     'cloudsRender.atmosphere': false,
     'cloudsRender.clouds': true,
     'cloudsRender.aerialPerspective': false,
     'cloudsRender.exposure': 1.05,
+    'cloudFinishing.toneMapping': 0,
     'cloudFinishing.dithering': false,
   };
   for (const [path, value] of Object.entries(values)) {
@@ -760,7 +763,7 @@ function makeWorkshopSchema() {
     },
   };
   out.takramAtmosphere = {
-    label: 'atmosphere',
+    label: 'takram atmosphere',
     icon: '◐',
     blurb: 'Takram sky/material flags',
     fields: {
@@ -1170,6 +1173,7 @@ window.skyLab = {
   store,
   panel,
   perf,
+  captureSettleMs: WORKSHOP_CAPTURE_SETTLE_MS,
   cloudPresets: cloudPresetApi,
   assets: () => skyAssetsPromise,
   diagnostics: () => scene.getHorizonDiagnosticSnapshot(),

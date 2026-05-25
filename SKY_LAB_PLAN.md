@@ -166,6 +166,12 @@ water-fork repair we moved to a high unique port because other agents may
 have local Vite/browser sessions active. Keep this repo headless unless the
 user explicitly asks to open it.
 
+**Headless capture timing:** wait at least `10_000ms` after workshop boot or
+after loading a scene preset before screenshots, pixel reads, screenshots grids,
+or UI assertions. The canonical value is `WORKSHOP_CAPTURE_SETTLE_MS` in
+`src/config/captureTiming.js`, mirrored at `window.skyLab.captureSettleMs`.
+This avoids judging half-built frames on the target MacBook.
+
 ## 3 · Phased work plan
 
 Original cadence: each phase ends with a screenshot the user can sign off on.
