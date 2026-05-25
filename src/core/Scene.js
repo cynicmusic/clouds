@@ -24,6 +24,7 @@ const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve))
 const SHADOW_FILTER_TYPES = [THREE.BasicShadowMap, THREE.PCFShadowMap, THREE.PCFSoftShadowMap];
 const LAB_CLEAR = new THREE.Color('#081018');
 const DIAG_MAGENTA = new THREE.Color('#ff00ff');
+const MOBILE_PROFILE = detectMobileRenderProfile();
 
 export class Scene {
   constructor(container, store, options = {}) {
@@ -40,8 +41,12 @@ export class Scene {
     this.SeaClass = options.SeaClass || Sea;
     this.afterGenerate = options.afterGenerate || null;
 
-    this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.mobileProfile = MOBILE_PROFILE;
+    this.renderer = new THREE.WebGLRenderer({
+      antialias: !this.mobileProfile.mobile,
+      powerPreference: 'high-performance',
+    });
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, this.mobileProfile.pixelRatioCap));
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -581,9 +586,13 @@ export class Scene {
         exposure: legacySkyClouds
           ? this.store.get('render.exposure')
           : (render.exposure ?? legacy.exposure ?? 10),
-        quality: render.quality ?? legacy.quality ?? 2,
-        resolutionScale: render.resolutionScale ?? legacy.resolutionScale ?? 0.75,
-        temporalUpscale: render.temporalUpscale ?? true,
+        quality: this.mobileProfile.mobile
+          ? Math.min(render.quality ?? legacy.quality ?? 2, this.mobileProfile.cloudQualityMax)
+          : (render.quality ?? legacy.quality ?? 2),
+        resolutionScale: this.mobileProfile.mobile
+          ? Math.min(render.resolutionScale ?? legacy.resolutionScale ?? 0.75, this.mobileProfile.cloudResolutionMax)
+          : (render.resolutionScale ?? legacy.resolutionScale ?? 0.75),
+        temporalUpscale: this.mobileProfile.mobile ? false : (render.temporalUpscale ?? true),
       },
       atmosphere: this.store.get('takramAtmosphere') || {},
       weather: {
@@ -592,7 +601,15 @@ export class Scene {
       },
       layer: this.store.get('cloudLayer0') || {},
       lighting: this.store.get('cloudLighting') || {},
-      shadows: this.store.get('cloudShadows') || {},
+      shadows: this.mobileProfile.mobile
+        ? {
+          ...(this.store.get('cloudShadows') || {}),
+          layerShadow: false,
+          lightShafts: false,
+          cascadeCount: 1,
+          mapSize: 0,
+        }
+        : (this.store.get('cloudShadows') || {}),
       debug: this.store.get('cloudDebug') || {},
       finishing: this.store.get('cloudFinishing') || {},
     });
@@ -634,7 +651,7 @@ export class Scene {
 
   _applyShadowLightSettings(light, rawSize, forceMapReset = false) {
     if (!light?.shadow) return;
-    const maxSize = this.renderer.capabilities.maxTextureSize || 8192;
+    const maxSize = Math.min(this.renderer.capabilities.maxTextureSize || 8192, this.mobileProfile.shadowMapMax);
     const size = THREE.MathUtils.clamp(Math.round((rawSize || 2048) / 512) * 512, 512, maxSize);
     const shadow = light.shadow;
     const sizeChanged = shadow.mapSize.x !== size || shadow.mapSize.y !== size;
@@ -887,4 +904,28 @@ export class Scene {
       g.rotation.z = a * 0.18;
     }
   }
+}
+
+function detectMobileRenderProfile() {
+  if (typeof window === 'undefined') {
+    return {
+      mobile: false,
+      pixelRatioCap: 2,
+      shadowMapMax: 8192,
+      cloudQualityMax: 3,
+      cloudResolutionMax: 1,
+    };
+  }
+  const ua = navigator.userAgent || '';
+  const coarse = window.matchMedia?.('(pointer: coarse)')?.matches ?? false;
+  const iOS = /iPad|iPhone|iPod/.test(ua) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const mobile = coarse || iOS || /Android|Mobile/.test(ua);
+  return {
+    mobile,
+    pixelRatioCap: mobile ? 1 : 2,
+    shadowMapMax: mobile ? 1024 : 8192,
+    cloudQualityMax: mobile ? 0 : 3,
+    cloudResolutionMax: mobile ? 0.35 : 1,
+  };
 }
