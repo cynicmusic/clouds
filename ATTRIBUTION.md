@@ -66,12 +66,10 @@ Cite in any documentation or paper that uses the rendered output.
 
 ## Cloned shared infrastructure from ~/isometric (no external license)
 
-The files under `src/shared/` (`panelShell.js`, `FlyCameraDirector.js`,
-`PerfOverlay.js`, `panel.css`, `styles.css`, `noise.js`) and the cloned
-`src/waterWorkshop*.js` / `WaterWorkshopSea.js` files are point-in-time
-copies from the `isometric-island` repo at `~/isometric`. That repo is
-private (`"private": true` in its `package.json`), no separate license
-required for the copy.
+The files under `src/shared/`, the island sim/source directories under `src/`,
+and `src/island/IslandSea.js` are point-in-time copies or local forks from the
+`isometric-island` repo at `~/isometric`. That repo is private (`"private":
+true` in its `package.json`), no separate license required for the copy.
 
 ## postprocessing library
 

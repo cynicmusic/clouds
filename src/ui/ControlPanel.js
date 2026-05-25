@@ -1,21 +1,16 @@
-// Vanilla DOM control panel. Ported from sunset/src/ui/ControlPanel.js.
-// Field building, sections, store wiring and CSS classes are unchanged so
-// the panel is visually identical. Footer actions are island-relevant
-// (new island / default / random) instead of sky presets/sweep/flame.
+// Vanilla DOM control panel for the island root app.
+// The footer exposes only the master A-H / 1-8 preset surface.
 
 import { presetGradient } from '../config/presets.js';
 
 export class ControlPanel {
-  constructor({ store, schema, sectionOrder, onAction, onToggle, sticky, presets, cloudPresets, wavePresets, showWorkshopHint = true }) {
+  constructor({ store, schema, sectionOrder, onToggle, sticky, presets, showWorkshopHint = true }) {
     this.store = store;
     this.schema = schema;
     this.sectionOrder = sectionOrder;
-    this.onAction = onAction;
     this.onToggle = onToggle;
     this.sticky = sticky || { has: () => false, toggle: () => false };
     this.presets = presets || { slots: {}, save: () => {}, load: () => {} };
-    this.cloudPresets = cloudPresets || null;
-    this.wavePresets = wavePresets || null;
     this.showWorkshopHint = showWorkshopHint;
     this.fieldUpdaters = new Map();
     this.stickyEls = new Map();
@@ -98,8 +93,7 @@ export class ControlPanel {
     this.fieldUpdaters.get(path).add(apply);
   }
 
-  // No title — the project speaks for itself. Just a slim status line so
-  // preset/sticky/roll feedback still has somewhere to land.
+  // No title; just a slim status line for preset feedback.
   _buildHeader() {
     const head = document.createElement('div');
     head.className = 'ff-panel-header';
@@ -319,16 +313,6 @@ export class ControlPanel {
     const footer = document.createElement('div');
     footer.className = 'ff-panel-footer';
 
-    if (this.cloudPresets) {
-      const cloudGrid = this._buildMiniPresetRow('cloud', this.cloudPresets);
-      footer.appendChild(cloudGrid);
-    }
-
-    if (this.wavePresets) {
-      const waveGrid = this._buildMiniPresetRow('wave', this.wavePresets);
-      footer.appendChild(waveGrid);
-    }
-
     // Bank row A–H — selects which 8-slot bank the preset row + the 1-8
     // hotkeys address. Click-only (letters collide with WASD/h/b/f/r).
     const banks = document.createElement('div');
@@ -370,28 +354,6 @@ export class ControlPanel {
 
     this.root.appendChild(footer);
     this.refreshPresets();
-    this.refreshCloudPresets();
-    this.refreshWavePresets();
-  }
-
-  _buildMiniPresetRow(kind, api) {
-    const grid = document.createElement('div');
-    grid.className = `ff-mini-presets ff-${kind}-presets`;
-    const mapName = kind === 'cloud' ? 'cloudPresetEls' : 'wavePresetEls';
-    this[mapName] = new Map();
-    for (let slot = 1; slot <= 8; slot++) {
-      const b = document.createElement('button');
-      b.className = `ff-mini-preset ff-${kind}-preset`;
-      b.dataset.slot = String(slot);
-      b.innerHTML = `<span class="ff-mini-preset-num">${slot}</span>`;
-      b.addEventListener('click', (e) => {
-        if (e.shiftKey) api.save(slot);
-        else api.load(slot);
-      });
-      grid.appendChild(b);
-      this[mapName].set(slot, b);
-    }
-    return grid;
   }
 
   _syncBankActive() {
@@ -412,30 +374,6 @@ export class ControlPanel {
       b.classList.toggle('filled', filled);
       b.style.backgroundImage = filled ? (presetGradient(p) || '') : '';
       b.title = `${key}${key === 'A1' ? ' (default)' : ''} — click load · shift-click save`;
-    }
-  }
-
-  refreshWavePresets() {
-    this._refreshMiniPresets('wave', this.wavePresetEls, this.wavePresets, 'wave');
-  }
-
-  refreshCloudPresets() {
-    this._refreshMiniPresets('cloud', this.cloudPresetEls, this.cloudPresets, 'cloud');
-  }
-
-  _refreshMiniPresets(kind, elements, api, label) {
-    if (!elements || !api) return;
-    const slots = api.slots || {};
-    const active = api.getActive?.();
-    for (const [slot, b] of elements) {
-      const p = slots[String(slot)] || slots[slot];
-      const filled = !!p;
-      b.classList.toggle('filled', filled);
-      b.classList.toggle('active', Number(active) === slot);
-      b.style.backgroundImage = filled ? (api.gradient?.(p) || '') : '';
-      b.title = `${label} ${slot}${slot === 1 ? ' (current default)' : ''} — click load · shift-click save`;
-      b.setAttribute('aria-label', b.title);
-      b.dataset.kind = kind;
     }
   }
 

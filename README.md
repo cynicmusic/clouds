@@ -1,131 +1,72 @@
-# sky lab
+# island
 
-Research lab for **Takram-style volumetric clouds** in a vanilla Three.js
-+ Vite setup. Lives in its own repo at `~/clouds` (separate from the main
-sim at `~/isometric`) so it can iterate without colliding with vite
-processes there.
+Canonical island sim with Takram atmosphere/clouds, the legacy island/water
+stack, and one master preset surface.
 
-## Current Plan
+This repo started as a sky/cloud lab, but the root app at
+`http://127.0.0.1:57170/` is now the authoritative island surface. The old
+research docs live in `archive/sky-lab-research/`; use
+[TAKRAM_FINAL_INTEGRATION_PLAN.md](TAKRAM_FINAL_INTEGRATION_PLAN.md) as the
+current plan.
 
-Read [TAKRAM_FINAL_INTEGRATION_PLAN.md](TAKRAM_FINAL_INTEGRATION_PLAN.md)
-first. The old sky-lab phase docs have moved to
-`archive/sky-lab-research/` so they stay available as research notes without
-competing with the current master-preset/main-sim integration plan.
-
-## Run it
+## Run
 
 ```sh
 npm install
 npm run dev
-# headless-friendly local URL: http://127.0.0.1:57170/
+# http://127.0.0.1:57170/
 ```
 
-Headless checks use Playwright:
+Headless smoke check:
 
 ```sh
 npm run smoke
 ```
 
-Canonical capture timing: wait **10 seconds** after the workshop boots or after
-loading a scene preset before taking screenshots, sampling pixels, or judging a
-UI state. The shared value lives at
-`src/config/captureTiming.js` as `WORKSHOP_CAPTURE_SETTLE_MS`; `window.skyLab`
-also exposes it as `captureSettleMs`. This matters on the target MacBook, where
-the island/cloud scene can still be building for several seconds after the page
-looks alive.
+Canonical capture timing: wait 10 seconds after boot or after loading a preset
+before judging screenshots or pixel samples. The shared value is
+`WORKSHOP_CAPTURE_SETTLE_MS` in `src/config/captureTiming.js`, and the live app
+exposes it as `window.island.captureSettleMs`.
 
-The root page now boots a local fork of the `~/isometric` water workshop
-through `src/skyWorkshop.js`. The copied `src/workshop/water/` route is
-also present for reference, but the sky lab entry is no longer a blank
-stub.
+## Current Shape
 
-The cloud-focused panel sections are the current Phase 2-4 spike. `clouds
-render` now starts in `Takram ref` mode: Takram sky, Takram haze, Takram
-clouds, full atmosphere LUTs, ACES finishing, and pass dithering enabled. The
-same section also exposes a `legacy sky` mode that keeps Takram clouds but
-turns off Takram sky/haze so we can study the old sim sky composite
-separately. The weather/layer/lighting/shadow/debug sections expose the useful
-Takram knobs, including a `Reference stack` toggle for isolating a single
-editable layer. Keep `Fast sky boot` on for headless probes when you do not
-need the island mesh.
+- Root entrypoint: `index.html` -> `src/island.js`.
+- Upper-left badge: `island`.
+- One preset system: banks `A-H`, slots `1-8`.
+- Shift-click or shift-number saves a master preset.
+- A master preset captures all current params plus camera pose.
+- Cloud and wave mini preset rows have been removed.
+- Sticky persistence is removed. The diamond is only a purple, local,
+  in-session important-param marker.
+- Takram ref and legacy sky paths remain available; ACES is the default tone
+  mapping path, with AGX only for manual comparison.
+- Pool, methodology, palm, and pine workshops remain. Water, waves, godray,
+  old lab, and old main entrypoints have been retired.
 
-The footer has a cloud preset strip above the wave preset strip. Click a cloud
-slot to load it; shift-click to save the current cloud/Takram/tone/sun params
-plus camera into `cloud-presets.json` under the dev server.
-
-In `legacy sky`, clouds still use the Takram cloud effect, but the composer
-exposure follows the original sim `render.exposure` so toggling clouds does
-not intentionally retone the island.
-
-Visible-cloud proof, 2026-05-23: [artifacts/visible-clouds/grid.png](artifacts/visible-clouds/grid.png)
-shows the current default boot on the left and a sky-focused reference angle
-on the right. The matching probe is [artifacts/visible-clouds/probe.json](artifacts/visible-clouds/probe.json).
-Sky-choice proof, 2026-05-23: [artifacts/sky-choice/old-sky-clouds.png](artifacts/sky-choice/old-sky-clouds.png)
-and [artifacts/sky-choice/takram-sky-clouds.png](artifacts/sky-choice/takram-sky-clouds.png)
-show the separated modes. The matching probe is [artifacts/sky-choice/probe.json](artifacts/sky-choice/probe.json).
-
-Takram's vanilla story uses `DitheringEffect` from
-`@takram/three-geospatial-effects`; `postprocessing` does not export it. That
-extra package is intentionally not installed yet. The current finishing section
-uses `postprocessing`'s built-in pass dithering switch and a tone-map selector:
-ACES by default for the tuned lab aesthetic, with neutral, AGX, and linear
-available for manual comparison work.
-
-The public atmosphere payload is currently the full Takram atmosphere LUT set:
-`scattering.bin`, `single_mie_scattering.bin`, `higher_order_scattering.bin`,
-`transmittance.bin`, and `irradiance.bin`. The compact combined-scattering
-experiment remains documented in `artifacts/compact-atmosphere-reference.md`
-for the later sub-15 MB packaging pass.
-
-## Layout
+## Files
 
 ```
 ~/clouds/
-├── TAKRAM_FINAL_INTEGRATION_PLAN.md ← current authoritative plan
-├── archive/sky-lab-research/        ← earlier phase plans and notes
-├── ATTRIBUTION.md                   ← Takram MIT + Bruneton citation
-├── package.json                     ← three + vite + Takram Phase 2 deps
-├── vite.config.mjs                  ← port 57170, strictPort, local
-│                                      preset/sticky middleware
-├── index.html                       ← boots src/skyWorkshop.js
-├── presets.json                     ← copied from ~/isometric for local use
-├── sticky.json                      ← archived legacy input; root final ignores sticky state
-├── src/
-│   ├── skyWorkshop.js               ← real water-workshop fork, adjusted to
-│   │                                  local root imports + Takram controls
-│   ├── TakramSkyRig.js              ← opt-in Takram composer/sky/cloud rig
-│   ├── atmosphere/ core/ config/    ← copied from ~/isometric
-│   ├── water/ voxel/ flora/ fx/     ← copied from ~/isometric
-│   ├── ui/ state/ gen/ camera/      ← copied from ~/isometric
-│   └── workshop/water/              ← 1:1 copied water workshop source
-└── public/
-    ├── presets.json                 ← static fallback copied locally
-    ├── atmosphere/                  ← full Takram/Bruneton LUT set for now
-    └── clouds/                      ← cloud weather/shape/STBN textures
+├── index.html
+├── src/island.js
+├── src/island/IslandSea.js
+├── src/TakramSkyRig.js
+├── src/config/presets.js
+├── src/ui/
+├── src/core/
+├── src/atmosphere/
+├── workshop/pool/
+├── workshop/methodology/
+├── workshop/palm/
+├── workshop/pine/
+├── public/atmosphere/
+└── public/clouds/
 ```
 
-## Rules of the road
+## Notes
 
-- **Do not import from `~/isometric`.** The forked sim/workshop files in
-  this repo are point-in-time copies. If the main repo improves, back-port
-  deliberately.
-- **Do not push tuning or assets back to the main sim** until the user
-  approves the main-sim integration pass in
-  `TAKRAM_FINAL_INTEGRATION_PLAN.md`.
-- **No credits in the main sim.** Attribution stays here in
-  `ATTRIBUTION.md`. The main sim has its own consolidated attribution
-  pass planned for later.
-- **Current scope.** This repo is now the candidate Takram clouds final lab.
-  Preserve the current presets while the master preset system is designed.
-- **`/tmp/three-geospatial`** is where Takram source should be cloned
-  for inspection. Re-clone if `/tmp` has been swept; the handoff pinned
-  commit `fc25526342a01d8e2b02f527fceb7f876e34b6d8`. For
-  `public/clouds/stbn.bin`, use the Takram GitHub media URL documented in
-  `ATTRIBUTION.md`; a blobless clone only gives a Git LFS pointer.
-
-## Handoff notes for a new Claude (e.g. VS Code instance)
-
-Everything you need is in this repo. Start with
-`TAKRAM_FINAL_INTEGRATION_PLAN.md`, then look at `src/skyWorkshop.js`.
-The archived sky-lab docs are historical research context, not the current
-execution plan.
+- Do not import from `~/isometric`; this repo is a local fork.
+- Do not mutate `presets.json` unless deliberately saving/replacing a preset.
+- Tree workshop code is golden and should stay isolated from island cleanup.
+- Atmosphere payload is still the full Takram/Bruneton LUT set for now. The
+  later packaging pass can re-compact toward the sub-15 MB goal.

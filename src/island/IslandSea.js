@@ -138,10 +138,10 @@ vec3 waterWaveNormal(vec2 xz, float speedMul, float scaleMul, float heightMul, f
 }
 `;
 
-export class WaterWorkshopSea {
+export class IslandSea {
   constructor(params) {
     this.group = new THREE.Group();
-    this.group.name = 'WaterWorkshopSea';
+    this.group.name = 'IslandSea';
     this._enabled = params.enable !== false;
     this._seaLevel = params.seaLevel;
     this._surfaceLift = params.surfaceLift ?? 0.08;

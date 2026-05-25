@@ -17,10 +17,10 @@ import {
 const ATMOSPHERE_URL = '/atmosphere/';
 const CLOUDS_URL = '/clouds/';
 
-let skyLabAssetsPromise = null;
+let islandAssetsPromise = null;
 
-export function loadSkyLabAssets({ onProgress } = {}) {
-  if (skyLabAssetsPromise) return skyLabAssetsPromise;
+export function loadIslandAssets({ onProgress } = {}) {
+  if (islandAssetsPromise) return islandAssetsPromise;
 
   const manager = new LoadingManager();
   manager.onProgress = (url, loaded, total) => {
@@ -33,16 +33,16 @@ export function loadSkyLabAssets({ onProgress } = {}) {
     higherOrderScattering: true,
   }, manager);
 
-  skyLabAssetsPromise = Promise.all([
+  islandAssetsPromise = Promise.all([
     loadPrecomputedTextures(atmosphereLoader),
     loadCloudTextures(manager),
   ]).then(([atmosphere, clouds]) => ({ atmosphere, clouds }));
 
-  return skyLabAssetsPromise;
+  return islandAssetsPromise;
 }
 
-export function resetSkyLabAssetsCacheForTests() {
-  skyLabAssetsPromise = null;
+export function resetIslandAssetsCacheForTests() {
+  islandAssetsPromise = null;
 }
 
 function loadPrecomputedTextures(loader) {

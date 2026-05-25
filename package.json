@@ -1,15 +1,14 @@
 {
-  "name": "sky-lab",
+  "name": "island",
   "version": "0.0.1",
   "private": true,
   "type": "module",
-  "description": "Takram clouds final lab, forked off ~/isometric's water workshop shell. See TAKRAM_FINAL_INTEGRATION_PLAN.md.",
+  "description": "Island sim with Takram atmosphere and clouds. See TAKRAM_FINAL_INTEGRATION_PLAN.md.",
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 57170 --strictPort",
     "build": "vite build",
     "smoke": "node scripts/smoke-workshop.mjs",
-    "preview": "vite preview --host 127.0.0.1 --port 57170",
-    "water": "vite --host 127.0.0.1 --port 57170 --strictPort"
+    "preview": "vite preview --host 127.0.0.1 --port 57170"
   },
   "dependencies": {
     "@takram/three-atmosphere": "^0.19.1",

@@ -1,11 +1,10 @@
-// WATER WORKSHOP — current sim scene, read-only persistence, tutorial-order
-// water controls. This file intentionally reuses the sim Scene/ControlPanel
-// but swaps in WaterWorkshopSea so the shader can be rebuilt stage by stage.
+// ISLAND — canonical Takram clouds island sim.
+// The root app is now the authoritative main surface; older water/waves/godray
+// workshop entrypoints have been retired.
 
 import * as THREE from 'three';
 import './styles.css';
 import './ui/panel.css';
-import './workshop/water/waterWorkshop.css';
 import { Scene } from './core/Scene.js';
 import { ParamStore } from './state/ParamStore.js';
 import { schema as simSchema } from './config/paramSchema.js';
@@ -13,30 +12,24 @@ import { defaultParams } from './config/defaults.js';
 import { ControlPanel } from './ui/ControlPanel.js';
 import { PerfOverlay } from './ui/PerfOverlay.js';
 import { BuildConsole } from './ui/BuildConsole.js';
-import { loadPresets } from './config/presets.js';
+import { loadPresets, savePresetToDisk } from './config/presets.js';
 import { WORKSHOP_CAPTURE_SETTLE_MS } from './config/captureTiming.js';
-import { loadSkyLabAssets } from './AssetLoader.js';
+import { loadIslandAssets } from './AssetLoader.js';
 import { TakramSkyRig } from './TakramSkyRig.js';
-import { WaterWorkshopSea } from './workshop/water/WaterWorkshopSea.js';
+import './island/island.css';
+import { IslandSea } from './island/IslandSea.js';
 
 const canvasContainer = document.getElementById('canvas-container');
 const uiRoot = document.getElementById('ui-root');
 const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
-const isWavesLab = location.pathname.includes('/workshop/waves');
-const workshopName = isWavesLab ? 'waves lab' : 'takram clouds final';
-const workshopTitle = isWavesLab ? 'Waves Lab' : 'Takram Clouds Final';
-const workshopPresetLabel = isWavesLab ? 'waves lab' : 'takram clouds final';
-const WAVE_PRESETS_KEY = isWavesLab
-  ? 'isometric-island.waves-lab.wavePresets.v1'
-  : 'isometric-island.water-workshop.wavePresets.v1';
-const CLOUD_PRESETS_KEY = 'sky-lab.cloudPresets.v1';
+const workshopName = 'island';
+const workshopTitle = 'Island';
+const workshopPresetLabel = 'island';
 
 const schema = makeWorkshopSchema();
-const tuningSections = isWavesLab ? ['waves', 'chaos', 'lod', 'layers'] : ['waves'];
+const tuningSections = ['waves'];
 const cloudSections = ['cloudsRender', 'takramAtmosphere', 'cloudWeather', 'cloudLayer0', 'cloudLighting', 'cloudShadows', 'cloudDebug', 'cloudFinishing'];
-const sectionOrder = isWavesLab
-  ? ['skyDiagnosis', ...cloudSections, 'water', 'waves', 'chaos', 'lod', 'sun', 'atmosphere', 'lighting', 'island', 'voxel', 'seasons', 'tree', 'shadows', 'render', 'godrays']
-  : ['skyDiagnosis', ...cloudSections, 'water', 'waves', 'sun', 'atmosphere', 'lighting', 'island', 'voxel', 'seasons', 'tree', 'shadows', 'render', 'godrays'];
+const sectionOrder = ['skyDiagnosis', ...cloudSections, 'water', 'waves', 'sun', 'atmosphere', 'lighting', 'island', 'voxel', 'seasons', 'tree', 'shadows', 'render', 'godrays'];
 const workshopDefaults = buildDefaults(schema, defaultParams);
 
 const buildConsole = new BuildConsole({ parent: uiRoot, label: `${workshopName} build` });
@@ -48,7 +41,6 @@ buildConsole.step('presets');
 const presets = await loadPresets();
 buildConsole.step('param markers');
 const tuningPathSet = new Set(tuningPaths());
-const cloudPathSet = new Set(cloudPaths());
 const importantPaths = new Set();
 
 const boot = structuredClone(defaultParams);
@@ -58,19 +50,13 @@ ensureWorkshopParams(boot);
 
 const store = new ParamStore(boot);
 buildConsole.step('param store');
-let wavePresets = loadWavePresetSlots();
-let cloudPresets = await loadCloudPresetSlots();
-let activeWaveSlot = findMatchingWavePreset(wavePresets, tuningParamsFrom(boot));
-let activeCloudSlot = findMatchingCloudPreset(cloudPresets, cloudParamsFrom(boot));
-let applyingWavePreset = false;
-let applyingCloudPreset = false;
 
 let refGroup = null;
 const scene = new Scene(canvasContainer, store, {
   loader: buildConsole,
   autoGenerate: false,
   asyncRegenerate: true,
-  SeaClass: WaterWorkshopSea,
+  SeaClass: IslandSea,
   afterGenerate: (s) => {
     s.sea?.setStyle?.(seaStyleParams());
     refGroup = rebuildReferenceBlocks(s, refGroup);
@@ -142,8 +128,13 @@ function applyPreset(preset) {
   return true;
 }
 
-function savePreset(slot) {
-  panel.flashStatus(`${keyOf(slot)} save disabled in workshop`, 'err');
+async function savePreset(slot) {
+  const key = keyOf(slot);
+  const preset = capturePreset();
+  presets[key] = preset;
+  panel.refreshPresets();
+  await savePresetToDisk(key, preset);
+  panel.flashStatus(`saved ${key} · master preset`, 'ok');
 }
 
 function loadPreset(slot) {
@@ -152,7 +143,7 @@ function loadPreset(slot) {
   if (!preset) { panel.flashStatus(`${key} empty`, 'err'); return; }
   applyPreset(preset);
   panel.refreshPresets();
-  panel.flashStatus(`loaded ${key} · ${workshopPresetLabel} copy`, 'ok');
+  panel.flashStatus(`loaded ${key} · ${workshopPresetLabel}`, 'ok');
 }
 
 function setBank(bank) {
@@ -170,62 +161,43 @@ const presetApi = {
   getBank: () => activeBank,
 };
 
-const wavePresetApi = {
-  slots: wavePresets,
-  save: saveWavePreset,
-  load: loadWavePreset,
-  getActive: () => activeWaveSlot,
-  gradient: wavePresetGradient,
-};
-
-const cloudPresetApi = {
-  slots: cloudPresets,
-  save: saveCloudPreset,
-  load: loadCloudPreset,
-  getActive: () => activeCloudSlot,
-  gradient: cloudPresetGradient,
-};
-
 const panel = new ControlPanel({
   store,
   schema,
   sectionOrder,
   sticky,
   presets: presetApi,
-  cloudPresets: cloudPresetApi,
-  wavePresets: wavePresetApi,
-  onAction: handleAction,
   showWorkshopHint: false,
 });
 uiRoot.appendChild(panel.root);
 panel.toggle();
-panel.flashStatus(`${workshopTitle.toLowerCase()} · read-only scene presets`, 'ok');
+panel.flashStatus(`${workshopTitle.toLowerCase()} · master presets`, 'ok');
 
 const perf = new PerfOverlay({ scene });
 perf.root.classList.add('sky-clouds-perf');
 uiRoot.appendChild(perf.root);
 
-const skyAssetsPromise = loadSkyLabAssets({
+const skyAssetsPromise = loadIslandAssets({
   onProgress: ({ loaded, total }) => panel.flashStatus(`sky assets ${loaded}/${total}`, 'ok'),
 }).then((assets) => {
   takramRig.setAssets(assets);
   panel.flashStatus('sky assets loaded', 'ok');
   return assets;
 }).catch((error) => {
-  console.error('[sky-lab] asset load failed', error);
+  console.error('[island] asset load failed', error);
   panel.flashStatus('sky assets failed', 'err');
   throw error;
 });
 
 const badge = document.createElement('div');
 badge.className = 'sky-clouds-badge';
-badge.textContent = 'takrum clouds final';
+badge.textContent = 'island';
 document.body.appendChild(badge);
 
 scene.start();
 buildConsole.step('first frame');
 if (store.get('skyDiagnosis.fastSkyBoot')) {
-  buildConsole.done('sky-only ready');
+  buildConsole.done('island sky ready');
   panel.flashStatus('sky-only fast boot · island build skipped', 'ok');
 } else {
   await scene.regenerateAsync(`${workshopName} asset build`);
@@ -233,15 +205,8 @@ if (store.get('skyDiagnosis.fastSkyBoot')) {
 
 store.subscribe((evt) => {
   if (evt.path === 'cloudsRender.mode') applyCloudMode(evt.value);
-  if ((evt.path === '*' || cloudPathSet.has(evt.path)) && !applyingCloudPreset) {
-    activeCloudSlot = evt.path === '*' ? findMatchingCloudPreset(cloudPresets, cloudParamsFrom(store.toJSON())) : null;
-    panel.refreshCloudPresets();
-  }
   if (tuningPathSet.has(evt.path)) {
-    if (!applyingWavePreset) {
-      activeWaveSlot = null;
-      panel.refreshWavePresets();
-    }
+    panel.refreshPresets();
   }
   if (evt.path === '*' || tuningPathSet.has(evt.path)) {
     scene.sea?.setStyle?.(seaStyleParams());
@@ -254,31 +219,6 @@ store.subscribe((evt) => {
     scene.regenerateAsync(`${workshopName} diagnostic island build`);
   }
 });
-
-function handleAction(action) {
-  switch (action) {
-    case 'default':
-      store.fromJSON(workshopDefaults);
-      ensureMissingDefaults();
-      if (!store.get('skyDiagnosis.fastSkyBoot') || scene.vol) {
-        scene.regenerateAsync(`${workshopName} default rebuild`);
-      }
-      panel.refreshSticky();
-      panel.flashStatus('workshop defaults · disk untouched', 'ok');
-      break;
-    case 'baseline':
-      if (presets.A1?.params) applyPreset(presets.A1);
-      store.set('waves.surfaceStage', 3);
-      panel.flashStatus('baseline · surface only', 'ok');
-      break;
-    case 'random':
-      randomize();
-      panel.flashStatus('rolled', 'ok');
-      break;
-    default:
-      console.warn('unknown action', action);
-  }
-}
 
 function randomize() {
   store.set('voxel.seed', 1 + ((Math.random() * 99998) | 0));
@@ -310,299 +250,6 @@ function applyCloudMode(mode) {
   for (const [path, value] of Object.entries(values)) {
     if (store.get(path) !== value) store.set(path, value);
   }
-}
-
-function currentCloudParams() {
-  return cloudParamsFrom(store.toJSON());
-}
-
-function cloudParamsFrom(source) {
-  const out = {};
-  for (const path of cloudPaths()) {
-    const value = getAt(source, path);
-    if (value !== undefined) setAt(out, path, value);
-  }
-  return out;
-}
-
-function loadCloudPreset(slot) {
-  const preset = cloudPresets[String(slot)];
-  const params = cloudPresetParams(preset);
-  if (!params) {
-    panel.flashStatus(`cloud ${slot} empty`, 'err');
-    return;
-  }
-  applyingCloudPreset = true;
-  store.fromJSON(params);
-  if (preset.cam) applyCameraSnapshot(preset.cam);
-  applyingCloudPreset = false;
-  activeCloudSlot = slot;
-  panel.refreshCloudPresets();
-  panel.flashStatus(`cloud ${slot} loaded`, 'ok');
-}
-
-async function saveCloudPreset(slot) {
-  const key = String(slot);
-  cloudPresets[key] = {
-    label: `cloud ${key}`,
-    params: currentCloudParams(),
-    cam: cameraSnapshot(),
-    t: Date.now(),
-  };
-  await saveCloudPresetSlots(cloudPresets);
-  activeCloudSlot = slot;
-  panel.refreshCloudPresets();
-  panel.flashStatus(`cloud ${slot} saved`, 'ok');
-}
-
-async function loadCloudPresetSlots() {
-  const defaults = defaultCloudPresetSlots();
-  const stored = await loadCloudPresetStorage();
-  return { ...defaults, ...(stored && typeof stored === 'object' ? stored : {}) };
-}
-
-async function loadCloudPresetStorage() {
-  if (import.meta.env.DEV) {
-    try {
-      const r = await fetch('/__cloud-presets');
-      if (r.ok) {
-        const { presets } = await r.json();
-        return presets || {};
-      }
-    } catch { /* fall through to localStorage */ }
-  }
-  try {
-    const raw = window.localStorage?.getItem(CLOUD_PRESETS_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch {
-    return {};
-  }
-}
-
-async function saveCloudPresetSlots(slots) {
-  const out = {};
-  for (let i = 1; i <= 8; i++) {
-    const p = slots[String(i)];
-    if (p?.params) out[String(i)] = p;
-  }
-  if (import.meta.env.DEV) {
-    try {
-      await fetch('/__cloud-presets', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ replace: true, presets: out }),
-      });
-    } catch { /* localStorage fallback below */ }
-  }
-  try {
-    window.localStorage?.setItem(CLOUD_PRESETS_KEY, JSON.stringify(out));
-  } catch { /* ignore private mode */ }
-}
-
-function defaultCloudPresetSlots() {
-  const takram = cloudParamsFrom(workshopDefaults);
-  const oldSky = structuredClone(takram);
-  setAt(oldSky, 'cloudsRender.mode', 1);
-  setAt(oldSky, 'cloudsRender.atmosphere', false);
-  setAt(oldSky, 'cloudsRender.clouds', true);
-  setAt(oldSky, 'cloudsRender.aerialPerspective', false);
-  setAt(oldSky, 'cloudsRender.exposure', 1.05);
-  setAt(oldSky, 'cloudFinishing.toneMapping', 0);
-  setAt(oldSky, 'cloudFinishing.dithering', false);
-  return {
-    1: { label: 'takram ref', params: takram, t: 0 },
-    2: { label: 'legacy sky', params: oldSky, t: 0 },
-  };
-}
-
-function findMatchingCloudPreset(slots, params = {}) {
-  for (let i = 1; i <= 8; i++) {
-    const p = slots[String(i)];
-    const presetParams = cloudPresetParams(p);
-    if (presetParams && cloudParamsAlmostEqual(presetParams, params)) return i;
-  }
-  return null;
-}
-
-function cloudParamsAlmostEqual(a, b) {
-  for (const path of cloudPaths()) {
-    const av = getAt(a, path);
-    const bv = getAt(b, path);
-    if (typeof av === 'number' || typeof bv === 'number') {
-      if (Math.abs(Number(av) - Number(bv)) > 0.0005) return false;
-    } else if (JSON.stringify(av) !== JSON.stringify(bv)) {
-      return false;
-    }
-  }
-  return true;
-}
-
-function cloudPresetGradient(preset) {
-  const params = cloudPresetParams(preset);
-  if (!params) return '';
-  const mode = Math.round(getAt(params, 'cloudsRender.mode') ?? 0);
-  const tone = Math.round(getAt(params, 'cloudFinishing.toneMapping') ?? 0);
-  const coverage = THREE.MathUtils.clamp(getAt(params, 'cloudWeather.coverage') ?? 0.4, 0, 1);
-  const exposure = THREE.MathUtils.clamp((getAt(params, 'cloudsRender.exposure') ?? 1) / 12, 0, 1);
-  const sunElev = THREE.MathUtils.clamp(((getAt(params, 'sun.elevationDeg') ?? 26) + 8) / 58, 0, 1);
-  const base = mode === 0 ? '#0f1824' : '#102c38';
-  const toneColor = ['#ff8a3a', '#d0d8d8', '#ffbd72', '#f5f7ff'][tone] || '#ffbd72';
-  const cloud = mixHex('#3c3f4f', '#ffe0b1', Math.max(coverage * 0.72, exposure * 0.62));
-  const horizon = mixHex('#222c4a', toneColor, 1 - sunElev * 0.65);
-  return `linear-gradient(90deg, ${base} 0%, ${cloud} 48%, ${horizon} 100%)`;
-}
-
-function cloudPresetParams(preset) {
-  return preset?.params || null;
-}
-
-function cameraSnapshot() {
-  const c = scene.camera;
-  return {
-    p: c.position.toArray(),
-    q: c.quaternion.toArray(),
-    fov: c.fov,
-  };
-}
-
-function applyCameraSnapshot(cam) {
-  if (!cam?.p || !cam?.q) return;
-  scene.camera.position.fromArray(cam.p);
-  scene.camera.quaternion.fromArray(cam.q);
-  if (Number.isFinite(cam.fov)) {
-    scene.camera.fov = cam.fov;
-    scene.camera.updateProjectionMatrix();
-  }
-  scene.camera.updateMatrixWorld();
-}
-
-function currentWaveParams() {
-  return tuningParamsFrom(store.toJSON());
-}
-
-function tuningParamsFrom(source) {
-  const out = {};
-  for (const path of tuningPaths()) {
-    setAt(out, path, getAt(source, path));
-  }
-  return out;
-}
-
-function loadWavePreset(slot) {
-  const preset = wavePresets[String(slot)];
-  const params = wavePresetParams(preset);
-  if (!params) {
-    panel.flashStatus(`wave ${slot} empty`, 'err');
-    return;
-  }
-  applyingWavePreset = true;
-  for (const path of tuningPaths()) {
-    const value = getAt(params, path);
-    if (value !== undefined) store.set(path, structuredClone(value));
-  }
-  applyingWavePreset = false;
-  activeWaveSlot = slot;
-  panel.refreshWavePresets();
-  panel.flashStatus(`wave ${slot} loaded`, 'ok');
-}
-
-function saveWavePreset(slot) {
-  const key = String(slot);
-  wavePresets[key] = {
-    params: currentWaveParams(),
-    waves: structuredClone(store.get('waves') || {}),
-    t: Date.now(),
-    label: `wave ${key}`,
-  };
-  saveWavePresetSlots(wavePresets);
-  activeWaveSlot = slot;
-  panel.refreshWavePresets();
-  panel.flashStatus(`wave ${slot} saved`, 'ok');
-}
-
-function loadWavePresetSlots() {
-  const defaults = defaultWavePresetSlots();
-  try {
-    const raw = window.localStorage?.getItem(WAVE_PRESETS_KEY);
-    const stored = raw ? JSON.parse(raw) : {};
-    return { ...defaults, ...(stored && typeof stored === 'object' ? stored : {}) };
-  } catch {
-    return defaults;
-  }
-}
-
-function saveWavePresetSlots(slots) {
-  try {
-    const out = {};
-    for (let i = 1; i <= 8; i++) {
-      const p = slots[String(i)];
-      if (p?.waves || p?.params) out[String(i)] = p;
-    }
-    window.localStorage?.setItem(WAVE_PRESETS_KEY, JSON.stringify(out));
-  } catch { /* ignore private mode */ }
-}
-
-function defaultWavePresetSlots() {
-  const params = {};
-  for (const path of tuningPaths()) setAt(params, path, getAt(workshopDefaults, path));
-  return {
-    1: { label: 'current default', params, waves: structuredClone(workshopDefaults.waves), t: 0 },
-  };
-}
-
-function findMatchingWavePreset(slots, params = {}) {
-  for (let i = 1; i <= 8; i++) {
-    const p = slots[String(i)];
-    const presetParams = wavePresetParams(p);
-    if (presetParams && wavesAlmostEqual(presetParams, params)) return i;
-  }
-  return null;
-}
-
-function wavesAlmostEqual(a, b) {
-  for (const path of tuningPaths()) {
-    const av = Number(getAt(a, path));
-    const bv = Number(getAt(b, path));
-    if (Number.isFinite(av) || Number.isFinite(bv)) {
-      if (Math.abs(av - bv) > 0.0005) return false;
-    } else if (getAt(a, path) !== getAt(b, path)) {
-      return false;
-    }
-  }
-  return true;
-}
-
-function wavePresetGradient(preset) {
-  const w = wavePresetWaves(preset);
-  if (!w) return '';
-  const speed = THREE.MathUtils.clamp((w.waveSpeed ?? 0) / 3, 0, 1);
-  const glint = THREE.MathUtils.clamp((w.glintSpeed ?? 0) / 5, 0, 1);
-  const scale = THREE.MathUtils.clamp((w.waveScale ?? 0.0001) / 0.05, 0, 1);
-  const chop = THREE.MathUtils.clamp(((w.waveChoppy ?? 0.5) - 0.5) / 7.5, 0, 1);
-  const c1 = mixHex('#071018', '#2fd9c8', scale);
-  const c2 = mixHex('#114354', '#f1f9ff', glint);
-  const c3 = mixHex('#0b2330', '#ff8a3a', Math.max(speed, chop * 0.75));
-  return `linear-gradient(90deg, ${c1} 0%, ${c2} 52%, ${c3} 100%)`;
-}
-
-function mixHex(a, b, t) {
-  const ah = a.replace('#', '');
-  const bh = b.replace('#', '');
-  const ar = parseInt(ah.slice(0, 2), 16), ag = parseInt(ah.slice(2, 4), 16), ab = parseInt(ah.slice(4, 6), 16);
-  const br = parseInt(bh.slice(0, 2), 16), bg = parseInt(bh.slice(2, 4), 16), bb = parseInt(bh.slice(4, 6), 16);
-  const k = THREE.MathUtils.clamp(t, 0, 1);
-  const c = [ar + (br - ar) * k, ag + (bg - ag) * k, ab + (bb - ab) * k].map((v) => Math.round(v).toString(16).padStart(2, '0'));
-  return `#${c.join('')}`;
-}
-
-function wavePresetParams(preset) {
-  if (preset?.params) return preset.params;
-  if (preset?.waves) return { waves: preset.waves };
-  return null;
-}
-
-function wavePresetWaves(preset) {
-  return preset?.waves || preset?.params?.waves || null;
 }
 
 function seaStyleParams() {
@@ -840,16 +487,11 @@ function makeWorkshopSchema() {
       lagoonTint: { type: 'float', label: 'Channel tint', min: 0, max: 2, step: 0.02, default: 0.18, hint: 'generated river/delta mask tint; keep low while tuning PBR' },
     },
   };
-  if (isWavesLab) {
-    out.water.fields.debugView.max = 7;
-    out.water.fields.debugView.labels = ['final', 'depth', 'channel', 'wave', 'normal', 'land', 'chaos', 'layers'];
-  }
   out.waves = {
     label: 'waves',
     icon: '≋',
     blurb: 'POOL surface stages 3-5',
     fields: {
-      ...makeLayerFields('waves'),
       waveSpeed: { type: 'float', label: 'Wave speed', min: 0, max: 3, step: 0.02, default: 2.7, hint: 'phase speed; tune for rolling, not sheet sliding' },
       glintSpeed: { type: 'float', label: 'Glint motion', min: 0, max: 5, step: 0.02, default: 3.5, hint: 'multiplies only the sun-highlight normal motion; 0 = locked' },
       glintScale: { type: 'float', label: 'Glint scale', min: 0.1, max: 4, step: 0.02, default: 1.34, hint: 'wave-normal scale seen by the broad white sun path' },
@@ -864,96 +506,7 @@ function makeWorkshopSchema() {
       refractionStrength: { type: 'float', label: 'Distortion', min: 0, max: 0.7, step: 0.005, default: 0.18, hint: 'stage 5 depth/mask distortion; not true screen refraction yet' },
     },
   };
-  if (isWavesLab) {
-    out.waves.blurb = 'experimental wave layers · water workshop stays clean';
-    out.chaos = {
-      label: 'chaos',
-      icon: '✣',
-      blurb: 'third detail layer · soloable experiment',
-      fields: {
-        ...makeLayerFields('chaos'),
-        extraDetailMix: { type: 'float', path: 'chaos.extraDetailMix', label: 'Chaos amount', min: 0, max: 2, step: 0.02, default: 0.35, hint: '0 = absent · 1 = normal mix · 2 = debug-loud' },
-        extraDetailOpacity: { type: 'float', path: 'chaos.extraDetailOpacity', label: 'Chaos opacity', min: 0, max: 1, step: 0.02, default: 1, hint: 'visibility of the extra layer when mixed or soloed' },
-        extraDetailScale: { type: 'float', path: 'chaos.extraDetailScale', label: 'Chaos scale', min: 0.05, max: 18, step: 0.05, default: 2.4, curve: 1.8, uiStep: 0.001, hint: 'frequency multiplier for the extra detail layer' },
-        extraDetailSpeed: { type: 'float', path: 'chaos.extraDetailSpeed', label: 'Chaos speed', min: -6, max: 6, step: 0.02, default: 0.7, hint: 'phase speed; negative runs against the main waves' },
-        extraDetailRotation: { type: 'float', path: 'chaos.extraDetailRotation', label: 'Chaos rotation', min: -180, max: 180, step: 1, default: 119, unit: '°', hint: 'basis rotation relative to wave rotation' },
-        extraDetailContrast: { type: 'float', path: 'chaos.extraDetailContrast', label: 'Chaos contrast', min: 0.2, max: 4, step: 0.02, default: 1.4, hint: 'pushes the chaos mask away from flat grey' },
-        extraDetailBias: { type: 'float', path: 'chaos.extraDetailBias', label: 'Chaos bias', min: -1, max: 1, step: 0.02, default: 0, hint: 'brighten/darken before contrast; useful when soloing' },
-        extraDetailSharp: { type: 'float', path: 'chaos.extraDetailSharp', label: 'Chaos sharp', min: 0.4, max: 5, step: 0.02, default: 1, hint: 'nonlinear sharpen after contrast' },
-        extraDetailTint: { type: 'float', path: 'chaos.extraDetailTint', label: 'Chaos tint', min: 0, max: 1, step: 0.02, default: 0.55, hint: '0 = dark/blue · 1 = pale crest contribution' },
-        extraDetailDistort: { type: 'float', path: 'chaos.extraDetailDistort', label: 'Chaos distort', min: 0, max: 1.2, step: 0.02, default: 0.25, hint: 'how much this layer pushes the depth/mask lookup' },
-      },
-    };
-    out.lod = {
-      label: 'LOD',
-      icon: '▦',
-      blurb: 'near camera patch · disabled by default',
-      fields: {
-        nearPatch: { type: 'bool', label: 'Near patch', default: false, hint: 'adds a camera-following high-density water mesh' },
-        patchSolo: { type: 'bool', label: 'Patch solo', default: false, hint: 'hide the giant ocean mesh so the LOD patch is obvious' },
-        patchSize: { type: 'float', label: 'Patch size', min: 120, max: 2400, step: 20, default: 820, unit: 'm', hint: 'world size of the camera-following patch' },
-        patchSegments: { type: 'int', label: 'Patch segments', min: 24, max: 420, step: 4, default: 180, hint: 'higher = more vertex wave silhouette, more triangles' },
-        patchLift: { type: 'float', label: 'Patch lift', min: 0, max: 0.4, step: 0.01, default: 0.05, unit: 'm', hint: 'small offset above the base water to avoid z-fighting' },
-        patchAlpha: { type: 'float', label: 'Patch alpha', min: 0, max: 1, step: 0.01, default: 0.9, hint: 'opacity of the tall near-camera experiment' },
-        patchFeather: { type: 'float', label: 'Patch feather', min: 0.02, max: 0.9, step: 0.01, default: 0.38, hint: 'radial fade at the patch edge' },
-        patchLobes: { type: 'int', label: 'Patch lobes', min: 0, max: 9, step: 1, default: 5, hint: 'breaks the circular fade so the patch is less square/obvious' },
-        patchSuppress: { type: 'float', label: 'Base suppress', min: 0, max: 1, step: 0.01, default: 0.82, hint: 'hides the base ocean under the LOD patch to avoid double patterns' },
-        patchHeightMul: { type: 'float', label: 'Patch height x', min: 0, max: 10, step: 0.05, default: 3.5, hint: 'pool-style tall vertex waves for close shots' },
-        patchScaleMul: { type: 'float', label: 'Patch scale x', min: 0.05, max: 24, step: 0.05, default: 2.4, curve: 1.8, uiStep: 0.001, hint: 'near patch frequency multiplier, independent of the broad ocean feel' },
-        patchSpeedMul: { type: 'float', label: 'Patch speed x', min: 0, max: 8, step: 0.05, default: 1.15, hint: 'near patch phase multiplier' },
-        patchChopBoost: { type: 'float', label: 'Patch chop +', min: 0, max: 8, step: 0.05, default: 1.1, hint: 'adds choppy pool-style crests only on the patch' },
-        patchDetailBoost: { type: 'float', label: 'Patch detail x', min: 0, max: 8, step: 0.05, default: 1.35, hint: 'boosts fragment pattern contrast on the near patch' },
-        patchNormalBoost: { type: 'float', label: 'Patch normal x', min: 0, max: 8, step: 0.05, default: 1.6, hint: 'stronger normal response on the tall patch' },
-        baseSegments: { type: 'int', label: 'Base segments', min: 80, max: 520, step: 8, default: 320, hint: 'rebuilds the broad ocean mesh; useful perf sanity check' },
-      },
-    };
-    out.layers = {
-      label: 'layers',
-      icon: '·',
-      blurb: 'hidden aliases',
-      fields: {
-        muteVertex: { type: 'bool', label: 'Mute vertex', default: false },
-        muteBroad: { type: 'bool', label: 'Mute broad', default: false },
-        muteFine: { type: 'bool', label: 'Mute fine', default: false },
-        muteGlint: { type: 'bool', label: 'Mute glint', default: false },
-        muteChaos: { type: 'bool', label: 'Mute chaos', default: false },
-        soloVertex: { type: 'bool', label: 'Solo vertex', default: false },
-        soloBroad: { type: 'bool', label: 'Solo broad', default: false },
-        soloFine: { type: 'bool', label: 'Solo fine', default: false },
-        soloGlint: { type: 'bool', label: 'Solo glint', default: false },
-        soloChaos: { type: 'bool', label: 'Solo chaos', default: false },
-      },
-    };
-  }
   return out;
-}
-
-function makeLayerFields(prefix) {
-  if (!isWavesLab) return {};
-  const fields = {};
-  for (const name of ['vertex', 'broad', 'fine', 'glint', 'chaos']) {
-    const cap = name[0].toUpperCase() + name.slice(1);
-    fields[`mute${cap}`] = {
-      type: 'bool',
-      path: `layers.mute${cap}`,
-      label: `Mute ${name}`,
-      default: false,
-      pin: false,
-      hint: prefix === 'chaos' ? 'shared layer mixer' : undefined,
-    };
-  }
-  for (const name of ['vertex', 'broad', 'fine', 'glint', 'chaos']) {
-    const cap = name[0].toUpperCase() + name.slice(1);
-    fields[`solo${cap}`] = {
-      type: 'bool',
-      path: `layers.solo${cap}`,
-      label: `Solo ${name}`,
-      default: false,
-      pin: false,
-      hint: prefix === 'waves' ? 'any solo mutes all non-solo layers' : undefined,
-    };
-  }
-  return fields;
 }
 
 function buildDefaults(schemaObj, base) {
@@ -977,16 +530,6 @@ function tuningPaths() {
   return [...paths];
 }
 
-function cloudPaths() {
-  const paths = new Set();
-  for (const sectionKey of [...cloudSections, 'sun']) {
-    for (const [fieldKey, field] of Object.entries(schema[sectionKey]?.fields || {})) {
-      paths.add(field.path || `${sectionKey}.${fieldKey}`);
-    }
-  }
-  return [...paths];
-}
-
 function getAt(obj, path) {
   const parts = path.split('.');
   let node = obj;
@@ -998,23 +541,7 @@ function getAt(obj, path) {
 }
 
 function cloneScenePresetParams(params) {
-  const out = structuredClone(params || {});
-  delete out.skyDiagnosis;
-  delete out.takram;
-  delete out.cloudsRender;
-  delete out.takramAtmosphere;
-  delete out.cloudWeather;
-  delete out.cloudLayer0;
-  delete out.cloudLighting;
-  delete out.cloudShadows;
-  delete out.cloudDebug;
-  delete out.cloudFinishing;
-  delete out.water;
-  delete out.waves;
-  delete out.chaos;
-  delete out.lod;
-  delete out.layers;
-  return out;
+  return structuredClone(params || {});
 }
 
 function ensureWorkshopParams(target) {
@@ -1049,10 +576,6 @@ function setAt(obj, path, value) {
   node[last] = structuredClone(value);
 }
 
-function openSection(key) {
-  panel.root.querySelector(`.ff-section[data-section="${key}"]`)?.classList.add('open');
-}
-
 function rebuildReferenceBlocks(sim, existing) {
   if (existing) {
     sim.scene.remove(existing);
@@ -1084,7 +607,7 @@ function rebuildReferenceBlocks(sim, existing) {
 
   const colors = ['#ff4d57', '#ffb84a', '#f6ff63', '#55ff8d', '#3df6ff', '#806bff', '#ff6ff0'];
   const group = new THREE.Group();
-  group.name = 'WaterWorkshopReferenceBlocks';
+  group.name = 'IslandReferenceBlocks';
   const count = Math.min(colors.length, candidates.length);
   for (let n = 0; n < count; n++) {
     const sample = candidates[Math.floor((n / Math.max(1, count - 1)) * (candidates.length - 1))];
@@ -1100,7 +623,7 @@ function rebuildReferenceBlocks(sim, existing) {
       metalness: 0,
     });
     const mesh = new THREE.Mesh(geom, mat);
-    mesh.name = `WaterRefBlock${n + 1}`;
+    mesh.name = `IslandRefBlock${n + 1}`;
     mesh.castShadow = false;
     mesh.receiveShadow = true;
     mesh.position.set(x, Math.min(seaLevel - 0.8, sample.y + h * 0.5), z);
@@ -1110,15 +633,12 @@ function rebuildReferenceBlocks(sim, existing) {
   return group;
 }
 
-window.waterWorkshop = { scene, store, panel, perf, presets: presetApi, capturePreset };
-window.isometric = window.waterWorkshop;
-window.skyLab = {
+window.island = {
   scene,
   store,
   panel,
   perf,
   captureSettleMs: WORKSHOP_CAPTURE_SETTLE_MS,
-  cloudPresets: cloudPresetApi,
   assets: () => skyAssetsPromise,
   diagnostics: () => scene.getHorizonDiagnosticSnapshot(),
   takram: () => takramRig.getDebugSnapshot(),

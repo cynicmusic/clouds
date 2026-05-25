@@ -1,9 +1,7 @@
 // Client side of the preset system. Talks to the Vite middleware in
-// vite.config.js. A preset is a FULL snapshot: every param plus the camera
-// pose. 8 BANKS (A–H) × 8 slots → keyed "A1".."H8". "A1" is the conceptual
-// "default" / boot state. Presets never touch sticky pins — that is what
-// separates loading A1 from the "default" button (factory-reset + clears
-// sticky). Legacy numeric keys "1".."8" migrate into bank A.
+// vite.config.mjs. A preset is a full island snapshot: every parameter plus
+// the camera pose. 8 banks (A-H) x 8 slots are keyed "A1".."H8".
+// Legacy numeric keys "1".."8" migrate into bank A.
 
 function migrate(map) {
   if (!map || typeof map !== 'object') return {};
@@ -43,7 +41,7 @@ export async function loadPresets() {
   // static build skip it — it would 404 and spam the console.
   if (import.meta.env.DEV) {
     try {
-      const r = await fetch('/__iso-presets');
+      const r = await fetch('/__island-presets');
       if (r.ok) {
         const { presets } = await r.json();
         return migrate(presets || {});
@@ -71,7 +69,7 @@ export async function savePresetToDisk(slot, preset) {
     return;
   }
   try {
-    await fetch('/__iso-presets', {
+    await fetch('/__island-presets', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ slot, preset }),

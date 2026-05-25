@@ -548,7 +548,7 @@ export class Scene {
     this.islandGroup.visible = !hideIsland && !isolate;
     this.treeGroup.visible = !hideIsland && !isolate;
 
-    const ref = this.scene.getObjectByName('WaterWorkshopReferenceBlocks');
+    const ref = this.scene.getObjectByName('IslandReferenceBlocks');
     if (ref) ref.visible = !hideIsland && !isolate && !!this.store.get('water.referenceBlocks');
 
     if (!this.sea) return;

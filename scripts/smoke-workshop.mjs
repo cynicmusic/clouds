@@ -1,7 +1,7 @@
 import { chromium } from 'playwright';
 import { WORKSHOP_CAPTURE_SETTLE_MS } from '../src/config/captureTiming.js';
 
-const url = process.env.SKY_LAB_URL || 'http://127.0.0.1:57170/';
+const url = process.env.ISLAND_URL || process.env.SKY_LAB_URL || 'http://127.0.0.1:57170/';
 
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
@@ -16,7 +16,7 @@ try {
     throw new Error(`HTTP ${response?.status() ?? 'unknown'} from ${url}`);
   }
 
-  await page.waitForFunction(() => Boolean(window.skyLab && window.waterWorkshop), null, {
+  await page.waitForFunction(() => Boolean(window.island), null, {
     timeout: 30000,
   });
 
@@ -24,10 +24,10 @@ try {
 
   const result = await page.evaluate(() => {
     const text = document.body?.innerText || '';
-    const skyLab = window.skyLab;
+    const island = window.island;
     const wanted = ['takram atmosphere', 'sun', 'atmosphere', 'lighting'];
     return {
-      captureSettleMs: skyLab?.captureSettleMs,
+      captureSettleMs: island?.captureSettleMs,
       checks: Object.fromEntries(wanted.map((label) => [label, text.includes(label)])),
       panelSequence: text
         .split('\n')
@@ -44,7 +44,7 @@ try {
     throw new Error(`Missing panel labels after settle: ${missing.join(', ')}`);
   }
 
-  console.log(`sky lab smoke ok (${result.captureSettleMs}ms settle)`);
+  console.log(`island smoke ok (${result.captureSettleMs}ms settle)`);
   console.log(`panel sequence: ${result.panelSequence.join(' > ')}`);
 } finally {
   await browser.close();

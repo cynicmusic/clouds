@@ -432,65 +432,6 @@
 .ff-btn-trio { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3px; }
 .ff-btn-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
 
-/* Mini preset strips — workshop-only when supplied. They intentionally read as
-   small instrument banks above the full scene A-H preset matrix. */
-.ff-mini-presets {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 3px;
-  padding-bottom: 2px;
-}
-.ff-cloud-presets {
-  border-bottom: 1px solid rgba(255, 149, 72, 0.12);
-}
-.ff-wave-presets {
-  border-bottom: 1px solid rgba(47, 217, 200, 0.10);
-}
-.ff-mini-preset {
-  position: relative;
-  height: 18px;
-  border-radius: 2px;
-  background-position: center;
-  background-size: cover;
-  color: rgba(218, 228, 228, 0.72);
-  cursor: pointer;
-  overflow: hidden;
-  transition: box-shadow 140ms, border-color 140ms, transform 80ms;
-}
-.ff-cloud-preset {
-  border: 1px solid rgba(255, 149, 72, 0.28);
-  background-color: rgba(18, 12, 8, 0.72);
-}
-.ff-wave-preset {
-  border: 1px solid rgba(47, 217, 200, 0.28);
-  background-color: rgba(5, 14, 20, 0.72);
-}
-.ff-mini-preset:not(.filled) { border-style: dashed; opacity: 0.62; }
-.ff-cloud-preset.filled { border-color: rgba(255, 186, 112, 0.42); }
-.ff-wave-preset.filled { border-color: rgba(112, 248, 255, 0.38); }
-.ff-mini-preset.active {
-  border-color: rgba(255, 206, 122, 0.95);
-  box-shadow: 0 0 8px rgba(255, 147, 38, 0.35), inset 0 0 0 1px rgba(255, 220, 180, 0.42);
-}
-.ff-mini-preset:hover {
-  border-color: rgba(255, 200, 140, 0.65);
-  box-shadow: inset 0 0 0 1px rgba(255, 220, 180, 0.35);
-  transform: translateY(-1px);
-}
-.ff-mini-preset-num {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-  color: rgba(225, 236, 236, 0.72);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.92);
-  pointer-events: none;
-}
-.ff-mini-preset.active .ff-mini-preset-num { color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.92); }
-
 /* Preset slots — 1 2 3 4 / 5 6 7 8. Filled slots carry a gradient sampled
    from their own params; empty slots are faint + dashed. */
 /* Bank selector A–H — one tight row; the active bank glows. */
@@ -584,28 +525,6 @@
   box-shadow: 0 0 18px rgba(255, 138, 58, 0.10);
 }
 .ff-btn:active { transform: translateY(1px); }
-.ff-btn.ff-mini {
-  padding: 2px 6px;
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  color: rgba(180, 190, 195, 0.62);
-  border-color: rgba(255, 165, 80, 0.14);
-  background: rgba(255, 255, 255, 0.025);
-}
-.ff-btn.ff-mini:hover {
-  color: rgba(220, 225, 230, 0.85);
-  border-color: rgba(255, 165, 80, 0.32);
-  background: rgba(255, 138, 58, 0.06);
-  box-shadow: none;
-}
-.ff-btn.ff-mini.active {
-  color: var(--accent);
-  border-color: var(--accent-soft);
-  background: rgba(255, 138, 58, 0.12);
-  box-shadow: 0 0 10px var(--accent-glow);
-}
-
 .ff-cycle {
   display: flex;
   align-items: center;
