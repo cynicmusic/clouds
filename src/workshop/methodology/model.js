@@ -382,8 +382,8 @@ function pineBillboardHybrid(seed, opts = {}) {
   const tex = getPineSilhouetteTexture(seed);
   const mat = new THREE.MeshStandardMaterial({
     map: tex,
-    transparent: true,
-    alphaTest: 0.18,
+    transparent: false,
+    alphaTest: 0.35,
     roughness: 0.95,
     side: THREE.DoubleSide,
   });
@@ -637,8 +637,8 @@ function pineSilhouetteShellBlue(seed, opts = {}) {
   const tex = getPineSilhouetteBlueTexture(seed);
   const mat = new THREE.MeshStandardMaterial({
     map: tex,
-    transparent: true,
-    alphaTest: 0.18,
+    transparent: false,
+    alphaTest: 0.35,
     roughness: 0.95,
     side: THREE.DoubleSide,
   });

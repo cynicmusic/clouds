@@ -569,8 +569,6 @@ function cloneScenePresetParams(params) {
     delete out.tree.palmSway;
   }
   if (out.water) delete out.water.referenceBlocks;
-  if (out.water?.lagoonTint === 0.18) delete out.water.lagoonTint;
-  if (out.lagoon?.depth === 0.45) delete out.lagoon.depth;
   return out;
 }
 

@@ -216,14 +216,14 @@ export function generateIsland(opts) {
   // marks a white-sand apron for palms/fringe trees.
   const lagoonCfg = lagoon || {};
   const lagoonOn = lagoonCfg.enable !== false;
-  const lagoonRx = Math.max(8, lagoonCfg.radiusX ?? 260);
+  const lagoonRx = Math.max(8, lagoonCfg.radiusX ?? 230);
   const lagoonRz = Math.max(8, lagoonCfg.radiusZ ?? 135);
-  const lagoonApron = Math.max(0, lagoonCfg.apronWidth ?? 72);
-  const lagoonDepth = Math.max(0.05, lagoonCfg.depth ?? 0.30);
-  const lagoonWhiteSand = Math.max(0, Math.min(1, lagoonCfg.whiteSand ?? 1));
+  const lagoonApron = Math.max(0, lagoonCfg.apronWidth ?? 42);
+  const lagoonDepth = Math.max(0.1, lagoonCfg.depth ?? 1.4);
+  const lagoonWhiteSand = Math.max(0, Math.min(1, lagoonCfg.whiteSand ?? 0.9));
   const lagoonInlet = Math.max(0, Math.min(1, lagoonCfg.inlet ?? 0.12));
-  const lagoonCx = Math.max(-0.55, Math.min(0.55, lagoonCfg.x ?? -0.32)) * radius;
-  const lagoonCz = Math.max(-0.55, Math.min(0.55, lagoonCfg.z ?? 0.16)) * radius;
+  const lagoonCx = Math.max(-0.55, Math.min(0.55, lagoonCfg.x ?? 0.24)) * radius;
+  const lagoonCz = Math.max(-0.55, Math.min(0.55, lagoonCfg.z ?? -0.12)) * radius;
   const lagoonRot = ((lagoonCfg.rotation ?? -24) * Math.PI) / 180;
   const lagoonCa = Math.cos(lagoonRot), lagoonSa = Math.sin(lagoonRot);
   const outLen = Math.hypot(lagoonCx, lagoonCz) || 1;
@@ -261,16 +261,10 @@ export function generateIsland(opts) {
   function lagoonSurfaceAt(x, z, rawH) {
     const l = lagoonAt(x, z);
     const carve = Math.max(l.water, l.inlet * 0.95);
-    let h = rawH;
-    if (l.apron > 0) {
-      const shelfTarget = seaLevel + 0.25 + (1 - l.apron) * 1.8;
-      const shelf = l.apron * 0.72;
-      h = h * (1 - shelf) + Math.min(h, shelfTarget) * shelf;
-    }
-    if (carve <= 0) return h;
-    const bowl = Math.max(l.water, 0.28 + l.inlet * 0.22);
-    const target = seaLevel - lagoonDepth * (0.05 + 0.36 * bowl);
-    return h * (1 - carve) + Math.min(h, target) * carve;
+    if (carve <= 0) return rawH;
+    const bowl = Math.max(l.water, 0.35 + l.inlet * 0.35);
+    const target = seaLevel - lagoonDepth * (0.28 + 0.72 * bowl);
+    return rawH * (1 - carve) + Math.min(rawH, target) * carve;
   }
 
   function surfaceAt(x, z) {
@@ -327,8 +321,8 @@ export function generateIsland(opts) {
       const hz = lagoonSurfaceAt(x, z + cellSize, surfaceAt(x, z + cellSize));
       const slope = Math.hypot(hx - h, hz - h) / cellSize;
       const lagoonInfo = lagoonAt(x, z);
-      const lagoonWater = lagoonInfo.water > 0.03 || lagoonInfo.inlet > 0.45;
-      const lagoonApronCell = !lagoonWater && lagoonInfo.apron > 0.02;
+      const lagoonWater = lagoonInfo.water > 0.08 || lagoonInfo.inlet > 0.45;
+      const lagoonApronCell = !lagoonWater && lagoonInfo.apron > 0.05;
 
       const a = (h - seaLevel) / Math.max(1, maxHeight);   // 0 shore → ~1 peak
       const { season } = seasonAt(x, z, a);
@@ -406,9 +400,9 @@ export function generateIsland(opts) {
         }
       }
 
-      if ((lagoonApronCell || lagoonInfo.water > 0.01) && mat !== MAT.ROCK && mat !== MAT.SNOW && mat !== MAT.GRASSY_SNOW) {
+      if (lagoonApronCell && mat !== MAT.ROCK && mat !== MAT.SNOW && mat !== MAT.GRASSY_SNOW) {
         const wn = valueNoise2(x * 0.04 + 8.7, z * 0.04 - 6.2, seed + 293);
-        if (wn < lagoonWhiteSand * Math.max(lagoonInfo.apron, lagoonInfo.water * 0.8)) mat = MAT.WHITE_SAND;
+        if (wn < lagoonWhiteSand * lagoonInfo.apron) mat = MAT.WHITE_SAND;
       }
 
       vol.material[idx] = mat;

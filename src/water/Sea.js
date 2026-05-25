@@ -21,7 +21,7 @@ function makeWaterDataTexture(volume, seaLevel, floorDepth) {
       const k = idx * 4;
       data[k] = Math.round(THREE.MathUtils.clamp(depth / maxDepth, 0, 1) * 255);
       data[k + 1] = volume.channel?.[idx] ? 255 : 0;
-      data[k + 2] = volume.channel?.[idx] ? 0 : volume.land?.[idx] ? 255 : 0;
+      data[k + 2] = volume.land?.[idx] ? 255 : 0;
       data[k + 3] = 255;
     }
   }
@@ -236,7 +236,7 @@ vec4 waterSample(vec2 rawUv) {
   vec3 shallowColor = vec3(0.08, 0.86, 0.93);
   vec3 midColor = vec3(0.02, 0.36, 0.45);
   vec3 deepColor = vec3(0.004, 0.055, 0.10);
-  vec3 lagoonColor = vec3(0.05, 1.00, 0.92);
+  vec3 lagoonColor = vec3(0.13, 0.92, 0.84);
   vec3 depthColor = mix(shallowColor, midColor, smoothstep(0.02, 0.45, depth));
   depthColor = mix(depthColor, deepColor, smoothstep(0.36, 1.0, depth));
   depthColor = mix(depthColor, lagoonColor, clamp(channel * uLagoonTint, 0.0, 1.0));

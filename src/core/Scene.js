@@ -270,6 +270,7 @@ export class Scene {
       treeSummerWeight: s.get('tree.summerWeight'),
       treeSpruceWeight: s.get('tree.spruceWeight'),
       treePalmWeight: s.get('tree.palmWeight'),
+      treePalmTarget: s.get('tree.palmTarget') | 0,
       treePeakSparse: s.get('tree.peakSparse'),
       treeOpenCuts: s.get('tree.openCuts'),
       treeAutumnScale: s.get('tree.autumnScale'),
@@ -540,7 +541,7 @@ export class Scene {
       const weights = {
         palmFringe: ((opts.treePalmWeight ?? 0.25) * (sand ? 0.75 : fairway ? 0.04 : 0.008) * Math.pow(1 - alt, 1.7) + lagoonPull * 0.22) * fringeMask,
         summerCanopy: (opts.treeSummerWeight ?? 0.95) * (season === SEASON.SUMMER ? 1.0 : 0.16) * (0.4 + (1 - alt)) * forestMask,
-        autumnCanopy: (opts.treeAutumnWeight ?? 1.7) * (season === SEASON.AUTUMN ? 1.25 : 0.12) * (0.44 + alt * 1.15) * (1 + mountainForest * 1.85) * forestMask,
+        autumnCanopy: (opts.treeAutumnWeight ?? 1.55) * (season === SEASON.AUTUMN ? 1.25 : 0.12) * (0.44 + alt * 1.15) * (1 + mountainForest * 1.85) * forestMask,
         spruceMix: (opts.treeSpruceWeight ?? 0.75) * (season === SEASON.CONIFER ? 1.1 : 0.08) * (0.22 + alt * alt * 1.4) * forestMask,
         peakSparse: (opts.treePeakSparse ?? 0.08) * (season === SEASON.WINTER ? 1.2 : 0.08) * (alt * alt * 1.25) * forestMask,
       };
@@ -598,7 +599,7 @@ export class Scene {
     // Palms are allowed to pepper coast / lagoon / fairway fringe separately
     // from grove centers. The grove allocator intentionally prefers inland
     // forest cores, which otherwise starves the classic palm look.
-    const palmTarget = Math.min(90, Math.round(target * clamp01((opts.treePalmWeight ?? 0.25) / 3) * 0.17));
+    const palmTarget = Math.max(0, Math.min(900, opts.treePalmTarget ?? 400));
     let palmGuard = 0;
     while (counts.palmFringe < palmTarget && palmGuard < palmTarget * 260 + 800) {
       palmGuard++;
