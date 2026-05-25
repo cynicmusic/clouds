@@ -1,21 +1,3 @@
-.sky-clouds-badge {
-  position: fixed;
-  left: 14px;
-  top: 14px;
-  z-index: 20;
-  padding: 4px 7px 5px;
-  border: 1px solid rgba(255, 149, 72, 0.34);
-  border-radius: 4px;
-  background: rgba(8, 12, 18, 0.48);
-  color: #ffad5f;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 11px;
-  line-height: 1;
-  text-transform: lowercase;
-  pointer-events: none;
-  user-select: none;
-}
-
 .sky-clouds-perf {
   top: 42px;
   left: 14px;

@@ -4,14 +4,13 @@
 import { presetGradient } from '../config/presets.js';
 
 export class ControlPanel {
-  constructor({ store, schema, sectionOrder, onToggle, sticky, presets, showWorkshopHint = true }) {
+  constructor({ store, schema, sectionOrder, onToggle, sticky, presets }) {
     this.store = store;
     this.schema = schema;
     this.sectionOrder = sectionOrder;
     this.onToggle = onToggle;
     this.sticky = sticky || { has: () => false, toggle: () => false };
     this.presets = presets || { slots: {}, save: () => {}, load: () => {} };
-    this.showWorkshopHint = showWorkshopHint;
     this.fieldUpdaters = new Map();
     this.stickyEls = new Map();
     this.collapsed = true;
@@ -23,38 +22,12 @@ export class ControlPanel {
     this._buildBody();
     this._buildFooter();
 
-    this.handle = document.createElement('button');
-    this.handle.className = 'ff-panel-handle' + (this.collapsed ? ' visible' : '');
-    this.handle.title = 'open controls (h or b)';
-    this.handle.textContent = '◧';
-    this.handle.addEventListener('click', () => this.toggle());
-    document.body.appendChild(this.handle);
-
-    this.hints = document.createElement('div');
-    this.hints.className = 'ff-hints';
-    this.hints.innerHTML = `
-      <kbd>WASD</kbd> fly
-      <kbd>Q/↑↓</kbd> up·down
-      <kbd>drag</kbd> look
-      <kbd>H</kbd> panel
-      <kbd>P</kbd> collapse
-      <kbd>C</kbd> water
-      <kbd>G</kbd> god rays
-      <kbd>X</kbd> shadows
-      ${this.showWorkshopHint ? '<kbd>T</kbd> workshop' : ''}
-      <kbd>F</kbd> fps
-    `;
-    document.body.appendChild(this.hints);
-
     this.unsubscribe = store.subscribe((evt) => this._onStoreChange(evt));
   }
 
   toggle() {
     this.collapsed = !this.collapsed;
     this.root.classList.toggle('collapsed', this.collapsed);
-    this.handle.classList.toggle('visible', this.collapsed);
-    // Control hints ride with the panel — clean view by default.
-    this.hints.classList.toggle('show', !this.collapsed);
     this.onToggle?.(this.collapsed);
   }
 
@@ -414,8 +387,6 @@ export class ControlPanel {
 
   destroy() {
     this.unsubscribe?.();
-    this.handle.remove();
-    this.hints.remove();
     this.root.remove();
   }
 }

@@ -167,10 +167,8 @@ const panel = new ControlPanel({
   sectionOrder,
   sticky,
   presets: presetApi,
-  showWorkshopHint: false,
 });
 uiRoot.appendChild(panel.root);
-panel.toggle();
 panel.flashStatus(`${workshopTitle.toLowerCase()} · master presets`, 'ok');
 
 const perf = new PerfOverlay({ scene });
@@ -188,11 +186,6 @@ const skyAssetsPromise = loadIslandAssets({
   panel.flashStatus('sky assets failed', 'err');
   throw error;
 });
-
-const badge = document.createElement('div');
-badge.className = 'sky-clouds-badge';
-badge.textContent = 'island';
-document.body.appendChild(badge);
 
 scene.start();
 buildConsole.step('first frame');
