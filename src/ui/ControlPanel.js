@@ -341,12 +341,14 @@ export class ControlPanel {
     this._syncBankActive();
     if (!this.presetEls) return;
     const bank = this.presets?.getBank?.() || 'A';
+    const activeKey = this.presets?.getActiveKey?.() || '';
     const slots = this.presets?.slots || {};
     for (const [slot, b] of this.presetEls) {
       const key = `${bank}${slot}`;
       const p = slots[key];
       const filled = !!p;
       b.classList.toggle('filled', filled);
+      b.classList.toggle('active', key === activeKey);
       b.style.backgroundImage = filled ? (presetGradient(p) || '') : '';
       b.title = `${key}${key === 'A1' ? ' (default)' : ''} — click load · shift-click save`;
     }

@@ -88,6 +88,7 @@ const sticky = {
 };
 
 let activeBank = 'A';
+let activePresetKey = 'A1';
 const keyOf = (slot) => `${activeBank}${slot}`;
 
 function capturePreset() {
@@ -134,6 +135,7 @@ async function savePreset(slot) {
   const key = keyOf(slot);
   const preset = capturePreset();
   presets[key] = preset;
+  activePresetKey = key;
   panel.refreshPresets();
   await savePresetToDisk(key, preset);
   panel.flashStatus(`saved ${key} · master preset`, 'ok');
@@ -144,6 +146,7 @@ function loadPreset(slot) {
   const preset = presets[key];
   if (!preset) { panel.flashStatus(`${key} empty`, 'err'); return; }
   applyPreset(preset);
+  activePresetKey = key;
   panel.refreshPresets();
   panel.flashStatus(`loaded ${key} · ${workshopPresetLabel}`, 'ok');
 }
@@ -161,6 +164,7 @@ const presetApi = {
   load: loadPreset,
   setBank,
   getBank: () => activeBank,
+  getActiveKey: () => activePresetKey,
 };
 
 const panel = new ControlPanel({

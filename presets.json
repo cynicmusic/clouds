@@ -932,7 +932,7 @@
       "orbitSweep": {
         "enable": false,
         "speed": 1,
-        "elevationDeg": 9.5,
+        "elevationDeg": 23,
         "azimuthDeg": -118,
         "elevationSpeed": 4,
         "azimuthSpeed": 0.5,
@@ -942,7 +942,7 @@
         ]
       },
       "sun": {
-        "elevationDeg": 9.5,
+        "elevationDeg": 23,
         "azimuthDeg": -118,
         "intensity": 60
       },
@@ -971,7 +971,7 @@
         "radius": 1070,
         "shape": 3,
         "lowland": 38,
-        "massif": 470,
+        "massif": 280,
         "massifSharpness": 1,
         "massifOffsetX": 0,
         "massifOffsetZ": 0,
@@ -1005,13 +1005,13 @@
         "debugView": 0,
         "depthTint": 0.78,
         "lagoonTint": 0.18,
+        "referenceBlocks": true,
         "causticScale": 4.6,
         "causticIntensity": 2.8,
         "causticOpacity": 0,
         "shoreGlow": 1.35,
         "shoreGlowWidth": 1.3,
-        "shoreGlowFollow": 0,
-        "referenceBlocks": true
+        "shoreGlowFollow": 0
       },
       "waves": {
         "waveSpeed": 2.7,
@@ -1050,8 +1050,8 @@
       },
       "render": {
         "fov": 65,
-        "exposure": 0.3,
-        "fogDensity": 0.0003,
+        "exposure": 0.2,
+        "fogDensity": 0,
         "horizonWarp": true
       },
       "godrays": {
@@ -1103,21 +1103,21 @@
         "quality": 2,
         "resolutionScale": 0.75,
         "temporalUpscale": true,
-        "exposure": 10
+        "exposure": 4.4
       },
       "takramAtmosphere": {
         "sun": true,
         "ground": true,
-        "groundAlbedo": 0.018,
+        "groundAlbedo": 0,
         "transmittance": true,
         "inscatter": true,
         "sunLight": true,
         "skyLight": true,
-        "albedoScale": 1
+        "albedoScale": 0.28
       },
       "cloudWeather": {
-        "coverage": 0.4,
-        "weatherRepeatX": 100,
+        "coverage": 0.36,
+        "weatherRepeatX": 77,
         "weatherRepeatY": 100,
         "weatherVelocityX": 0.001,
         "weatherVelocityY": 0,
@@ -1171,24 +1171,24 @@
         "rayDistance": 120000
       },
       "cloudFinishing": {
-        "toneMapping": 0,
+        "toneMapping": 1,
         "dithering": true
       }
     },
     "cam": {
       "p": [
-        -685.8805709941141,
-        408.7737349827536,
-        1084.2703180182011
+        1068.7876993474363,
+        233.54673381043386,
+        -356.2573343121963
       ],
       "q": [
-        -0.1458493129659333,
-        -0.18167352851383453,
-        -0.027257422768793112,
-        0.9721006840079384
+        -0.03819155452093825,
+        0.7217085276264378,
+        0.03994736179236482,
+        0.689987256839127
       ]
     },
-    "t": 1779731673493
+    "t": 1779732556006
   },
   "B4": {
     "params": {
@@ -5510,7 +5510,7 @@
       "orbitSweep": {
         "enable": false,
         "speed": 1,
-        "elevationDeg": 23,
+        "elevationDeg": 9.5,
         "azimuthDeg": -118,
         "elevationSpeed": 4,
         "azimuthSpeed": 0.5,
@@ -5520,7 +5520,7 @@
         ]
       },
       "sun": {
-        "elevationDeg": 23,
+        "elevationDeg": 9.5,
         "azimuthDeg": -118,
         "intensity": 60
       },
@@ -5583,13 +5583,13 @@
         "debugView": 0,
         "depthTint": 0.78,
         "lagoonTint": 0.18,
-        "referenceBlocks": true,
         "causticScale": 4.6,
         "causticIntensity": 2.8,
         "causticOpacity": 0,
         "shoreGlow": 1.35,
         "shoreGlowWidth": 1.3,
-        "shoreGlowFollow": 0
+        "shoreGlowFollow": 0,
+        "referenceBlocks": true
       },
       "waves": {
         "waveSpeed": 2.7,
@@ -5628,8 +5628,8 @@
       },
       "render": {
         "fov": 65,
-        "exposure": 0.2,
-        "fogDensity": 0,
+        "exposure": 0.3,
+        "fogDensity": 0.0003,
         "horizonWarp": true
       },
       "godrays": {
@@ -5681,21 +5681,21 @@
         "quality": 2,
         "resolutionScale": 0.75,
         "temporalUpscale": true,
-        "exposure": 4.4
+        "exposure": 10
       },
       "takramAtmosphere": {
         "sun": true,
         "ground": true,
-        "groundAlbedo": 0,
+        "groundAlbedo": 0.018,
         "transmittance": true,
         "inscatter": true,
         "sunLight": true,
         "skyLight": true,
-        "albedoScale": 0.28
+        "albedoScale": 1
       },
       "cloudWeather": {
-        "coverage": 0.36,
-        "weatherRepeatX": 77,
+        "coverage": 0.4,
+        "weatherRepeatX": 100,
         "weatherRepeatY": 100,
         "weatherVelocityX": 0.001,
         "weatherVelocityY": 0,
@@ -5749,24 +5749,24 @@
         "rayDistance": 120000
       },
       "cloudFinishing": {
-        "toneMapping": 1,
+        "toneMapping": 0,
         "dithering": true
       }
     },
     "cam": {
       "p": [
-        1068.7876993474363,
-        233.54673381043386,
-        -356.2573343121963
+        -685.8805709941141,
+        408.7737349827536,
+        1084.2703180182011
       ],
       "q": [
-        -0.03819155452093825,
-        0.7217085276264378,
-        0.03994736179236482,
-        0.689987256839127
+        -0.1458493129659333,
+        -0.18167352851383453,
+        -0.027257422768793112,
+        0.9721006840079384
       ]
     },
-    "t": 1779732556006
+    "t": 1779731673493
   },
   "C2": {
     "params": {
