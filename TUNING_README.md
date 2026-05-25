@@ -16,9 +16,16 @@ while making the powerful controls and coupled controls explicit.
 
 ## Important Params
 
-- `sun.elevationDeg`: ramps the legacy island light quickly. Around 10 degrees
-  it is already moving hard toward daytime.
+- `sun.elevationDeg`: raw sun angle for sky, water, and legacy island light.
+  The island light response is now shaped by the gain controls below.
 - `sun.intensity`: feeds the legacy sun model.
+- `lighting.sunElevationGain`: how hard `sun.elevationDeg` is allowed to change
+  island light power. Lower values keep sunset/noon moves in the same color
+  grading family.
+- `lighting.sunFloor`: minimum legacy direct-light power at low sun.
+- `lighting.sunCeiling`: maximum legacy direct-light power at high sun.
+- `lighting.secondaryEnergy`: energy scale for the second legacy sun while
+  shadows are in add mode.
 - `shadows.secondaryMix` + add mode: can make both sun lights contribute
   strongly.
 - `takramAtmosphere.sunLight`: Takram post-process sun irradiance on geometry.
@@ -33,6 +40,32 @@ while making the powerful controls and coupled controls explicit.
   Takram is active. Right now it mostly reads as ocean/horizon power.
 - `render.fogDensity`: horizon haze is dangerous and can act as global blue
   light. It can turn the whole scene blue.
+
+## Gain Staging Pane
+
+`gain staging` is a control-surface pane, not a new render path. It gathers the
+controls that can make the whole scene read darker, brighter, bluer, flatter, or
+more photoreal:
+
+- legacy direct light: `lighting.sunElevationGain`, `lighting.sunFloor`,
+  `lighting.sunCeiling`, `lighting.secondaryEnergy`
+- legacy fill: `lighting.skyBounce`, `lighting.groundBounce`
+- Takram scene light: `takramAtmosphere.sunLight`,
+  `takramAtmosphere.skyLight`, `takramAtmosphere.albedoScale`
+- cloud-side power: `cloudWeather.coverage`,
+  `cloudLighting.scatteringCoefficient`, `cloudLighting.groundBounceScale`,
+  `cloudShadows.layerShadow`
+- exposure and horizon: `cloudsRender.exposure`, `render.exposure`,
+  `render.fogDensity`, `cloudFinishing.toneMapping`
+- legacy atmosphere colour: `atmosphere.rayleighMul`, `atmosphere.mieBeta`,
+  `atmosphere.mieG`, `atmosphere.ozoneMul`
+
+Legacy atmosphere still controls the water/horizon path, including the pink
+strip sunset effects. That is a useful overlap, not something to strip out.
+
+Cloud shadows on the ground are useful and should stay powerful. The current
+tuning question is how to balance Takram cloud/scene light against the legacy
+sun, not how to remove either lighting system.
 
 ## Tone Mapping
 
@@ -61,6 +94,13 @@ toggled off, `Ground albedo` stops working.
 Horizon line and legacy fog interact negatively. Move legacy fog/horizon haze up
 near the Takram ground controls with an explicit flag before doing serious
 horizon tuning.
+
+## Lagoon
+
+The lagoon is a first-class terrain object, but it should read as lowland water,
+not a high-elevation caldera that eats the massif. `lagoon.lowlandCap` fades
+lagoon carving above a rise over sea level. Set it to `0` to let the lagoon
+carve at any elevation again.
 
 ## Coupled Controls And Gotchas
 

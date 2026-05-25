@@ -115,6 +115,8 @@ export class ControlPanel {
 
   _buildField(path, field) {
     switch (field.type) {
+      case 'group':
+        return this._buildGroupField(field);
       case 'int':
       case 'float':
         return this._buildSliderField(path, field);
@@ -125,6 +127,20 @@ export class ControlPanel {
       default:
         return null;
     }
+  }
+
+  _buildGroupField(field) {
+    const row = document.createElement('div');
+    row.className = 'ff-field-group';
+    if (field.origin) row.dataset.origin = field.origin;
+    if (field.color) row.style.setProperty('--group-color', field.color);
+    if (field.wash) row.style.setProperty('--group-wash', field.wash);
+    row.innerHTML = `
+      <span class="ff-field-group-icon">${field.icon || '·'}</span>
+      <span class="ff-field-group-label">${field.label || ''}</span>
+      ${field.map ? `<span class="ff-field-group-map">${field.map}</span>` : ''}
+    `;
+    return row;
   }
 
   _buildSliderField(path, field) {

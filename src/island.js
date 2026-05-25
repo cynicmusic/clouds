@@ -29,7 +29,7 @@ const workshopPresetLabel = 'island';
 const schema = makeWorkshopSchema();
 const tuningSections = ['waves'];
 const cloudSections = ['cloudsRender', 'takramAtmosphere', 'cloudWeather', 'cloudLayer0', 'cloudLighting', 'cloudShadows', 'cloudDebug'];
-const sectionOrder = ['skyDiagnosis', ...cloudSections, 'water', 'waves', 'sun', 'atmosphere', 'lighting', 'island', 'lagoon', 'voxel', 'seasons', 'tree', 'shadows', 'render'];
+const sectionOrder = ['skyDiagnosis', 'gain', ...cloudSections, 'water', 'waves', 'sun', 'atmosphere', 'lighting', 'island', 'lagoon', 'voxel', 'seasons', 'tree', 'shadows', 'render'];
 const workshopDefaults = buildDefaults(schema, defaultParams);
 
 const buildConsole = new BuildConsole({ parent: uiRoot, label: `${workshopName} build` });
@@ -339,6 +339,209 @@ function makeWorkshopSchema() {
       forceBelowHorizonFog: { type: 'bool', label: 'Below-horizon fog', default: false, hint: 'diagnostic fill for rays that hit the planet' },
     },
   };
+  out.gain = {
+    label: 'gain staging',
+    icon: '◉',
+    blurb: 'sun · atmosphere · Takram · clouds · finish',
+    fields: {
+      sunGroup: {
+        type: 'group', label: 'sun', icon: '☉', map: 'sun.* + lighting.*',
+        color: '#ff8a3a', wash: 'rgba(255, 138, 58, 0.13)',
+      },
+      elevationDeg: {
+        path: 'sun.elevationDeg',
+        type: 'float', label: 'Elevation', min: -10, max: 90, step: 0.5, default: 26, unit: '°',
+        hint: 'sun.elevationDeg',
+      },
+      azimuthDeg: {
+        path: 'sun.azimuthDeg',
+        type: 'float', label: 'Azimuth', min: -180, max: 180, step: 1, default: -84, unit: '°',
+        hint: 'sun.azimuthDeg',
+      },
+      sunIntensity: {
+        path: 'sun.intensity',
+        type: 'float', label: 'Intensity', min: 1, max: 60, step: 0.5, default: 22,
+        hint: 'sun.intensity',
+      },
+      sunElevationGain: {
+        path: 'lighting.sunElevationGain',
+        type: 'float', label: 'Sun elev gain', min: 0, max: 1, step: 0.01, default: 0.45,
+        hint: 'lighting.sunElevationGain',
+      },
+      sunFloor: {
+        path: 'lighting.sunFloor',
+        type: 'float', label: 'Sun floor', min: 0, max: 4, step: 0.02, default: 0.8,
+        hint: 'lighting.sunFloor',
+      },
+      sunCeiling: {
+        path: 'lighting.sunCeiling',
+        type: 'float', label: 'Sun ceiling', min: 0, max: 5, step: 0.02, default: 2,
+        hint: 'lighting.sunCeiling',
+      },
+      secondaryEnergy: {
+        path: 'lighting.secondaryEnergy',
+        type: 'float', label: 'Coarse energy', min: 0, max: 1.5, step: 0.01, default: 0.55,
+        hint: 'lighting.secondaryEnergy',
+      },
+      secondaryMix: {
+        path: 'shadows.secondaryMix',
+        type: 'float', label: 'Coarse mix', min: 0, max: 1, step: 0.01, default: 1,
+        hint: 'shadows.secondaryMix',
+      },
+      shadowBlend: {
+        path: 'shadows.blendMode',
+        type: 'int', label: 'Shadow blend', min: 0, max: 1, step: 1, default: 1,
+        labels: ['split', 'add'],
+        hint: 'shadows.blendMode',
+      },
+      fillGroup: {
+        type: 'group', label: 'fill', icon: '✦', map: 'lighting.*',
+        color: '#ffcf6a', wash: 'rgba(255, 206, 106, 0.13)',
+      },
+      skyBounce: {
+        path: 'lighting.skyBounce',
+        type: 'float', label: 'Sky bounce', min: 0, max: 1.6, step: 0.02, default: 0.55,
+        hint: 'lighting.skyBounce',
+      },
+      groundBounce: {
+        path: 'lighting.groundBounce',
+        type: 'float', label: 'Ground bounce', min: 0, max: 1, step: 0.02, default: 0.3,
+        hint: 'lighting.groundBounce',
+      },
+      bounceTint: {
+        path: 'lighting.bounceTint',
+        type: 'float', label: 'Bounce tint', min: 0, max: 1, step: 0.02, default: 0.7,
+        hint: 'lighting.bounceTint',
+      },
+      glintWidth: {
+        path: 'lighting.sunGlint',
+        type: 'float', label: 'Glint width', min: 0, max: 2.5, step: 0.05, default: 0.7,
+        hint: 'lighting.sunGlint',
+      },
+      glintSpread: {
+        path: 'lighting.glintSpread',
+        type: 'float', label: 'Glint spread', min: 0.2, max: 4, step: 0.05, default: 1.1,
+        hint: 'lighting.glintSpread',
+      },
+      atmosphereGroup: {
+        type: 'group', label: 'atmosphere', icon: '◐', map: 'atmosphere.* + render.fog',
+        color: '#b68cff', wash: 'rgba(182, 140, 255, 0.13)',
+      },
+      legacyRayleigh: {
+        path: 'atmosphere.rayleighMul',
+        type: 'float', label: 'Rayleigh', min: 0, max: 4, step: 0.01, default: 1,
+        hint: 'atmosphere.rayleighMul',
+      },
+      legacyMieBeta: {
+        path: 'atmosphere.mieBeta',
+        type: 'float', label: 'Mie β', min: 0, max: 0.05, step: 0.0005, default: 0.021,
+        hint: 'atmosphere.mieBeta',
+      },
+      legacyMieG: {
+        path: 'atmosphere.mieG',
+        type: 'float', label: 'Mie g', min: 0, max: 0.95, step: 0.005, default: 0.758,
+        hint: 'atmosphere.mieG',
+      },
+      legacyOzone: {
+        path: 'atmosphere.ozoneMul',
+        type: 'float', label: 'Ozone', min: 0, max: 3, step: 0.01, default: 1,
+        hint: 'atmosphere.ozoneMul',
+      },
+      horizonHaze: {
+        path: 'render.fogDensity',
+        type: 'float', label: 'Horizon haze', min: 0, max: 0.006, step: 0.00005, default: 0.00072,
+        hint: 'render.fogDensity',
+      },
+      takramGroup: {
+        type: 'group', label: 'takram', icon: '◎', map: 'takramAtmosphere.*',
+        color: '#2fd9c8', wash: 'rgba(47, 217, 200, 0.12)',
+      },
+      takramSunLight: {
+        path: 'takramAtmosphere.sunLight',
+        type: 'bool', label: 'Takram sun', default: true,
+        hint: 'takramAtmosphere.sunLight',
+      },
+      takramSkyLight: {
+        path: 'takramAtmosphere.skyLight',
+        type: 'bool', label: 'Takram sky', default: true,
+        hint: 'takramAtmosphere.skyLight',
+      },
+      takramGround: {
+        path: 'takramAtmosphere.ground',
+        type: 'bool', label: 'Ground branch', default: true,
+        hint: 'takramAtmosphere.ground',
+      },
+      groundAlbedo: {
+        path: 'takramAtmosphere.groundAlbedo',
+        type: 'float', label: 'Ground albedo', min: 0, max: 0.35, step: 0.005, default: 0.018,
+        hint: 'takramAtmosphere.groundAlbedo',
+      },
+      albedoScale: {
+        path: 'takramAtmosphere.albedoScale',
+        type: 'float', label: 'Albedo scale', min: 0, max: 2, step: 0.02, default: 1,
+        hint: 'takramAtmosphere.albedoScale',
+      },
+      cloudGroup: {
+        type: 'group', label: 'clouds', icon: '☁', map: 'cloudWeather + cloudLighting',
+        color: '#f0e5cf', wash: 'rgba(240, 229, 207, 0.10)',
+      },
+      cloudCoverage: {
+        path: 'cloudWeather.coverage',
+        type: 'float', label: 'Cloud cover', min: 0, max: 1, step: 0.01, default: 0.4,
+        hint: 'cloudWeather.coverage',
+      },
+      cloudScatter: {
+        path: 'cloudLighting.scatteringCoefficient',
+        type: 'float', label: 'Cloud scatter', min: 0, max: 3, step: 0.001, precision: 3, default: 1, curve: 4, uiStep: 0.001,
+        hint: 'cloudLighting.scatteringCoefficient',
+      },
+      cloudGroundBounce: {
+        path: 'cloudLighting.groundBounceScale',
+        type: 'float', label: 'Cloud ground', min: 0, max: 3, step: 0.02, default: 1,
+        hint: 'cloudLighting.groundBounceScale',
+      },
+      cloudSkyLight: {
+        path: 'cloudLighting.skyLightScale',
+        type: 'float', label: 'Cloud sky', min: 0, max: 3, step: 0.02, default: 1,
+        hint: 'cloudLighting.skyLightScale',
+      },
+      cloudPowder: {
+        path: 'cloudLighting.powderScale',
+        type: 'float', label: 'Powder', min: 0, max: 2, step: 0.02, default: 0.8,
+        hint: 'cloudLighting.powderScale',
+      },
+      cloudLayerShadow: {
+        path: 'cloudShadows.layerShadow',
+        type: 'bool', label: 'Cloud shadows', default: true,
+        hint: 'cloudShadows.layerShadow',
+      },
+      finishGroup: {
+        type: 'group', label: 'finish', icon: '◯', map: 'cloudFinishing + render',
+        color: '#aab4be', wash: 'rgba(170, 180, 190, 0.11)',
+      },
+      takramExposure: {
+        path: 'cloudsRender.exposure',
+        type: 'float', label: 'Takram exposure', min: 0.2, max: 20, step: 0.05, default: 10,
+        hint: 'cloudsRender.exposure',
+      },
+      renderExposure: {
+        path: 'render.exposure',
+        type: 'float', label: 'Legacy exposure', min: 0.2, max: 3, step: 0.01, default: 1.05,
+        hint: 'render.exposure',
+      },
+      toneMapping: {
+        path: 'cloudFinishing.toneMapping',
+        type: 'int', label: 'Tone map', min: 0, max: 3, step: 1, default: 0,
+        labels: ['ACES', 'neutral', 'AGX', 'linear'],
+        hint: 'cloudFinishing.toneMapping',
+      },
+      dithering: {
+        path: 'cloudFinishing.dithering',
+        type: 'bool', label: 'Dither', default: true,
+        hint: 'cloudFinishing.dithering',
+      },
+    },
+  };
   out.cloudsRender = {
     label: 'clouds render',
     icon: '◎',
@@ -531,6 +734,7 @@ function buildDefaults(schemaObj, base) {
   const out = structuredClone(base);
   for (const [sectionKey, section] of Object.entries(schemaObj)) {
     for (const [fieldKey, field] of Object.entries(section.fields || {})) {
+      if (field.type === 'group') continue;
       const path = field.path || `${sectionKey}.${fieldKey}`;
       setAt(out, path, field.type === 'range' ? [...field.default] : field.default);
     }
@@ -542,6 +746,7 @@ function tuningPaths() {
   const paths = new Set();
   for (const sectionKey of tuningSections) {
     for (const [fieldKey, field] of Object.entries(schema[sectionKey]?.fields || {})) {
+      if (field.type === 'group') continue;
       paths.add(field.path || `${sectionKey}.${fieldKey}`);
     }
   }
@@ -579,7 +784,9 @@ function hydratePresetParams(params) {
 function ensureWorkshopParams(target) {
   for (const [sectionKey, section] of Object.entries(schema)) {
     for (const [fieldKey] of Object.entries(section.fields || {})) {
-      const path = schema[sectionKey].fields[fieldKey].path || `${sectionKey}.${fieldKey}`;
+      const field = schema[sectionKey].fields[fieldKey];
+      if (field.type === 'group') continue;
+      const path = field.path || `${sectionKey}.${fieldKey}`;
       if (getAt(target, path) === undefined) {
         setAt(target, path, getAt(workshopDefaults, path));
       }

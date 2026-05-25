@@ -239,6 +239,7 @@ export class Scene {
         radiusZ: s.get('lagoon.radiusZ'),
         rotation: s.get('lagoon.rotation'),
         depth: s.get('lagoon.depth'),
+        lowlandCap: s.get('lagoon.lowlandCap'),
         inlet: s.get('lagoon.inlet'),
         apronWidth: s.get('lagoon.apronWidth'),
         whiteSand: s.get('lagoon.whiteSand'),
@@ -658,8 +659,9 @@ export class Scene {
     const primaryOn = !!s.get('shadows.primaryEnable');
     const secondaryOn = !!s.get('shadows.secondaryEnable');
     const mix = THREE.MathUtils.clamp(s.get('shadows.secondaryMix') ?? 0.22, 0, 1);
+    const addEnergy = THREE.MathUtils.clamp(s.get('lighting.secondaryEnergy') ?? 0.55, 0, 1.5);
     const mode = s.get('shadows.blendMode') | 0;
-    if (mode === 1) return { primary: primaryOn ? 1 : 0, secondary: secondaryOn ? mix : 0 };
+    if (mode === 1) return { primary: primaryOn ? 1 : 0, secondary: secondaryOn ? mix * addEnergy : 0 };
     if (primaryOn && secondaryOn) return { primary: 1 - mix, secondary: mix };
     return { primary: primaryOn ? 1 : 0, secondary: secondaryOn ? 1 : 0 };
   }
@@ -709,10 +711,14 @@ export class Scene {
     const elDeg = sun.elevationDeg;
     const day = THREE.MathUtils.clamp((elDeg + 6) / 28, 0, 1);   // dusk→noon
     const day2 = day * day * (3 - 2 * day);
-    const slider = THREE.MathUtils.clamp(intensity / 22, 0.45, 2.2);
+    const elevationGain = THREE.MathUtils.clamp(s.get('lighting.sunElevationGain') ?? 0.45, 0, 1);
+    const sunFloor = THREE.MathUtils.clamp(s.get('lighting.sunFloor') ?? 0.8, 0, 4);
+    const sunCeiling = Math.max(sunFloor + 0.01, THREE.MathUtils.clamp(s.get('lighting.sunCeiling') ?? 2.0, 0, 5));
+    const slider = Math.pow(THREE.MathUtils.clamp(intensity / 22, 0.15, 3), 0.55);
+    const gainDay = THREE.MathUtils.lerp(0.5, day2, elevationGain);
 
     const sunColor = new THREE.Color('#ff7a36').lerp(new THREE.Color('#fff3df'), day2);
-    const directIntensity = THREE.MathUtils.lerp(0.5, 3.1, day2) * slider;
+    const directIntensity = THREE.MathUtils.lerp(sunFloor, sunCeiling, gainDay) * slider;
     const shadowWeights = this._shadowLayerWeights();
     for (const light of this.sunLayers) {
       light.position.copy(dir).multiplyScalar(6000);
@@ -733,9 +739,9 @@ export class Scene {
     this._gi = { tint: s.get('lighting.bounceTint') };
     this._hemiBase = new THREE.Color('#e8a86a').lerp(new THREE.Color('#a9c8e6'), day2);
     this.hemi.color.copy(this._hemiBase);
-    this.hemi.groundColor.set('#3a2a1c').lerp(new THREE.Color('#60503a'), day2);
-    this.hemi.intensity = THREE.MathUtils.lerp(0.30, 0.60, day2) * (giB / 0.55);
-    this.ambient.intensity = THREE.MathUtils.lerp(0.03, 0.09, day2) * (0.70 + giG);
+    this.hemi.groundColor.set('#3a2a1c').lerp(new THREE.Color('#60503a'), gainDay);
+    this.hemi.intensity = THREE.MathUtils.lerp(0.36, 0.56, gainDay) * (giB / 0.55);
+    this.ambient.intensity = THREE.MathUtils.lerp(0.04, 0.075, gainDay) * (0.70 + giG);
 
     // Analytic fallback fog colour; the real one is sampled from the actual
     // sky-view LUT horizon each time the sky changes (see _syncHorizonFog) so

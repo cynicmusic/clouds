@@ -220,6 +220,7 @@ export function generateIsland(opts) {
   const lagoonRz = Math.max(8, lagoonCfg.radiusZ ?? 135);
   const lagoonApron = Math.max(0, lagoonCfg.apronWidth ?? 42);
   const lagoonDepth = Math.max(0.1, lagoonCfg.depth ?? 1.4);
+  const lagoonLowlandCap = Math.max(0, lagoonCfg.lowlandCap ?? 54);
   const lagoonWhiteSand = Math.max(0, Math.min(1, lagoonCfg.whiteSand ?? 0.9));
   const lagoonInlet = Math.max(0, Math.min(1, lagoonCfg.inlet ?? 0.12));
   const lagoonCx = Math.max(-0.55, Math.min(0.55, lagoonCfg.x ?? 0.24)) * radius;
@@ -258,9 +259,15 @@ export function generateIsland(opts) {
     return { water, apron, inlet, d };
   }
 
+  function lagoonLowlandFade(rawH) {
+    if (!lagoonOn || lagoonLowlandCap <= 0) return 1;
+    const rise = rawH - seaLevel;
+    return 1 - smooth01(lagoonLowlandCap * 0.62, lagoonLowlandCap, rise);
+  }
+
   function lagoonSurfaceAt(x, z, rawH) {
     const l = lagoonAt(x, z);
-    const carve = Math.max(l.water, l.inlet * 0.95);
+    const carve = Math.max(l.water, l.inlet * 0.95) * lagoonLowlandFade(rawH);
     if (carve <= 0) return rawH;
     const bowl = Math.max(l.water, 0.35 + l.inlet * 0.35);
     const target = seaLevel - lagoonDepth * (0.28 + 0.72 * bowl);
@@ -320,7 +327,14 @@ export function generateIsland(opts) {
       const hx = lagoonSurfaceAt(x + cellSize, z, surfaceAt(x + cellSize, z));
       const hz = lagoonSurfaceAt(x, z + cellSize, surfaceAt(x, z + cellSize));
       const slope = Math.hypot(hx - h, hz - h) / cellSize;
-      const lagoonInfo = lagoonAt(x, z);
+      const lagoonRaw = lagoonAt(x, z);
+      const lagoonFade = lagoonLowlandFade(rawH);
+      const lagoonInfo = {
+        ...lagoonRaw,
+        water: lagoonRaw.water * lagoonFade,
+        apron: lagoonRaw.apron * lagoonFade,
+        inlet: lagoonRaw.inlet * lagoonFade,
+      };
       const lagoonWater = lagoonInfo.water > 0.08 || lagoonInfo.inlet > 0.45;
       const lagoonApronCell = !lagoonWater && lagoonInfo.apron > 0.05;
 
