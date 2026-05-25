@@ -24,9 +24,9 @@ const canvasContainer = document.getElementById('canvas-container');
 const uiRoot = document.getElementById('ui-root');
 const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
 const isWavesLab = location.pathname.includes('/workshop/waves');
-const workshopName = isWavesLab ? 'waves lab' : 'water workshop';
-const workshopTitle = isWavesLab ? 'Waves Lab' : 'Water Workshop';
-const workshopPresetLabel = isWavesLab ? 'waves lab' : 'water workshop';
+const workshopName = isWavesLab ? 'waves lab' : 'takram clouds final';
+const workshopTitle = isWavesLab ? 'Waves Lab' : 'Takram Clouds Final';
+const workshopPresetLabel = isWavesLab ? 'waves lab' : 'takram clouds final';
 const WAVE_PRESETS_KEY = isWavesLab
   ? 'isometric-island.waves-lab.wavePresets.v1'
   : 'isometric-island.water-workshop.wavePresets.v1';
@@ -250,7 +250,7 @@ const skyAssetsPromise = loadSkyLabAssets({
 
 const badge = document.createElement('div');
 badge.className = 'sky-clouds-badge';
-badge.textContent = 'takram clouds';
+badge.textContent = 'takrum clouds final';
 document.body.appendChild(badge);
 
 scene.start();

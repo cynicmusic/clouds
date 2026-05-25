@@ -5,20 +5,12 @@ Research lab for **Takram-style volumetric clouds** in a vanilla Three.js
 sim at `~/isometric`) so it can iterate without colliding with vite
 processes there.
 
-## Read these in order
+## Current Plan
 
-1. [SKY_LAB_PLANNING_HANDOFF.md](SKY_LAB_PLANNING_HANDOFF.md) — original
-   research handoff: Takram architecture, asset list, source URLs,
-   black-horizon-strip triage ideas.
-2. [SKY_LAB_PLAN.md](SKY_LAB_PLAN.md) — the actionable 7-phase plan with
-   user answers committed.
-3. [SKY_LAB_HORIZON_NOTES.md](SKY_LAB_HORIZON_NOTES.md) — Phase 1 horizon
-   diagnosis.
-4. [SKY_LAB_EXTRACTION_MAP.md](SKY_LAB_EXTRACTION_MAP.md) — Phase 5 source,
-   shader, asset, and API-surgery inventory. Extraction itself has not been
-   started.
-5. [SKY_LAB_LIGHT_SHAFTS_NOTES.md](SKY_LAB_LIGHT_SHAFTS_NOTES.md) — Phase 6
-   light-shaft wiring, artifacts, and budget notes.
+Read [TAKRAM_FINAL_INTEGRATION_PLAN.md](TAKRAM_FINAL_INTEGRATION_PLAN.md)
+first. The old sky-lab phase docs have moved to
+`archive/sky-lab-research/` so they stay available as research notes without
+competing with the current master-preset/main-sim integration plan.
 
 ## Run it
 
@@ -89,8 +81,8 @@ for the later sub-15 MB packaging pass.
 
 ```
 ~/clouds/
-├── SKY_LAB_PLAN.md                  ← the plan
-├── SKY_LAB_PLANNING_HANDOFF.md      ← background research
+├── TAKRAM_FINAL_INTEGRATION_PLAN.md ← current authoritative plan
+├── archive/sky-lab-research/        ← earlier phase plans and notes
 ├── ATTRIBUTION.md                   ← Takram MIT + Bruneton citation
 ├── package.json                     ← three + vite + Takram Phase 2 deps
 ├── vite.config.mjs                  ← port 57170, strictPort, local
@@ -118,12 +110,13 @@ for the later sub-15 MB packaging pass.
   this repo are point-in-time copies. If the main repo improves, back-port
   deliberately.
 - **Do not push tuning or assets back to the main sim** until the user
-  approves an extraction (Phase 5+ in the plan).
+  approves the main-sim integration pass in
+  `TAKRAM_FINAL_INTEGRATION_PLAN.md`.
 - **No credits in the main sim.** Attribution stays here in
   `ATTRIBUTION.md`. The main sim has its own consolidated attribution
   pass planned for later.
-- **Clouds-only scope.** No water, no LOD, no WebGPU implementation. See
-  the plan's §0 non-goals.
+- **Current scope.** This repo is now the candidate Takram clouds final lab.
+  Preserve the current presets while the master preset system is designed.
 - **`/tmp/three-geospatial`** is where Takram source should be cloned
   for inspection. Re-clone if `/tmp` has been swept; the handoff pinned
   commit `fc25526342a01d8e2b02f527fceb7f876e34b6d8`. For
@@ -132,7 +125,7 @@ for the later sub-15 MB packaging pass.
 
 ## Handoff notes for a new Claude (e.g. VS Code instance)
 
-Everything you need is in this repo. Don't read `~/isometric` files
-unless you're investigating the horizon-strip fix in Phase 7. Start with
-the two markdown docs above, then look at `src/skyWorkshop.js` and the
-cloned `src/waterWorkshop.js` for the fork pattern.
+Everything you need is in this repo. Start with
+`TAKRAM_FINAL_INTEGRATION_PLAN.md`, then look at `src/skyWorkshop.js`.
+The archived sky-lab docs are historical research context, not the current
+execution plan.
