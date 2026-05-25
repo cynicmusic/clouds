@@ -12,11 +12,13 @@ now being treated as the candidate main-sim successor. Those older docs live in
 - Root workshop name in code: `takram clouds final`
 - Upper-left live badge text: `takrum clouds final`
 - Current default reload state is intentional.
-- Current scene preset slots `1` through `8` are intentional.
+- Current scene preset slots `A1-H8` are intentional and accepted as-is.
 - User-verified priority slots: reload, then presets `1`, `2`, and `3` are good.
-- Temporary caveat: the inherited workshop still applies `sticky.json` during
-  reload. Treat current `sticky.json` only as a captured reload-state bridge
-  until the master preset serializer absorbs those values.
+- Cloud and wave values that ship with current slots are fine for now. Do not
+  hunt historical cloud/wave states; the user will retune those later.
+- Sticky state is disabled in the final workshop. The diamond marker is now a
+  purple, local-only "important param" reminder and does not persist or affect
+  reload/randomize/preset behavior.
 - Do not mutate `presets.json`, `public/presets.json`, `sticky.json`, or browser
   preset storage during the next architecture pass unless the task explicitly
   says "save preset" or "replace preset".
@@ -33,7 +35,7 @@ The current separate systems are historical:
 - scene presets: bank `A-H` plus slots `1-8`
 - cloud mini presets: `1-8`
 - wave mini presets: `1-8`
-- sticky params
+- purple important-param markers
 
 Final direction:
 
@@ -45,24 +47,19 @@ Final direction:
 - Loading a master preset should fully replace the workshop state.
 - Saving a master preset should write one complete package, not a partial cloud
   or wave fragment.
-- Sticky state should not override master presets.
+- Purple important-param markers should never override master presets.
 - Separate cloud and wave mini rows should be removed after the master preset
   path is proven.
 
 ## Sky Direction
 
-Short term:
-
-- Keep the legacy/Hillaire sky path available while consolidating presets.
+- Keep the legacy/Hillaire sky path available. Do not retire paths during the
+  preset consolidation pass.
+- The current mix where the old sky influences the water while Takram owns the
+  clouds is valid and visually approved at `http://127.0.0.1:57170/`.
 - Keep Takram ref/Takram atmosphere routed through ACES by default.
 - AGX remains a manual comparison option only.
 - Do not allow route buttons or mode switches to silently invoke AGX.
-
-Medium term:
-
-- Retire the old Hillaire legacy sky path if Takram atmosphere owns the final
-  look.
-- Use the Takram atmosphere/cloud stack as the main sky system.
 - Preserve the current white top debug sections for cloud/Takram controls until
   the master preset system is stable.
 
@@ -75,7 +72,7 @@ system has the same save/load semantics.
 Primary risks:
 
 - partial presets accidentally overriding master presets
-- sticky state reapplying after a clean preset load
+- old sticky assumptions creeping back into boot or preset load
 - cloud/wave mini presets mutating state during tests
 - scene preset loads stripping or preserving the wrong sections
 - current good slots `1`, `2`, and `3` being overwritten during refactor
@@ -104,4 +101,4 @@ Exit criteria:
 - Presets `1`, `2`, and `3` remain visually correct.
 - Slots `1-8` are unchanged unless explicitly replaced.
 - One master preset package captures and restores every parameter plus camera.
-- No sticky params can corrupt a master preset load.
+- No sticky params exist that can corrupt a master preset load.

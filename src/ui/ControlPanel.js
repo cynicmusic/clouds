@@ -439,8 +439,8 @@ export class ControlPanel {
     }
   }
 
-  // ◇ before the field name → ◆ when pinned. Structural params (voxel.*)
-  // get the amber "major" pin; everything else the lime roll-friendly pin.
+  // ◇ before the field name -> ◆ when marked important. This no longer
+  // persists or affects reload/randomize; it is just a local visual reminder.
   _attachSticky(row, path, field = {}) {
     if (field.pin === false) return;
     const label = row.querySelector('.ff-field-name');
@@ -448,9 +448,7 @@ export class ControlPanel {
     const major = path.startsWith('voxel.');
     const d = document.createElement('button');
     d.className = 'ff-sticky' + (major ? ' major' : '') + (this.sticky.has(path) ? ' on' : '');
-    d.title = major
-      ? 'structural pin — lock this; it is never randomized'
-      : 'sticky pin — keep this value across reseed/random';
+    d.title = 'important param marker — visual reminder only';
     d.textContent = this.sticky.has(path) ? '◆' : '◇';
     d.addEventListener('click', (e) => {
       e.stopPropagation();

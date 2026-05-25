@@ -14,7 +14,6 @@ import { ControlPanel } from './ui/ControlPanel.js';
 import { PerfOverlay } from './ui/PerfOverlay.js';
 import { BuildConsole } from './ui/BuildConsole.js';
 import { loadPresets } from './config/presets.js';
-import { loadSticky, setSticky } from './config/sticky.js';
 import { WORKSHOP_CAPTURE_SETTLE_MS } from './config/captureTiming.js';
 import { loadSkyLabAssets } from './AssetLoader.js';
 import { TakramSkyRig } from './TakramSkyRig.js';
@@ -30,9 +29,6 @@ const workshopPresetLabel = isWavesLab ? 'waves lab' : 'takram clouds final';
 const WAVE_PRESETS_KEY = isWavesLab
   ? 'isometric-island.waves-lab.wavePresets.v1'
   : 'isometric-island.water-workshop.wavePresets.v1';
-const WAVE_STICKY_KEY = isWavesLab
-  ? 'isometric-island.waves-lab.currentWaves.v1'
-  : null;
 const CLOUD_PRESETS_KEY = 'sky-lab.cloudPresets.v1';
 
 const schema = makeWorkshopSchema();
@@ -50,34 +46,14 @@ await nextFrame();
 
 buildConsole.step('presets');
 const presets = await loadPresets();
-buildConsole.step('sticky read-only');
-const stickyMap = await loadSticky();
-const labWaveStickyMap = isWavesLab ? loadLocalWaveSticky() : null;
+buildConsole.step('param markers');
 const tuningPathSet = new Set(tuningPaths());
 const cloudPathSet = new Set(cloudPaths());
-for (const path of Object.keys(stickyMap || {})) {
-  if (path.startsWith('water.')) {
-    delete stickyMap[path];
-    setSticky(path, undefined, false);
-  } else if (isWavesLab && tuningPathSet.has(path)) {
-    delete stickyMap[path];
-  }
-}
-for (const path of tuningPaths()) {
-  if (isWavesLab) stickyMap[path] = labWaveStickyMap?.[path] ?? structuredClone(getAt(workshopDefaults, path));
-  else if (stickyMap[path] === undefined) stickyMap[path] = structuredClone(getAt(workshopDefaults, path));
-}
-const stickyPaths = new Set([
-  ...Object.keys(stickyMap || {}).filter((path) => !path.startsWith('water.')),
-  ...tuningPaths(),
-]);
+const importantPaths = new Set();
 
 const boot = structuredClone(defaultParams);
 const bootPreset = presets.A1;
 if (bootPreset?.params) deepMerge(boot, cloneScenePresetParams(bootPreset.params));
-for (const [path, value] of Object.entries(stickyMap || {})) {
-  if (!path.startsWith('water.')) setAt(boot, path, value);
-}
 ensureWorkshopParams(boot);
 
 const store = new ParamStore(boot);
@@ -117,18 +93,11 @@ if (bootPreset?.cam) {
 }
 
 const sticky = {
-  has: (path) => stickyPaths.has(path),
+  has: (path) => importantPaths.has(path),
   toggle: (path) => {
-    if (tuningPathSet.has(path)) {
-      stickyPaths.add(path);
-      const value = store.get(path);
-      stickyMap[path] = value;
-      setWaveSticky(path, value, true);
-      return true;
-    }
-    if (stickyPaths.has(path)) stickyPaths.delete(path);
-    else stickyPaths.add(path);
-    return stickyPaths.has(path);
+    if (importantPaths.has(path)) importantPaths.delete(path);
+    else importantPaths.add(path);
+    return importantPaths.has(path);
   },
 };
 
@@ -269,8 +238,6 @@ store.subscribe((evt) => {
     panel.refreshCloudPresets();
   }
   if (tuningPathSet.has(evt.path)) {
-    stickyMap[evt.path] = evt.value;
-    setWaveSticky(evt.path, evt.value, true);
     if (!applyingWavePreset) {
       activeWaveSlot = null;
       panel.refreshWavePresets();
@@ -572,29 +539,6 @@ function saveWavePresetSlots(slots) {
       if (p?.waves || p?.params) out[String(i)] = p;
     }
     window.localStorage?.setItem(WAVE_PRESETS_KEY, JSON.stringify(out));
-  } catch { /* ignore private mode */ }
-}
-
-function loadLocalWaveSticky() {
-  if (!WAVE_STICKY_KEY) return {};
-  try {
-    const raw = window.localStorage?.getItem(WAVE_STICKY_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch {
-    return {};
-  }
-}
-
-function setWaveSticky(path, value, on) {
-  if (!isWavesLab) {
-    setSticky(path, value, on);
-    return;
-  }
-  try {
-    const map = loadLocalWaveSticky();
-    if (on === false) delete map[path];
-    else map[path] = structuredClone(value);
-    window.localStorage?.setItem(WAVE_STICKY_KEY, JSON.stringify(map));
   } catch { /* ignore private mode */ }
 }
 

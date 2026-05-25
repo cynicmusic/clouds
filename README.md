@@ -89,7 +89,7 @@ for the later sub-15 MB packaging pass.
 │                                      preset/sticky middleware
 ├── index.html                       ← boots src/skyWorkshop.js
 ├── presets.json                     ← copied from ~/isometric for local use
-├── sticky.json                      ← copied from ~/isometric for local use
+├── sticky.json                      ← archived legacy input; root final ignores sticky state
 ├── src/
 │   ├── skyWorkshop.js               ← real water-workshop fork, adjusted to
 │   │                                  local root imports + Takram controls

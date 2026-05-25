@@ -227,7 +227,7 @@
   display: flex;
   align-items: baseline;
 }
-/* Fixed-width pin gutter so ◇ vs ◆ (and toggling) never shifts the label. */
+/* Fixed-width marker gutter so ◇ vs ◆ (and toggling) never shifts the label. */
 .ff-sticky {
   flex: 0 0 auto;
   width: 14px;
@@ -236,22 +236,22 @@
   line-height: 1;
   margin-right: 7px;
   padding: 0;
-  color: rgba(205, 210, 214, 0.55);          /* hollow white/grey when unpinned */
+  color: rgba(205, 210, 214, 0.55);
   transition: color 120ms, text-shadow 120ms;
   vertical-align: middle;
 }
 .ff-sticky:hover { color: rgba(235, 240, 245, 0.95); }
-/* pinned: bright lime, yellow outline, roll-friendly */
+/* marked important: purple reminder only; no persistence or randomize behavior */
 .ff-sticky.on {
-  color: #9bff34;
-  -webkit-text-stroke: 0.6px #ffe000;
-  text-shadow: 0 0 7px rgba(155, 255, 52, 0.7);
+  color: #c084fc;
+  -webkit-text-stroke: 0.5px #f0abfc;
+  text-shadow: 0 0 7px rgba(192, 132, 252, 0.72);
 }
-/* structural (voxel.*): amber — pinning these is a deliberate, major act */
+/* structural params use the same reminder semantics in this workshop */
 .ff-sticky.major.on {
-  color: #ff9326;
-  -webkit-text-stroke: 0.5px #ffce7a;
-  text-shadow: 0 0 7px rgba(255, 140, 40, 0.65);
+  color: #c084fc;
+  -webkit-text-stroke: 0.5px #f0abfc;
+  text-shadow: 0 0 7px rgba(192, 132, 252, 0.72);
 }
 .ff-field-hint { font-size: 10px; color: var(--text-dim); font-style: italic; }
 .ff-field-value {
