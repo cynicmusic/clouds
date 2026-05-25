@@ -28,8 +28,8 @@ const workshopPresetLabel = 'island';
 
 const schema = makeWorkshopSchema();
 const tuningSections = ['waves'];
-const cloudSections = ['cloudsRender', 'takramAtmosphere', 'cloudWeather', 'cloudLayer0', 'cloudLighting', 'cloudShadows', 'cloudDebug', 'cloudFinishing'];
-const sectionOrder = ['skyDiagnosis', ...cloudSections, 'water', 'waves', 'sun', 'atmosphere', 'lighting', 'island', 'voxel', 'seasons', 'tree', 'shadows', 'render', 'godrays'];
+const cloudSections = ['cloudsRender', 'takramAtmosphere', 'cloudWeather', 'cloudLayer0', 'cloudLighting', 'cloudShadows', 'cloudDebug'];
+const sectionOrder = ['skyDiagnosis', ...cloudSections, 'water', 'waves', 'sun', 'atmosphere', 'lighting', 'island', 'lagoon', 'voxel', 'seasons', 'tree', 'shadows', 'render'];
 const workshopDefaults = buildDefaults(schema, defaultParams);
 
 const buildConsole = new BuildConsole({ parent: uiRoot, label: `${workshopName} build` });
@@ -51,7 +51,6 @@ ensureWorkshopParams(boot);
 const store = new ParamStore(boot);
 buildConsole.step('param store');
 
-let refGroup = null;
 const scene = new Scene(canvasContainer, store, {
   loader: buildConsole,
   autoGenerate: false,
@@ -59,8 +58,6 @@ const scene = new Scene(canvasContainer, store, {
   SeaClass: IslandSea,
   afterGenerate: (s) => {
     s.sea?.setStyle?.(seaStyleParams());
-    refGroup = rebuildReferenceBlocks(s, refGroup);
-    if (refGroup) refGroup.visible = !!store.get('water.referenceBlocks');
   },
 });
 buildConsole.step('renderer');
@@ -212,10 +209,6 @@ store.subscribe((evt) => {
   }
   if (evt.path === '*' || tuningPathSet.has(evt.path)) {
     scene.sea?.setStyle?.(seaStyleParams());
-  }
-  if ((evt.path === '*' || evt.path === 'water.referenceBlocks') && refGroup) {
-    const d = store.get('skyDiagnosis') || {};
-    refGroup.visible = !!store.get('water.referenceBlocks') && d.hideIsland === false && !d.skyOnly && !d.seaOnlyStub && !d.floorOnlyStub;
   }
   if (evt.path === 'skyDiagnosis.fastSkyBoot' && evt.value === false && !scene.vol) {
     scene.regenerateAsync(`${workshopName} diagnostic island build`);
@@ -463,6 +456,20 @@ function makeWorkshopSchema() {
       rayDistance: { type: 'float', label: 'Ray distance', min: 20000, max: 220000, step: 5000, default: 120000, unit: 'm' },
     },
   };
+  out.render.fields = {
+    toneMapping: {
+      path: 'cloudFinishing.toneMapping',
+      type: 'int', label: 'Tone map', min: 0, max: 3, step: 1, default: 0,
+      labels: ['ACES', 'neutral', 'AGX', 'linear'],
+      hint: 'Takram composer tone map; neutral is the NORMAL look',
+    },
+    dithering: {
+      path: 'cloudFinishing.dithering',
+      type: 'bool', label: 'Dither', default: true,
+      hint: 'postprocessing fullscreen dithering toggle',
+    },
+    ...out.render.fields,
+  };
   out.cloudFinishing = {
     label: 'lens / finishing',
     icon: '◌',
@@ -489,7 +496,6 @@ function makeWorkshopSchema() {
       deltaFloor: { type: 'float', label: 'Delta follow', min: 0, max: 1, step: 0.02, default: 0, hint: 'carves underwater floor along the river/delta channel' },
       surfaceLift: { type: 'float', label: 'Surface lift', min: -1, max: 2, step: 0.02, default: 0.08, unit: 'm', hint: 'shore z-fighting diagnostic' },
       landMask: { type: 'float', label: 'Land mask', min: 0, max: 1, step: 0.02, default: 1, hint: 'fade water off generated land cells' },
-      referenceBlocks: { type: 'bool', label: 'Reference blocks', default: true, hint: 'colored lagoon blocks for transparency/depth tuning' },
       debugView: {
         type: 'int', label: 'Debug view', min: 0, max: 5, step: 1, default: 0,
         labels: ['final', 'depth', 'channel', 'wave', 'normal', 'land'],
@@ -553,7 +559,17 @@ function getAt(obj, path) {
 }
 
 function cloneScenePresetParams(params) {
-  return structuredClone(params || {});
+  const out = structuredClone(params || {});
+  // Retired controls should not keep steering the canonical island after the
+  // tree-bank/lagoon rewrite.
+  if (out.tree) {
+    delete out.tree.palmCount;
+    delete out.tree.palmLine;
+    delete out.tree.mixedTreeCount;
+    delete out.tree.palmSway;
+  }
+  if (out.water) delete out.water.referenceBlocks;
+  return out;
 }
 
 function hydratePresetParams(params) {
@@ -590,63 +606,6 @@ function setAt(obj, path, value) {
   let node = obj;
   for (const part of parts) node = (node[part] ??= {});
   node[last] = structuredClone(value);
-}
-
-function rebuildReferenceBlocks(sim, existing) {
-  if (existing) {
-    sim.scene.remove(existing);
-    existing.traverse((obj) => {
-      if (obj.geometry) obj.geometry.dispose();
-      if (obj.material) obj.material.dispose?.();
-    });
-  }
-  const vol = sim.vol;
-  if (!vol?.heightVox) return null;
-  const seaLevel = store.get('water.seaLevel');
-  const candidates = [];
-  for (let j = 1; j < vol.res - 1; j += Math.max(1, Math.floor(vol.res / 160))) {
-    for (let i = 1; i < vol.res - 1; i += Math.max(1, Math.floor(vol.res / 160))) {
-      const idx = vol.idx(i, j);
-      const y = vol.heightVox[idx] * vol.vstep;
-      if (vol.channel?.[idx] && y < seaLevel - 1.5) candidates.push({ i, j, idx, y });
-    }
-  }
-  if (!candidates.length) {
-    const mid = vol.res >> 1;
-    for (let n = -3; n <= 3; n++) {
-      const i = THREE.MathUtils.clamp(mid + n * 8, 0, vol.res - 1);
-      const j = THREE.MathUtils.clamp(mid + n * 5, 0, vol.res - 1);
-      const idx = vol.idx(i, j);
-      candidates.push({ i, j, idx, y: vol.heightVox[idx] * vol.vstep });
-    }
-  }
-
-  const colors = ['#ff4d57', '#ffb84a', '#f6ff63', '#55ff8d', '#3df6ff', '#806bff', '#ff6ff0'];
-  const group = new THREE.Group();
-  group.name = 'IslandReferenceBlocks';
-  const count = Math.min(colors.length, candidates.length);
-  for (let n = 0; n < count; n++) {
-    const sample = candidates[Math.floor((n / Math.max(1, count - 1)) * (candidates.length - 1))];
-    const [x, z] = vol.cellToWorld(sample.i, sample.j);
-    const h = 4 + n * 1.4;
-    const geom = new THREE.BoxGeometry(8, h, 8);
-    const color = new THREE.Color(colors[n]);
-    const mat = new THREE.MeshStandardMaterial({
-      color,
-      emissive: color,
-      emissiveIntensity: 0.28,
-      roughness: 0.55,
-      metalness: 0,
-    });
-    const mesh = new THREE.Mesh(geom, mat);
-    mesh.name = `IslandRefBlock${n + 1}`;
-    mesh.castShadow = false;
-    mesh.receiveShadow = true;
-    mesh.position.set(x, Math.min(seaLevel - 0.8, sample.y + h * 0.5), z);
-    group.add(mesh);
-  }
-  sim.scene.add(group);
-  return group;
 }
 
 window.island = {

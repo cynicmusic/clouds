@@ -35,9 +35,9 @@ export function buildIslandMesh(vol, seed) {
       c = seafloorColor(depthFrac + g * 0.4);
       // SCAFFOLD: flooded gully/valley/delta → shimmery cyan vs deep ocean.
       if (vol.channel && vol.channel[idx]) c = mixRgb(c, CHANNEL_WATER, 0.55 + g);
-    } else if (m === MAT.SAND) {
+    } else if (m === MAT.SAND || m === MAT.WHITE_SAND) {
       const wet = Math.max(0, Math.min(1, (y - seaLevel) / 6)); // wet (dark) → dry (light)
-      c = terrainColor(MAT.SAND, 0.25 + wet * 0.6 + g);
+      c = terrainColor(m, 0.25 + wet * 0.6 + g);
     } else if (m === MAT.GRASS) {
       // Season is a SOFT tint on grass only — green still meets sand directly.
       const alt = Math.max(0, Math.min(1, (y - seaLevel) / Math.max(1, maxHeight)));

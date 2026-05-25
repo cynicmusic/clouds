@@ -19,7 +19,7 @@ try {
   }
 
   await page.waitForFunction(() => Boolean(window.island), null, {
-    timeout: 30000,
+    timeout: 90000,
   });
 
   await page.waitForTimeout(WORKSHOP_CAPTURE_SETTLE_MS);

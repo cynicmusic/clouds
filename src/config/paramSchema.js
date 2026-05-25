@@ -79,6 +79,25 @@ export const schema = {
     },
   },
 
+  lagoon: {
+    label: 'lagoon',
+    icon: '◌',
+    blurb: 'inland water · white sand · palm/fringe anchor',
+    fields: {
+      enable: { type: 'bool', label: 'Lagoon', default: true, hint: 'first-class inland lagoon, separate from valley/delta' },
+      x: { type: 'float', label: 'East/west', min: -0.55, max: 0.55, step: 0.01, default: 0.24, hint: 'lagoon center as island-radius fraction' },
+      z: { type: 'float', label: 'North/south', min: -0.55, max: 0.55, step: 0.01, default: -0.12, hint: 'lagoon center as island-radius fraction' },
+      radiusX: { type: 'float', label: 'Long radius', min: 40, max: 420, step: 5, default: 230, unit: 'm', hint: 'major axis of the lagoon bowl' },
+      radiusZ: { type: 'float', label: 'Short radius', min: 30, max: 320, step: 5, default: 135, unit: 'm', hint: 'minor axis of the lagoon bowl' },
+      rotation: { type: 'float', label: 'Rotation', min: -180, max: 180, step: 1, default: -24, unit: '°', hint: 'rotates the lagoon ellipse' },
+      depth: { type: 'float', label: 'Depth', min: 0.1, max: 8, step: 0.1, default: 1.4, unit: 'm', hint: 'floor below sea datum at the center' },
+      inlet: { type: 'float', label: 'Inlet', min: 0, max: 1, step: 0.01, default: 0.12, hint: '0 = closed lagoon · higher carves a narrow ocean connection' },
+      apronWidth: { type: 'float', label: 'Apron width', min: 4, max: 90, step: 2, default: 42, unit: 'm', hint: 'white-sand / grass transition around lagoon' },
+      whiteSand: { type: 'float', label: 'White sand', min: 0, max: 1, step: 0.02, default: 0.9, hint: 'strength of lagoon white-sand material' },
+      treeAttraction: { type: 'float', label: 'Tree pull', min: 0, max: 2, step: 0.02, default: 1.1, hint: 'extra palm/fringe cluster pull near lagoon apron' },
+    },
+  },
+
   seasons: {
     label: 'seasons',
     icon: '❄',
@@ -139,17 +158,27 @@ export const schema = {
     },
   },
 
-  // Tree population. Just palm count for now (perf-test knob) — other
-  // species get their own sliders later. Drives Scene._plantTrees.
+  // Tree population. The island now uses the imported tree-lab bank plus
+  // production palm variants; palms are a fringe layer, not the whole forest.
   tree: {
     label: 'tree',
     icon: '🌴',
-    blurb: 'grove population — palms (more sliders later)',
+    blurb: 'tree-lab bank · region clusters · palms as fringe',
     fields: {
-      palmCount: { type: 'int', label: 'Palm count', min: 0, max: 512, step: 1, default: 56, hint: 'palms massed on the fairway/courseway · raise to stress-test' },
-      palmLine: { type: 'float', label: 'Palm line', min: 0.18, max: 0.9, step: 0.01, default: 0.58, hint: 'highest normalized altitude where palms may plant' },
-      mixedTreeCount: { type: 'int', label: 'Mixed trees', min: 0, max: 256, step: 1, default: 34, hint: 'summer/autumn/conifer/winter scatter count' },
-      palmSway: { type: 'float', label: 'Palm sway', min: 0, max: 2, step: 0.02, default: 1, hint: 'multiplies the baked palm wind' },
+      enable: { type: 'bool', label: 'Trees', default: true, hint: 'turn off the whole tree-bank allocator' },
+      totalCount: { type: 'int', label: 'Total trees', min: 0, max: 2600, step: 25, default: 1300, hint: 'target instances from the 128-slot tree bank' },
+      globalScale: { type: 'float', label: 'Global scale', min: 0.35, max: 2, step: 0.02, default: 1.35, hint: 'overall tree scale after per-slot normalization' },
+      spacing: { type: 'float', label: 'Spacing', min: 5, max: 34, step: 1, default: 9, unit: 'm', hint: 'occupancy grid spacing; lower = denser groves' },
+      clusterBias: { type: 'float', label: 'Cluster bias', min: 0, max: 1, step: 0.02, default: 1, hint: '0 = even scatter · 1 = strong groves and open cuts' },
+      autumnWeight: { type: 'float', label: 'Autumn weight', min: 0, max: 3, step: 0.05, default: 2.4, hint: 'overweights autumn trees beyond raw terrain percent' },
+      summerWeight: { type: 'float', label: 'Summer weight', min: 0, max: 3, step: 0.05, default: 0.58, hint: 'green lowland tree mass' },
+      spruceWeight: { type: 'float', label: 'Spruce weight', min: 0, max: 3, step: 0.05, default: 0.75, hint: '65-72 and 81-88 conifer families on upper slopes' },
+      palmWeight: { type: 'float', label: 'Palm fringe', min: 0, max: 3, step: 0.05, default: 0.25, hint: 'palms around coast, lagoon, bunkers, and fairway edges' },
+      peakSparse: { type: 'float', label: 'Peak sparse', min: 0, max: 1, step: 0.02, default: 0.08, hint: 'small chance of sparse pines/skeletons high on the massif' },
+      openCuts: { type: 'float', label: 'Open cuts', min: 0, max: 1, step: 0.02, default: 0.6, hint: 'deliberate bare lawns/terrain windows' },
+      autumnScale: { type: 'float', label: 'Autumn scale', min: 0.5, max: 2, step: 0.02, default: 1.3, hint: 'family trim for 38-72-ish autumn trees' },
+      spruceScale: { type: 'float', label: 'Spruce scale', min: 0.5, max: 2, step: 0.02, default: 1.22, hint: 'family trim for 65-72 and 81-88 conifers' },
+      palmScale: { type: 'float', label: 'Palm scale', min: 0.4, max: 1.6, step: 0.02, default: 0.9, hint: 'family trim for palm slots 97-128' },
     },
   },
 
@@ -245,4 +274,4 @@ export const schema = {
   },
 };
 
-export const sectionOrder = ['orbitSweep', 'sun', 'atmosphere', 'lighting', 'voxel', 'island', 'seasons', 'water', 'waves', 'tree', 'shadows', 'render', 'godrays', 'camera'];
+export const sectionOrder = ['orbitSweep', 'sun', 'atmosphere', 'lighting', 'voxel', 'island', 'lagoon', 'seasons', 'water', 'waves', 'tree', 'shadows', 'render', 'godrays', 'camera'];

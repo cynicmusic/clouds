@@ -9,8 +9,8 @@ import { OrbitSweepController } from '../automation/OrbitSweepController.js';
 import { generateIsland } from '../gen/terrain.js';
 import { buildIslandMesh } from '../voxel/mesher.js';
 import { Sea } from '../water/Sea.js';
-import { makeTree } from '../flora/trees.js';
-import { mulberry32 } from '../gen/noise.js';
+import { chooseTreeSlot, makeTreeBankTree } from '../flora/treeBank.js';
+import { fbm2, mulberry32 } from '../gen/noise.js';
 import { SEASON } from '../gen/seasons.js';
 import { MAT } from '../gen/palette.js';
 import { PostFX } from '../fx/PostFX.js';
@@ -231,6 +231,19 @@ export class Scene {
       beachWidth: s.get('island.beachWidth'),
       valleyDepth: s.get('island.valleyDepth'),
       valleyWidth: s.get('island.valleyWidth'),
+      lagoon: {
+        enable: s.get('lagoon.enable') !== false,
+        x: s.get('lagoon.x'),
+        z: s.get('lagoon.z'),
+        radiusX: s.get('lagoon.radiusX'),
+        radiusZ: s.get('lagoon.radiusZ'),
+        rotation: s.get('lagoon.rotation'),
+        depth: s.get('lagoon.depth'),
+        inlet: s.get('lagoon.inlet'),
+        apronWidth: s.get('lagoon.apronWidth'),
+        whiteSand: s.get('lagoon.whiteSand'),
+        treeAttraction: s.get('lagoon.treeAttraction'),
+      },
       seaLevel: s.get('water.seaLevel'),
       floorDepth: s.get('water.floorDepth'),
       floorShape: s.get('water.floorShape'),
@@ -248,9 +261,20 @@ export class Scene {
         bunkerDensity: s.get('seasons.bunkerDensity'),
         bunkerSize: s.get('seasons.bunkerSize'),
       },
-      palmCount: s.get('tree.palmCount') | 0,
-      palmLine: s.get('tree.palmLine'),
-      mixedTreeCount: s.get('tree.mixedTreeCount') | 0,
+      treeEnable: s.get('tree.enable') !== false,
+      treeTotalCount: s.get('tree.totalCount') | 0,
+      treeGlobalScale: s.get('tree.globalScale'),
+      treeSpacing: s.get('tree.spacing'),
+      treeClusterBias: s.get('tree.clusterBias'),
+      treeAutumnWeight: s.get('tree.autumnWeight'),
+      treeSummerWeight: s.get('tree.summerWeight'),
+      treeSpruceWeight: s.get('tree.spruceWeight'),
+      treePalmWeight: s.get('tree.palmWeight'),
+      treePeakSparse: s.get('tree.peakSparse'),
+      treeOpenCuts: s.get('tree.openCuts'),
+      treeAutumnScale: s.get('tree.autumnScale'),
+      treeSpruceScale: s.get('tree.spruceScale'),
+      treePalmScale: s.get('tree.palmScale'),
     };
     opts.maxHeight = opts.lowland + opts.massif;
     return opts;
@@ -308,68 +332,270 @@ export class Scene {
   _plantTrees(vol, opts, targetGroup = this.treeGroup) {
     targetGroup.clear();
     const rand = mulberry32((opts.seed * 2654435761) >>> 0);
-    const counts = { palm: 0, summer: 0, autumn: 0, conifer: 0, winter: 0 };
+    const counts = {
+      palmFringe: 0,
+      summerCanopy: 0,
+      autumnCanopy: 0,
+      spruceMix: 0,
+      peakSparse: 0,
+      accentTrees: 0,
+    };
+    if (!opts.treeEnable) return { treeCount: 0, treeCounts: counts };
 
-    const inBand = (idx) => {
+    const clamp01 = (v) => THREE.MathUtils.clamp(Number(v) || 0, 0, 1);
+    const smooth01 = (e0, e1, x) => {
+      const t = clamp01((x - e0) / (e1 - e0 || 1));
+      return t * t * (3 - 2 * t);
+    };
+    const slopeAt = (i, j, idx) => {
+      const h = vol.heightVox[idx] * vol.vstep;
+      let maxD = 0;
+      const ns = [[i - 1, j], [i + 1, j], [i, j - 1], [i, j + 1]];
+      for (const [ni, nj] of ns) {
+        if (!vol.inBounds(ni, nj)) continue;
+        maxD = Math.max(maxD, Math.abs(h - vol.heightVox[vol.idx(ni, nj)] * vol.vstep));
+      }
+      return maxD / Math.max(1, vol.cellSize);
+    };
+    const lagoonInfluence = (x, z) => {
+      const l = opts.lagoon || {};
+      if (l.enable === false) return 0;
+      const cx = (l.x ?? 0) * opts.radius;
+      const cz = (l.z ?? 0) * opts.radius;
+      const a = THREE.MathUtils.degToRad(l.rotation ?? 0);
+      const ca = Math.cos(a), sa = Math.sin(a);
+      const dx = x - cx, dz = z - cz;
+      const lx = dx * ca + dz * sa;
+      const lz = -dx * sa + dz * ca;
+      const rx = Math.max(1, l.radiusX ?? 230);
+      const rz = Math.max(1, l.radiusZ ?? 135);
+      const d = Math.hypot(lx / rx, lz / rz);
+      const apron = (l.apronWidth ?? 42) / Math.max(rx, rz);
+      return 1 - clamp01((d - 0.86) / Math.max(0.08, apron + 0.12));
+    };
+    const inBand = (idx, m) => {
       if (!vol.land[idx]) return false;
-      const m = vol.material[idx];
       if (m === MAT.ROCK || m === MAT.SEAFLOOR) return false;
       const y = vol.heightVox[idx] * vol.vstep;
       return y >= opts.seaLevel + 0.4 && y <= opts.seaLevel + opts.maxHeight * 0.82;
     };
-    const place = (kind, i, j, idx) => {
-      const tree = makeTree(kind, ((rand() * 1e9) | 0) ^ idx);
+    const layerScale = (slot) => {
+      if (slot.layer === 'palmFringe') return opts.treePalmScale ?? 0.92;
+      if (slot.layer === 'autumnCanopy') return opts.treeAutumnScale ?? 1.08;
+      if (slot.layer === 'spruceMix' || slot.layer === 'peakSparse') return opts.treeSpruceScale ?? 1.08;
+      return 1;
+    };
+    const place = (layer, i, j, idx, scaleMul = 1) => {
+      const slot = chooseTreeSlot(layer, rand);
+      const tree = makeTreeBankTree(slot, ((rand() * 1e9) | 0) ^ idx);
+      if (!tree) return false;
       const y = vol.heightVox[idx] * vol.vstep;
       const [wx, wz] = vol.cellToWorld(i, j);
       tree.position.set(wx, y - 0.5, wz);
-      tree.scale.setScalar(0.85 + rand() * 0.5);
+      const slotScale = slot.scale ?? 1;
+      const globalScale = opts.treeGlobalScale ?? 1.08;
+      const heightJitter = layer === 'palmFringe'
+        ? 0.78 + rand() * 0.38
+        : layer === 'peakSparse'
+          ? 0.58 + rand() * 0.64
+          : 0.64 + Math.pow(rand(), 0.72) * 0.98;
+      tree.scale.setScalar(heightJitter * globalScale * slotScale * layerScale(slot) * scaleMul);
       tree.rotation.y = rand() * Math.PI * 2;
       targetGroup.add(tree);
-      counts[kind] = (counts[kind] || 0) + 1;
+      counts[layer] = (counts[layer] || 0) + 1;
+      return true;
     };
 
-    // ---- palms: explicit count (tree.palmCount, up to 512) — they
-    // concentrate on the fairway / courseway and beach (perf-test knob).
-    const palmTarget = Math.max(0, Math.min(512, opts.palmCount | 0));
-    const palmLine = Math.max(0.18, Math.min(0.9, opts.palmLine ?? 0.58));
-    let palms = 0, guard = 0;
-    const palmCap = palmTarget * 60 + 400;
-    while (palms < palmTarget && guard < palmCap) {
+    const target = Math.max(0, Math.min(2600, opts.treeTotalCount ?? 1300));
+    const spacing = Math.max(4, opts.treeSpacing ?? 9);
+    const clusterBias = clamp01(opts.treeClusterBias ?? 1);
+    const openCuts = clamp01(opts.treeOpenCuts ?? 0.6);
+    const occupied = new Set();
+    const candidates = [];
+    const stride = Math.max(4, Math.floor(vol.res / 150));
+    for (let j = 2; j < vol.res - 2; j += stride) {
+      for (let i = 2; i < vol.res - 2; i += stride) {
+        const idx = vol.idx(i, j);
+        const m = vol.material[idx];
+        if (!inBand(idx, m) || m === MAT.SAND || m === MAT.WHITE_SAND) continue;
+        const y = vol.heightVox[idx] * vol.vstep;
+        const alt = clamp01((y - opts.seaLevel) / Math.max(1, opts.maxHeight));
+        const slope = slopeAt(i, j, idx);
+        if (slope > 0.68 || alt < 0.16 || alt > 0.70) continue;
+        const [x, z] = vol.cellToWorld(i, j);
+        const season = vol.season[idx];
+        const autumn = season === SEASON.AUTUMN ? 1 : 0;
+        const conifer = season === SEASON.CONIFER ? 1 : 0;
+        const dirt = m === MAT.DIRT ? 1 : 0;
+        const fairway = m === MAT.FAIRWAY ? 1 : 0;
+        const midSlope = smooth01(0.16, 0.34, alt) * (1 - smooth01(0.58, 0.78, alt));
+        const broad = fbm2(x * 0.00125 + 11.3, z * 0.00125 - 6.7, { seed: opts.seed + 913, octaves: 3, gain: 0.58, warp: 0.72 });
+        const grove = fbm2(x * 0.0048 - 13.4, z * 0.0048 + 9.6, { seed: opts.seed + 1409, octaves: 4, gain: 0.54, warp: 0.42 });
+        const open = fbm2(x * 0.0012 - 23.1, z * 0.0012 + 19.4, { seed: opts.seed + 1777, octaves: 3, gain: 0.52, warp: 0.8 });
+        const score = (0.25 + broad * 0.55 + grove * 0.35)
+          * (0.45 + midSlope * 1.3 + autumn * 1.1 + dirt * 0.75 + conifer * 0.25)
+          * smooth01(openCuts * 0.44, openCuts * 1.05 + 0.18, open)
+          * (fairway ? 0.76 : 1);
+        if (score > 0.08) {
+          candidates.push({
+            x, z, score, season, alt,
+            radius: THREE.MathUtils.lerp(45, 135, clamp01(score * 0.55)),
+          });
+        }
+      }
+    }
+    candidates.sort((a, b) => b.score - a.score);
+    const groveCenters = [];
+    const maxCenters = 24;
+    const canAddCenter = (c, distanceMul = 0.58) => {
+      for (const g of groveCenters) {
+        if (Math.hypot(c.x - g.x, c.z - g.z) < Math.max(72, (c.radius + g.radius) * distanceMul)) return false;
+      }
+      return true;
+    };
+    const sectors = Array.from({ length: 10 }, () => []);
+    for (const c of candidates) {
+      const a = Math.atan2(c.z, c.x);
+      const sector = Math.floor(((a + Math.PI) / (Math.PI * 2)) * sectors.length) % sectors.length;
+      sectors[sector].push(c);
+    }
+    for (let pass = 0; pass < 2; pass++) {
+      for (const bucket of sectors) {
+        const c = bucket.find((candidate) => canAddCenter(candidate, pass === 0 ? 0.66 : 0.52));
+        if (!c) continue;
+        groveCenters.push(c);
+        if (groveCenters.length >= maxCenters) break;
+      }
+      if (groveCenters.length >= maxCenters) break;
+    }
+    for (const c of candidates) {
+      if (!canAddCenter(c, 0.50)) continue;
+      groveCenters.push(c);
+      if (groveCenters.length >= maxCenters) break;
+    }
+    if (!groveCenters.length) groveCenters.push({ x: 0, z: 0, score: 0.5, season: SEASON.SUMMER, alt: 0.35, radius: 120 });
+
+    let planted = 0;
+    let guard = 0;
+    const cap = target * 130 + 2000;
+    while (planted < target && guard < cap) {
       guard++;
-      const i = (rand() * vol.res) | 0, j = (rand() * vol.res) | 0;
+      const center = groveCenters[(rand() * groveCenters.length) | 0];
+      const angle = rand() * Math.PI * 2;
+      const dist = Math.sqrt(rand()) * center.radius * (0.40 + rand() * 0.78);
+      const [i, j] = vol.worldToCell(center.x + Math.cos(angle) * dist, center.z + Math.sin(angle) * dist);
+      if (!vol.inBounds(i, j)) continue;
       const idx = vol.idx(i, j);
-      if (!inBand(idx)) continue;
       const m = vol.material[idx];
+      if (!inBand(idx, m)) continue;
       const y = vol.heightVox[idx] * vol.vstep;
-      const alt = (y - opts.seaLevel) / Math.max(1, opts.maxHeight);
-      if (alt > palmLine) continue;
-      if (m === MAT.SNOW || m === MAT.GRASSY_SNOW || m === MAT.DIRT) continue;
-      if (!(m === MAT.FAIRWAY || m === MAT.SAND) && rand() > 0.30) continue;  // bias to greens/beach
-      place('palm', i, j, idx);
-      palms++;
-    }
+      const alt = clamp01((y - opts.seaLevel) / Math.max(1, opts.maxHeight));
+      const slope = slopeAt(i, j, idx);
+      const [wx, wz] = vol.cellToWorld(i, j);
+      const centerFalloff = 1 - clamp01(Math.hypot(wx - center.x, wz - center.z) / Math.max(1, center.radius));
+      if (centerFalloff <= 0) continue;
 
-    // ---- other species: modest fixed scatter for now (their own sliders
-    // come later — this pass is palms only).
-    const otherKind = (idx) => {
+      const broadGrove = fbm2(wx * 0.00145 + 11.3, wz * 0.00145 - 6.7, {
+        seed: opts.seed + 913,
+        octaves: 3,
+        gain: 0.58,
+        warp: 0.72,
+      });
+      const grove = fbm2(wx * 0.0062 - 13.4, wz * 0.0062 + 9.6, {
+        seed: opts.seed + 1409,
+        octaves: 4,
+        gain: 0.54,
+        warp: 0.42,
+      });
+      const open = fbm2(wx * 0.0014 - 23.1, wz * 0.0014 + 19.4, {
+        seed: opts.seed + 1777,
+        octaves: 3,
+        gain: 0.52,
+        warp: 0.8,
+      });
+      const lagoonPull = lagoonInfluence(wx, wz) * (opts.lagoon?.treeAttraction ?? 1.1);
+      const fairway = m === MAT.FAIRWAY;
+      const sand = m === MAT.SAND || m === MAT.WHITE_SAND;
+      const snowy = m === MAT.SNOW || m === MAT.GRASSY_SNOW;
+      const dirt = m === MAT.DIRT;
       const season = vol.season[idx];
-      if (season === SEASON.WINTER) return rand() > 0.55 ? 'conifer' : 'winter';
-      if (season === SEASON.CONIFER) return 'conifer';
-      if (season === SEASON.AUTUMN) return 'autumn';
-      return 'summer';
-    };
-    const otherTarget = Math.max(0, Math.min(256, opts.mixedTreeCount ?? 34));
-    let others = 0; guard = 0;
-    while (others < otherTarget && guard < otherTarget * 40) {
-      guard++;
-      const i = (rand() * vol.res) | 0, j = (rand() * vol.res) | 0;
-      const idx = vol.idx(i, j);
-      if (!inBand(idx)) continue;
-      place(otherKind(idx), i, j, idx);
-      others++;
+      const midSlope = smooth01(0.13, 0.30, alt) * (1 - smooth01(0.58, 0.78, alt));
+      const mountainForest = midSlope * (1 - smooth01(0.52, 0.86, slope));
+      const autumnPull = (season === SEASON.AUTUMN ? 0.18 : 0) + (dirt ? 0.12 : 0);
+      const coastFade = smooth01(0.10, 0.22, alt);
+      const broadCore = smooth01(0.54 - clusterBias * 0.12, 0.80 - clusterBias * 0.08, broadGrove);
+      const groveCore = smooth01(0.48 - clusterBias * 0.10, 0.78 - clusterBias * 0.08, grove);
+      const openMask = smooth01(openCuts * 0.52, openCuts * 1.12 + 0.12, open);
+      const centerMask = smooth01(0.02, 0.85, centerFalloff) * (0.55 + center.score * 0.35);
+      const forestMask = clamp01((centerMask + broadCore * 0.18 + groveCore * 0.14 + mountainForest * 0.22 + autumnPull + lagoonPull * 0.06) * openMask * coastFade);
+      const palmGroveMask = sand ? broadCore * groveCore * openMask * 0.48 : 0;
+      const fringeMask = clamp01(Math.max(forestMask, lagoonPull * 0.42, palmGroveMask));
+      if (fringeMask < 0.18) continue;
+      if (rand() > Math.pow(THREE.MathUtils.lerp(0.22, 0.99, fringeMask), 0.85)) continue;
+
+      const localSpacing = spacing * THREE.MathUtils.lerp(1.7, 0.58, forestMask);
+      const occKey = `${Math.round(wx / localSpacing)},${Math.round(wz / localSpacing)}`;
+      if (occupied.has(occKey)) continue;
+
+      const weights = {
+        palmFringe: ((opts.treePalmWeight ?? 0.25) * (sand ? 0.75 : fairway ? 0.04 : 0.008) * Math.pow(1 - alt, 1.7) + lagoonPull * 0.22) * fringeMask,
+        summerCanopy: (opts.treeSummerWeight ?? 0.58) * (season === SEASON.SUMMER ? 1.0 : 0.16) * (0.4 + (1 - alt)) * forestMask,
+        autumnCanopy: (opts.treeAutumnWeight ?? 2.4) * (season === SEASON.AUTUMN ? 1.25 : 0.12) * (0.44 + alt * 1.15) * (1 + mountainForest * 1.85) * forestMask,
+        spruceMix: (opts.treeSpruceWeight ?? 0.75) * (season === SEASON.CONIFER ? 1.1 : 0.08) * (0.22 + alt * alt * 1.4) * forestMask,
+        peakSparse: (opts.treePeakSparse ?? 0.08) * (season === SEASON.WINTER ? 1.2 : 0.08) * (alt * alt * 1.25) * forestMask,
+      };
+
+      if (fairway) {
+        weights.summerCanopy *= 0.30;
+        weights.autumnCanopy *= 0.22;
+        weights.spruceMix *= 0.04;
+        weights.peakSparse = 0;
+      }
+      if (sand) {
+        weights.summerCanopy *= 0.08;
+        weights.autumnCanopy *= 0.04;
+        weights.spruceMix = 0;
+        weights.peakSparse = 0;
+      }
+      if (snowy || alt > 0.72) {
+        weights.palmFringe = 0;
+        weights.summerCanopy *= 0.02;
+        weights.autumnCanopy *= 0.08;
+        weights.spruceMix *= 0.38;
+        weights.peakSparse *= 1.35;
+      }
+      if (dirt) {
+        weights.palmFringe *= 0.08;
+        weights.autumnCanopy *= 1.55;
+        weights.spruceMix *= 0.9;
+      }
+      if (slope > 0.72) {
+        weights.palmFringe = 0;
+        weights.summerCanopy *= 0.03;
+        weights.autumnCanopy *= 0.16;
+        weights.spruceMix *= 0.35;
+        weights.peakSparse *= 0.7;
+      }
+
+      const totalWeight = Object.values(weights).reduce((sum, v) => sum + Math.max(0, v), 0);
+      if (totalWeight <= 0.0001) continue;
+      let roll = rand() * totalWeight;
+      let layer = 'summerCanopy';
+      for (const [key, value] of Object.entries(weights)) {
+        roll -= Math.max(0, value);
+        if (roll <= 0) { layer = key; break; }
+      }
+      const scaleMul = layer === 'peakSparse'
+        ? 0.68
+        : layer === 'palmFringe'
+          ? 0.88
+          : 1.08 + forestMask * 0.34 + grove * 0.10;
+      if (!place(layer, i, j, idx, scaleMul)) continue;
+      occupied.add(occKey);
+      planted++;
     }
 
-    return { treeCount: palms + others, treeCounts: counts };
+    return { treeCount: planted, treeCounts: counts };
   }
 
   // ---- params ----
@@ -507,7 +733,7 @@ export class Scene {
       this._applyAll();
     }
     if (p === '*' || p.startsWith('island.') || p.startsWith('voxel.') || p.startsWith('seasons.') ||
-        p === 'tree.palmCount' || p === 'tree.palmLine' || p === 'tree.mixedTreeCount' ||
+        p.startsWith('tree.') || p.startsWith('lagoon.') ||
         p === 'water.seaLevel' || p === 'water.floorDepth' || p === 'water.floorShape' ||
         p === 'water.floorRoughness' || p === 'water.deltaFloor') {
       this._scheduleRegen();
@@ -552,9 +778,6 @@ export class Scene {
 
     this.islandGroup.visible = !hideIsland && !isolate;
     this.treeGroup.visible = !hideIsland && !isolate;
-
-    const ref = this.scene.getObjectByName('IslandReferenceBlocks');
-    if (ref) ref.visible = !hideIsland && !isolate && !!this.store.get('water.referenceBlocks');
 
     if (!this.sea) return;
     this.sea.group.visible = (waterOn && !skyOnly) || isolateSea;
@@ -879,7 +1102,6 @@ export class Scene {
       if (this._skyDirty) { this._syncHorizonFog(); this._skyDirty = false; }
       this._applySkyDiagnosis();
 
-      this._swayTrees();
       if (this.takramRig?.enabled) {
         this.takramRig.syncFromScene(this);
         this.takramRig.render(dt);
@@ -890,20 +1112,6 @@ export class Scene {
     tick();
   }
 
-  // Palm sway is baked per tree and globally scaled by tree.palmSway. Only
-  // palm groups carry userData.sway; everything else is skipped.
-  _swayTrees() {
-    const t = this.elapsed;
-    const swayMul = this.store.get('tree.palmSway') ?? 1;
-    if (swayMul <= 0) return;
-    for (const g of this.treeGroup.children) {
-      const s = g.userData && g.userData.sway;
-      if (!s) continue;
-      const a = Math.sin(t * s.speed + s.phase) * s.amp * swayMul;
-      if (s.crown) { s.crown.rotation.z = a; s.crown.rotation.x = a * 0.5; }
-      g.rotation.z = a * 0.18;
-    }
-  }
 }
 
 function detectMobileRenderProfile() {
