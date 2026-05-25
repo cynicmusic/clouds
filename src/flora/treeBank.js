@@ -1,6 +1,30 @@
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { mulberry32 } from '../gen/noise.js';
 import { buildSlots, makeLabTree } from '../workshop/tree-lab/treeLabModel.js';
 import { makeTreeStyle } from '../workshop/methodology/model.js';
 import { makePalm } from './palmReal.js';
+
+const AUTUMN_LEAF_MAT = new THREE.MeshStandardMaterial({
+  vertexColors: true,
+  side: THREE.DoubleSide,
+  roughness: 0.88,
+  metalness: 0,
+});
+const AUTUMN_BRANCH_MAT = new THREE.MeshStandardMaterial({
+  color: 0x3b2617,
+  roughness: 0.92,
+  metalness: 0,
+});
+
+const AUTUMN_COLORS = [
+  [0.96, 0.72, 0.18],
+  [0.90, 0.51, 0.12],
+  [0.74, 0.25, 0.10],
+  [0.66, 0.59, 0.24],
+  [0.46, 0.62, 0.32],
+  [0.78, 0.68, 0.34],
+];
 
 // Mirrors the live tree-lab workshop overrides. This is production metadata:
 // the island should not import the workshop renderer just to learn which slots
@@ -233,7 +257,123 @@ export function chooseTreeSlot(layer, rand) {
 export function makeTreeBankTree(slot, seed) {
   if (!slot) return null;
   if (slot.source === 'palm') return makePalm(((seed >>> 0) ^ (slot.slot * 2654435761)) >>> 0);
+  if (slot.layer === 'autumnCanopy') return makeAutumnLeafletTree(slot, seed);
   const spec = { ...slot, seed: ((slot.seed ?? seed) ^ (seed >>> 0)) >>> 0 };
   if (slot.methodology) return makeTreeStyle(slot.methodology, spec.seed, SLOT_PARAMS[slot.slot]);
   return makeLabTree(spec);
+}
+
+function makeAutumnLeafletTree(slot, seed) {
+  const rng = mulberry32(((seed >>> 0) ^ (slot.slot * 1597334677)) >>> 0);
+  const group = new THREE.Group();
+  group.name = `AutumnLeaflet${slot.slot}`;
+  group.userData.slot = slot.slot;
+  group.userData.family = slot.family;
+
+  const height = 6.2 + rng() * 3.6;
+  const crownY = height * (0.63 + rng() * 0.10);
+  const crownR = 2.4 + rng() * 1.35;
+  const branchGeos = [];
+  const trunk = new THREE.CylinderGeometry(0.16 + rng() * 0.08, 0.30 + rng() * 0.12, crownY, 6, 2, false);
+  trunk.translate(0, crownY * 0.5, 0);
+  branchGeos.push(trunk);
+
+  const branchCount = 4 + ((rng() * 4) | 0);
+  for (let b = 0; b < branchCount; b++) {
+    const t = branchCount === 1 ? 0 : b / branchCount;
+    const a = t * Math.PI * 2 + rng() * 0.65;
+    const y0 = crownY * (0.44 + rng() * 0.26);
+    const len = crownR * (0.66 + rng() * 0.42);
+    const up = 0.42 + rng() * 0.42;
+    const dir = new THREE.Vector3(Math.cos(a) * len, up * len, Math.sin(a) * len);
+    const mid = new THREE.Vector3(dir.x * 0.5, y0 + dir.y * 0.5, dir.z * 0.5);
+    const geo = cylinderBetween(mid, dir, 0.055 + rng() * 0.035, 0.025 + rng() * 0.02);
+    branchGeos.push(geo);
+  }
+  const branchMesh = new THREE.Mesh(mergeGeometries(branchGeos, false), AUTUMN_BRANCH_MAT);
+  branchMesh.castShadow = true;
+  branchMesh.receiveShadow = true;
+  group.add(branchMesh);
+
+  const leafPositions = [];
+  const leafColors = [];
+  const clumps = [];
+  const clumpCount = 4 + ((rng() * 4) | 0);
+  for (let i = 0; i < clumpCount; i++) {
+    const a = (i / clumpCount) * Math.PI * 2 + rng() * 0.55;
+    const r = crownR * (0.25 + rng() * 0.60);
+    clumps.push(new THREE.Vector3(
+      Math.cos(a) * r,
+      crownY + rng() * height * 0.28,
+      Math.sin(a) * r,
+    ));
+  }
+
+  const leafCount = 38 + ((rng() * 34) | 0);
+  for (let i = 0; i < leafCount; i++) {
+    const c = clumps[(rng() * clumps.length) | 0];
+    const theta = rng() * Math.PI * 2;
+    const radial = crownR * Math.pow(rng(), 0.78) * 0.45;
+    const pos = new THREE.Vector3(
+      c.x + Math.cos(theta) * radial,
+      c.y + (rng() - 0.35) * height * 0.26,
+      c.z + Math.sin(theta) * radial,
+    );
+    if (pos.y < crownY * 0.72) pos.y = crownY * 0.72 + rng() * height * 0.18;
+    const color = AUTUMN_COLORS[(rng() * AUTUMN_COLORS.length) | 0].map((v, k) => {
+      const jitter = (rng() - 0.5) * (k === 1 ? 0.10 : 0.07);
+      return THREE.MathUtils.clamp(v + jitter, 0, 1);
+    });
+    const w = 0.68 + rng() * 1.15;
+    const h = 0.18 + rng() * 0.40;
+    pushLeafCard(leafPositions, leafColors, pos, w, h, rng, color);
+  }
+
+  const leafGeo = new THREE.BufferGeometry();
+  leafGeo.setAttribute('position', new THREE.Float32BufferAttribute(leafPositions, 3));
+  leafGeo.setAttribute('color', new THREE.Float32BufferAttribute(leafColors, 3));
+  leafGeo.computeVertexNormals();
+  const leafMesh = new THREE.Mesh(leafGeo, AUTUMN_LEAF_MAT);
+  leafMesh.castShadow = true;
+  leafMesh.receiveShadow = true;
+  group.add(leafMesh);
+  return group;
+}
+
+function cylinderBetween(mid, dir, baseRadius, tipRadius) {
+  const len = Math.max(0.001, dir.length());
+  const geo = new THREE.CylinderGeometry(tipRadius, baseRadius, len, 5, 1, false);
+  const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.clone().normalize());
+  const m = new THREE.Matrix4().compose(mid, q, new THREE.Vector3(1, 1, 1));
+  geo.applyMatrix4(m);
+  return geo;
+}
+
+function pushLeafCard(positions, colors, center, width, height, rng, color) {
+  const yaw = rng() * Math.PI * 2;
+  const pitch = -0.55 + rng() * 1.15;
+  const normal = new THREE.Vector3(
+    Math.cos(yaw) * Math.cos(pitch),
+    Math.sin(pitch),
+    Math.sin(yaw) * Math.cos(pitch),
+  ).normalize();
+  const up = Math.abs(normal.y) > 0.92 ? new THREE.Vector3(1, 0, 0) : new THREE.Vector3(0, 1, 0);
+  const u = new THREE.Vector3().crossVectors(up, normal).normalize();
+  const v = new THREE.Vector3().crossVectors(normal, u).normalize();
+  const roll = (rng() - 0.5) * Math.PI;
+  u.multiplyScalar(Math.cos(roll)).addScaledVector(v, Math.sin(roll)).normalize();
+  v.crossVectors(normal, u).normalize();
+  const hw = width * 0.5;
+  const hh = height * 0.5;
+  const pts = [
+    center.clone().addScaledVector(u, -hw).addScaledVector(v, -hh),
+    center.clone().addScaledVector(u, hw).addScaledVector(v, -hh),
+    center.clone().addScaledVector(u, hw).addScaledVector(v, hh),
+    center.clone().addScaledVector(u, -hw).addScaledVector(v, hh),
+  ];
+  for (const idx of [0, 1, 2, 0, 2, 3]) {
+    const p = pts[idx];
+    positions.push(p.x, p.y, p.z);
+    colors.push(color[0], color[1], color[2]);
+  }
 }

@@ -433,7 +433,7 @@ export class Scene {
         const grove = fbm2(x * 0.0048 - 13.4, z * 0.0048 + 9.6, { seed: opts.seed + 1409, octaves: 4, gain: 0.54, warp: 0.42 });
         const open = fbm2(x * 0.0012 - 23.1, z * 0.0012 + 19.4, { seed: opts.seed + 1777, octaves: 3, gain: 0.52, warp: 0.8 });
         const score = (0.25 + broad * 0.55 + grove * 0.35)
-          * (0.45 + midSlope * 1.3 + autumn * 1.1 + dirt * 0.75 + conifer * 0.25)
+          * (0.45 + midSlope * 1.3 + autumn * 0.62 + dirt * 0.55 + conifer * 0.25 + (season === SEASON.SUMMER ? 0.38 : 0))
           * smooth01(openCuts * 0.44, openCuts * 1.05 + 0.18, open)
           * (fairway ? 0.76 : 1);
         if (score > 0.08) {
@@ -539,8 +539,8 @@ export class Scene {
 
       const weights = {
         palmFringe: ((opts.treePalmWeight ?? 0.25) * (sand ? 0.75 : fairway ? 0.04 : 0.008) * Math.pow(1 - alt, 1.7) + lagoonPull * 0.22) * fringeMask,
-        summerCanopy: (opts.treeSummerWeight ?? 0.58) * (season === SEASON.SUMMER ? 1.0 : 0.16) * (0.4 + (1 - alt)) * forestMask,
-        autumnCanopy: (opts.treeAutumnWeight ?? 2.4) * (season === SEASON.AUTUMN ? 1.25 : 0.12) * (0.44 + alt * 1.15) * (1 + mountainForest * 1.85) * forestMask,
+        summerCanopy: (opts.treeSummerWeight ?? 0.95) * (season === SEASON.SUMMER ? 1.0 : 0.16) * (0.4 + (1 - alt)) * forestMask,
+        autumnCanopy: (opts.treeAutumnWeight ?? 1.7) * (season === SEASON.AUTUMN ? 1.25 : 0.12) * (0.44 + alt * 1.15) * (1 + mountainForest * 1.85) * forestMask,
         spruceMix: (opts.treeSpruceWeight ?? 0.75) * (season === SEASON.CONIFER ? 1.1 : 0.08) * (0.22 + alt * alt * 1.4) * forestMask,
         peakSparse: (opts.treePeakSparse ?? 0.08) * (season === SEASON.WINTER ? 1.2 : 0.08) * (alt * alt * 1.25) * forestMask,
       };
@@ -591,6 +591,39 @@ export class Scene {
           ? 0.88
           : 1.08 + forestMask * 0.34 + grove * 0.10;
       if (!place(layer, i, j, idx, scaleMul)) continue;
+      occupied.add(occKey);
+      planted++;
+    }
+
+    // Palms are allowed to pepper coast / lagoon / fairway fringe separately
+    // from grove centers. The grove allocator intentionally prefers inland
+    // forest cores, which otherwise starves the classic palm look.
+    const palmTarget = Math.min(90, Math.round(target * clamp01((opts.treePalmWeight ?? 0.25) / 3) * 0.17));
+    let palmGuard = 0;
+    while (counts.palmFringe < palmTarget && palmGuard < palmTarget * 260 + 800) {
+      palmGuard++;
+      const a = rand() * Math.PI * 2;
+      const r = Math.pow(0.42 + rand() * 0.56, 0.82) * opts.radius;
+      const [i, j] = vol.worldToCell(Math.cos(a) * r, Math.sin(a) * r);
+      if (!vol.inBounds(i, j)) continue;
+      const idx = vol.idx(i, j);
+      const m = vol.material[idx];
+      if (!inBand(idx, m)) continue;
+      const y = vol.heightVox[idx] * vol.vstep;
+      const alt = clamp01((y - opts.seaLevel) / Math.max(1, opts.maxHeight));
+      const slope = slopeAt(i, j, idx);
+      const [wx, wz] = vol.cellToWorld(i, j);
+      const lagoonPull = lagoonInfluence(wx, wz);
+      const palmCell = (
+        (m === MAT.SAND || m === MAT.WHITE_SAND || m === MAT.FAIRWAY) ||
+        (m === MAT.GRASS && alt < 0.28) ||
+        lagoonPull > 0.18
+      );
+      if (!palmCell || slope > 0.55 || alt > 0.42) continue;
+      const localSpacing = spacing * THREE.MathUtils.lerp(1.1, 2.4, rand());
+      const occKey = `${Math.round(wx / localSpacing)},${Math.round(wz / localSpacing)}`;
+      if (occupied.has(occKey)) continue;
+      if (!place('palmFringe', i, j, idx, 0.76 + rand() * 0.24)) continue;
       occupied.add(occKey);
       planted++;
     }
