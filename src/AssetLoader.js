@@ -14,8 +14,10 @@ import {
   parseUint8Array,
 } from '@takram/three-geospatial';
 
-const ATMOSPHERE_URL = '/atmosphere/';
-const CLOUDS_URL = '/clouds/';
+const ASSET_BASE_URL = import.meta.env.BASE_URL || '/';
+const ASSET_BASE = new URL(ASSET_BASE_URL, window.location.href);
+const ATMOSPHERE_URL = new URL('atmosphere/', ASSET_BASE).href;
+const CLOUDS_URL = new URL('clouds/', ASSET_BASE).href;
 
 let islandAssetsPromise = null;
 

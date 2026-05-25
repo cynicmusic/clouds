@@ -5,9 +5,11 @@ const url = process.env.ISLAND_URL || process.env.SKY_LAB_URL || 'http://127.0.0
 
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+const pageErrors = [];
 
 try {
   page.on('pageerror', (err) => {
+    pageErrors.push(err.message);
     console.error(`pageerror: ${err.message}`);
   });
 
@@ -42,6 +44,9 @@ try {
 
   if (missing.length) {
     throw new Error(`Missing panel labels after settle: ${missing.join(', ')}`);
+  }
+  if (pageErrors.length) {
+    throw new Error(`Page errors after settle: ${pageErrors.join(' | ')}`);
   }
 
   console.log(`island smoke ok (${result.captureSettleMs}ms settle)`);
