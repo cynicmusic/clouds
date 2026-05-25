@@ -46,6 +46,17 @@ export class FlyCameraDirector {
     this._lastHumanInput = performance.now();
   }
 
+  clearInput() {
+    this._keys.clear();
+    this._pointers.clear();
+    this._pointerDown = false;
+    this._dragging = false;
+    this._pinchDistance = 0;
+    this._pinchCentroid = null;
+    this.dom.style.cursor = 'crosshair';
+    this.markHumanInput();
+  }
+
   getIdleSeconds(now = performance.now()) {
     return Math.max(0, (now - this._lastHumanInput) / 1000);
   }
@@ -56,8 +67,12 @@ export class FlyCameraDirector {
 
   _ignore(e) {
     const t = e.target;
-    return t && (t.tagName === 'INPUT' || t.tagName === 'SELECT' ||
-      (t.closest && t.closest('#ui-root')));
+    return t && (
+      t.tagName === 'INPUT' ||
+      t.tagName === 'SELECT' ||
+      t.tagName === 'TEXTAREA' ||
+      t.isContentEditable
+    );
   }
 
   _setupKeyboard() {

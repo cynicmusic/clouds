@@ -52,7 +52,7 @@ export class ParamStore {
 
   fromJSON(snapshot) {
     if (!snapshot || typeof snapshot !== 'object') return;
-    this._mergeInto(this.state, snapshot);
+    this.state = clone(snapshot);
     this._notify('*', this.state, null);
   }
 

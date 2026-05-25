@@ -273,6 +273,24 @@ export class TakramSkyRig {
     this.composer.setSize(width, height);
   }
 
+  resetTemporalState({ resetWeather = false } = {}) {
+    const size = this.renderer.getSize(new THREE.Vector2());
+    const temporalUpscale = this.clouds.temporalUpscale;
+    const shadowTemporalPass = this.clouds.shadow.temporalPass;
+    if (resetWeather) {
+      this.clouds.localWeatherOffset.set(0, 0);
+      this.clouds.shapeOffset.set(0, 0, 0);
+      this.clouds.shapeDetailOffset.set(0, 0, 0);
+    }
+    this.clouds.temporalUpscale = !temporalUpscale;
+    this.clouds.temporalUpscale = temporalUpscale;
+    this.clouds.shadow.temporalPass = !shadowTemporalPass;
+    this.clouds.shadow.temporalPass = shadowTemporalPass;
+    this.clouds.setSize(size.x, size.y);
+    this.composer.setSize(size.x, size.y);
+    this.clouds.frame = 0;
+  }
+
   getDebugSnapshot() {
     return {
       enabled: this.enabled,

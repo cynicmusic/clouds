@@ -115,8 +115,9 @@ function ensureMissingDefaults() {
 
 function applyPreset(preset) {
   if (!preset?.params) return false;
-  store.fromJSON(cloneScenePresetParams(preset.params));
-  ensureMissingDefaults();
+  store.fromJSON(hydratePresetParams(preset.params));
+  scene.camDirector?.clearInput?.();
+  scene.autoCameraDirector?.returnToHuman?.();
   if (!store.get('skyDiagnosis.fastSkyBoot') || scene.vol) {
     scene.regenerateAsync(`${workshopName} preset rebuild`);
   }
@@ -125,6 +126,7 @@ function applyPreset(preset) {
     scene.camera.quaternion.fromArray(preset.cam.q);
     scene.camera.updateMatrixWorld();
   }
+  takramRig.resetTemporalState({ resetWeather: true });
   return true;
 }
 
@@ -198,6 +200,9 @@ if (store.get('skyDiagnosis.fastSkyBoot')) {
 
 store.subscribe((evt) => {
   if (evt.path === 'cloudsRender.mode') applyCloudMode(evt.value);
+  if (evt.path === '*' || shouldResetTakramHistory(evt.path)) {
+    takramRig.resetTemporalState();
+  }
   if (tuningPathSet.has(evt.path)) {
     panel.refreshPresets();
   }
@@ -212,6 +217,16 @@ store.subscribe((evt) => {
     scene.regenerateAsync(`${workshopName} diagnostic island build`);
   }
 });
+
+function shouldResetTakramHistory(path) {
+  return path === 'cloudsRender.clouds' ||
+    path === 'cloudsRender.aerialPerspective' ||
+    path === 'cloudsRender.quality' ||
+    path === 'cloudsRender.resolutionScale' ||
+    path === 'cloudsRender.temporalUpscale' ||
+    path.startsWith('cloudShadows.') ||
+    path.startsWith('cloudDebug.');
+}
 
 function randomize() {
   store.set('voxel.seed', 1 + ((Math.random() * 99998) | 0));
@@ -535,6 +550,10 @@ function getAt(obj, path) {
 
 function cloneScenePresetParams(params) {
   return structuredClone(params || {});
+}
+
+function hydratePresetParams(params) {
+  return deepMerge(structuredClone(workshopDefaults), cloneScenePresetParams(params));
 }
 
 function ensureWorkshopParams(target) {

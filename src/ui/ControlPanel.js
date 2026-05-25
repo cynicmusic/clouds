@@ -298,6 +298,7 @@ export class ControlPanel {
       b.textContent = L;
       b.title = `bank ${L}`;
       b.addEventListener('click', () => {
+        b.blur();
         this.presets.setBank?.(L);
         this._syncBankActive();
       });
@@ -317,6 +318,7 @@ export class ControlPanel {
       b.dataset.slot = String(slot);
       b.innerHTML = `<span class="ff-preset-num">${slot}</span>`;
       b.addEventListener('click', (e) => {
+        b.blur();
         if (e.shiftKey) this.presets.save(slot);
         else this.presets.load(slot);
       });
@@ -363,6 +365,7 @@ export class ControlPanel {
     d.textContent = this.sticky.has(path) ? '◆' : '◇';
     d.addEventListener('click', (e) => {
       e.stopPropagation();
+      d.blur();
       const on = this.sticky.toggle(path);
       const buttons = this.stickyEls.get(path) || new Set([d]);
       for (const btn of buttons) {
