@@ -1,0 +1,358 @@
+{
+  "ok": true,
+  "capturedAt": "2026-05-23T22:54:11.429Z",
+  "url": "http://127.0.0.1:57170/",
+  "captures": [
+    {
+      "name": "off",
+      "file": "/Users/asmith/clouds/artifacts/light-shafts/off.png",
+      "lightShafts": false,
+      "shadowLengthIterations": 180,
+      "shadowLengthStep": 80,
+      "shadowLengthDistance": 120000,
+      "fps": {
+        "frames": 90,
+        "elapsedMs": 884.1,
+        "fps": 101.8
+      },
+      "snapshot": {
+        "takram": {
+          "enabled": true,
+          "cloudsEnabled": true,
+          "assetsReady": true,
+          "exposure": 10,
+          "qualityPreset": "medium",
+          "resolutionScale": 0.5,
+          "coverage": 0.74,
+          "skyVisible": true,
+          "temporalUpscale": true,
+          "lightShafts": false,
+          "cloudLayer": {
+            "altitude": 750,
+            "height": 600,
+            "densityScale": 0.48,
+            "shadow": true
+          },
+          "shadow": {
+            "cascadeCount": 3,
+            "mapSize": [
+              256,
+              256
+            ],
+            "shadowIterations": 50,
+            "shadowStep": 100,
+            "shadowLengthIterations": 180,
+            "shadowLengthStep": 80,
+            "shadowLengthDistance": 120000
+          },
+          "sunECEF": [
+            0.63469,
+            -0.46303,
+            -0.61868
+          ],
+          "passes": [
+            {
+              "name": "RenderPass",
+              "enabled": true
+            },
+            {
+              "name": "NormalPass",
+              "enabled": true
+            },
+            {
+              "name": "EffectPass",
+              "enabled": true
+            },
+            {
+              "name": "EffectPass",
+              "enabled": true
+            }
+          ]
+        },
+        "debug": {
+          "name": "Isometric Island",
+          "camera": [
+            "0.0",
+            "230.0",
+            "0.0"
+          ],
+          "triangles": 10,
+          "drawCalls": 9,
+          "trees": 533,
+          "worldSize": 2461,
+          "seaLevel": 9,
+          "sunElevationDeg": 9.5,
+          "seed": 1337
+        },
+        "canvas": [
+          1280,
+          800
+        ]
+      }
+    },
+    {
+      "name": "on-default",
+      "file": "/Users/asmith/clouds/artifacts/light-shafts/on-default.png",
+      "lightShafts": true,
+      "shadowLengthIterations": 180,
+      "shadowLengthStep": 80,
+      "shadowLengthDistance": 120000,
+      "fps": {
+        "frames": 90,
+        "elapsedMs": 1047.9,
+        "fps": 85.89
+      },
+      "snapshot": {
+        "takram": {
+          "enabled": true,
+          "cloudsEnabled": true,
+          "assetsReady": true,
+          "exposure": 10,
+          "qualityPreset": "medium",
+          "resolutionScale": 0.5,
+          "coverage": 0.74,
+          "skyVisible": true,
+          "temporalUpscale": true,
+          "lightShafts": true,
+          "cloudLayer": {
+            "altitude": 750,
+            "height": 600,
+            "densityScale": 0.48,
+            "shadow": true
+          },
+          "shadow": {
+            "cascadeCount": 3,
+            "mapSize": [
+              256,
+              256
+            ],
+            "shadowIterations": 50,
+            "shadowStep": 100,
+            "shadowLengthIterations": 180,
+            "shadowLengthStep": 80,
+            "shadowLengthDistance": 120000
+          },
+          "sunECEF": [
+            0.63469,
+            -0.46303,
+            -0.61868
+          ],
+          "passes": [
+            {
+              "name": "RenderPass",
+              "enabled": true
+            },
+            {
+              "name": "NormalPass",
+              "enabled": true
+            },
+            {
+              "name": "EffectPass",
+              "enabled": true
+            },
+            {
+              "name": "EffectPass",
+              "enabled": true
+            }
+          ]
+        },
+        "debug": {
+          "name": "Isometric Island",
+          "camera": [
+            "0.0",
+            "230.0",
+            "0.0"
+          ],
+          "triangles": 10,
+          "drawCalls": 9,
+          "trees": 533,
+          "worldSize": 2461,
+          "seaLevel": 9,
+          "sunElevationDeg": 9.5,
+          "seed": 1337
+        },
+        "canvas": [
+          1280,
+          800
+        ]
+      }
+    },
+    {
+      "name": "on-cheap",
+      "file": "/Users/asmith/clouds/artifacts/light-shafts/on-cheap.png",
+      "lightShafts": true,
+      "shadowLengthIterations": 80,
+      "shadowLengthStep": 120,
+      "shadowLengthDistance": 80000,
+      "fps": {
+        "frames": 90,
+        "elapsedMs": 886.2,
+        "fps": 101.56
+      },
+      "snapshot": {
+        "takram": {
+          "enabled": true,
+          "cloudsEnabled": true,
+          "assetsReady": true,
+          "exposure": 10,
+          "qualityPreset": "medium",
+          "resolutionScale": 0.5,
+          "coverage": 0.74,
+          "skyVisible": true,
+          "temporalUpscale": true,
+          "lightShafts": true,
+          "cloudLayer": {
+            "altitude": 750,
+            "height": 600,
+            "densityScale": 0.48,
+            "shadow": true
+          },
+          "shadow": {
+            "cascadeCount": 3,
+            "mapSize": [
+              256,
+              256
+            ],
+            "shadowIterations": 50,
+            "shadowStep": 100,
+            "shadowLengthIterations": 80,
+            "shadowLengthStep": 120,
+            "shadowLengthDistance": 80000
+          },
+          "sunECEF": [
+            0.63469,
+            -0.46303,
+            -0.61868
+          ],
+          "passes": [
+            {
+              "name": "RenderPass",
+              "enabled": true
+            },
+            {
+              "name": "NormalPass",
+              "enabled": true
+            },
+            {
+              "name": "EffectPass",
+              "enabled": true
+            },
+            {
+              "name": "EffectPass",
+              "enabled": true
+            }
+          ]
+        },
+        "debug": {
+          "name": "Isometric Island",
+          "camera": [
+            "0.0",
+            "230.0",
+            "0.0"
+          ],
+          "triangles": 10,
+          "drawCalls": 9,
+          "trees": 533,
+          "worldSize": 2461,
+          "seaLevel": 9,
+          "sunElevationDeg": 9.5,
+          "seed": 1337
+        },
+        "canvas": [
+          1280,
+          800
+        ]
+      }
+    },
+    {
+      "name": "shadow-length-debug",
+      "file": "/Users/asmith/clouds/artifacts/light-shafts/shadow-length-debug.png",
+      "lightShafts": true,
+      "shadowLengthIterations": 180,
+      "shadowLengthStep": 80,
+      "shadowLengthDistance": 120000,
+      "debugMode": 6,
+      "fps": {
+        "frames": 90,
+        "elapsedMs": 739.9,
+        "fps": 121.64
+      },
+      "snapshot": {
+        "takram": {
+          "enabled": true,
+          "cloudsEnabled": true,
+          "assetsReady": true,
+          "exposure": 10,
+          "qualityPreset": "medium",
+          "resolutionScale": 0.5,
+          "coverage": 0.74,
+          "skyVisible": true,
+          "temporalUpscale": true,
+          "lightShafts": true,
+          "cloudLayer": {
+            "altitude": 750,
+            "height": 600,
+            "densityScale": 0.48,
+            "shadow": true
+          },
+          "shadow": {
+            "cascadeCount": 3,
+            "mapSize": [
+              256,
+              256
+            ],
+            "shadowIterations": 50,
+            "shadowStep": 100,
+            "shadowLengthIterations": 180,
+            "shadowLengthStep": 80,
+            "shadowLengthDistance": 120000
+          },
+          "sunECEF": [
+            0.63469,
+            -0.46303,
+            -0.61868
+          ],
+          "passes": [
+            {
+              "name": "RenderPass",
+              "enabled": true
+            },
+            {
+              "name": "NormalPass",
+              "enabled": true
+            },
+            {
+              "name": "EffectPass",
+              "enabled": true
+            },
+            {
+              "name": "EffectPass",
+              "enabled": true
+            }
+          ]
+        },
+        "debug": {
+          "name": "Isometric Island",
+          "camera": [
+            "0.0",
+            "230.0",
+            "0.0"
+          ],
+          "triangles": 10,
+          "drawCalls": 9,
+          "trees": 533,
+          "worldSize": 2461,
+          "seaLevel": 9,
+          "sunElevationDeg": 9.5,
+          "seed": 1337
+        },
+        "canvas": [
+          1280,
+          800
+        ]
+      }
+    }
+  ],
+  "eventCounts": [],
+  "chromeStderrLines": 26
+}

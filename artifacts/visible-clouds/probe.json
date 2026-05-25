@@ -1,0 +1,121 @@
+{
+  "ok": true,
+  "files": [
+    "/Users/asmith/clouds/artifacts/visible-clouds/default-boot.png",
+    "/Users/asmith/clouds/artifacts/visible-clouds/reference-angle.png"
+  ],
+  "summary": {
+    "takram": {
+      "enabled": true,
+      "cloudsEnabled": true,
+      "assetsReady": true,
+      "exposure": 10,
+      "qualityPreset": "high",
+      "resolutionScale": 0.75,
+      "coverage": 0.4,
+      "skyVisible": true,
+      "temporalUpscale": true,
+      "lightShafts": false,
+      "cloudLayer": {
+        "layers": [
+          {
+            "channel": "r",
+            "altitude": 750,
+            "height": 650,
+            "densityScale": 0.2,
+            "shapeAmount": 1,
+            "shapeDetailAmount": 1,
+            "shadow": true
+          },
+          {
+            "channel": "g",
+            "altitude": 1000,
+            "height": 1200,
+            "densityScale": 0.2,
+            "shapeAmount": 1,
+            "shapeDetailAmount": 1,
+            "shadow": true
+          },
+          {
+            "channel": "b",
+            "altitude": 7500,
+            "height": 500,
+            "densityScale": 0.003,
+            "shapeAmount": 0.4,
+            "shapeDetailAmount": 0,
+            "shadow": false
+          },
+          {
+            "channel": "a",
+            "altitude": 0,
+            "height": 0,
+            "densityScale": 0,
+            "shapeAmount": 0,
+            "shapeDetailAmount": 0,
+            "shadow": false
+          }
+        ]
+      },
+      "shadow": {
+        "cascadeCount": 3,
+        "mapSize": [
+          256,
+          256
+        ],
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "sunECEF": [
+        0.96035,
+        0.24184,
+        -0.13872
+      ],
+      "passes": [
+        {
+          "name": "RenderPass",
+          "enabled": true
+        },
+        {
+          "name": "NormalPass",
+          "enabled": true
+        },
+        {
+          "name": "EffectPass",
+          "enabled": true
+        },
+        {
+          "name": "EffectPass",
+          "enabled": true
+        }
+      ]
+    },
+    "info": {
+      "name": "Isometric Island",
+      "camera": [
+        "0.0",
+        "500.0",
+        "0.0"
+      ],
+      "triangles": 10,
+      "drawCalls": 9,
+      "trees": 533,
+      "worldSize": 2461,
+      "seaLevel": 9,
+      "sunElevationDeg": 45,
+      "seed": 1337
+    },
+    "sticky": {
+      "atmosphere": true,
+      "clouds": true,
+      "quality": 2,
+      "resolutionScale": 0.75,
+      "temporalUpscale": true,
+      "exposure": 10
+    }
+  },
+  "events": [],
+  "stderr": 5
+}

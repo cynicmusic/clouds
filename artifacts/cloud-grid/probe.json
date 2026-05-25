@@ -1,0 +1,301 @@
+{
+  "ok": true,
+  "capturedAt": "2026-05-23T22:49:59.427Z",
+  "url": "http://127.0.0.1:57170/",
+  "captures": [
+    {
+      "file": "/Users/asmith/clouds/artifacts/cloud-grid/horizon.png",
+      "probe": {
+        "name": "horizon",
+        "takram": {
+          "enabled": true,
+          "cloudsEnabled": true,
+          "assetsReady": true,
+          "exposure": 10,
+          "qualityPreset": "medium",
+          "resolutionScale": 0.5,
+          "coverage": 0.68,
+          "skyVisible": true,
+          "temporalUpscale": true,
+          "lightShafts": false,
+          "cloudLayer": {
+            "altitude": 750,
+            "height": 600,
+            "densityScale": 0.4,
+            "shadow": true
+          },
+          "shadow": {
+            "cascadeCount": 3,
+            "mapSize": [
+              256,
+              256
+            ]
+          },
+          "sunECEF": [
+            0.63469,
+            -0.46303,
+            -0.61868
+          ],
+          "passes": [
+            {
+              "name": "RenderPass",
+              "enabled": true
+            },
+            {
+              "name": "NormalPass",
+              "enabled": true
+            },
+            {
+              "name": "EffectPass",
+              "enabled": true
+            },
+            {
+              "name": "EffectPass",
+              "enabled": true
+            }
+          ]
+        },
+        "debug": {
+          "name": "Isometric Island",
+          "camera": [
+            "0.0",
+            "260.0",
+            "0.0"
+          ],
+          "triangles": 10,
+          "drawCalls": 9,
+          "trees": 533,
+          "worldSize": 2461,
+          "seaLevel": 9,
+          "sunElevationDeg": 9.5,
+          "seed": 1337
+        },
+        "canvas": [
+          1280,
+          800
+        ]
+      }
+    },
+    {
+      "file": "/Users/asmith/clouds/artifacts/cloud-grid/up.png",
+      "probe": {
+        "name": "up",
+        "takram": {
+          "enabled": true,
+          "cloudsEnabled": true,
+          "assetsReady": true,
+          "exposure": 10,
+          "qualityPreset": "medium",
+          "resolutionScale": 0.5,
+          "coverage": 0.68,
+          "skyVisible": true,
+          "temporalUpscale": true,
+          "lightShafts": false,
+          "cloudLayer": {
+            "altitude": 750,
+            "height": 600,
+            "densityScale": 0.4,
+            "shadow": true
+          },
+          "shadow": {
+            "cascadeCount": 3,
+            "mapSize": [
+              256,
+              256
+            ]
+          },
+          "sunECEF": [
+            0.63469,
+            -0.46303,
+            -0.61868
+          ],
+          "passes": [
+            {
+              "name": "RenderPass",
+              "enabled": true
+            },
+            {
+              "name": "NormalPass",
+              "enabled": true
+            },
+            {
+              "name": "EffectPass",
+              "enabled": true
+            },
+            {
+              "name": "EffectPass",
+              "enabled": true
+            }
+          ]
+        },
+        "debug": {
+          "name": "Isometric Island",
+          "camera": [
+            "0.0",
+            "220.0",
+            "0.0"
+          ],
+          "triangles": 10,
+          "drawCalls": 9,
+          "trees": 533,
+          "worldSize": 2461,
+          "seaLevel": 9,
+          "sunElevationDeg": 9.5,
+          "seed": 1337
+        },
+        "canvas": [
+          1280,
+          800
+        ]
+      }
+    },
+    {
+      "file": "/Users/asmith/clouds/artifacts/cloud-grid/toward-sun.png",
+      "probe": {
+        "name": "toward-sun",
+        "takram": {
+          "enabled": true,
+          "cloudsEnabled": true,
+          "assetsReady": true,
+          "exposure": 10,
+          "qualityPreset": "medium",
+          "resolutionScale": 0.5,
+          "coverage": 0.68,
+          "skyVisible": true,
+          "temporalUpscale": true,
+          "lightShafts": false,
+          "cloudLayer": {
+            "altitude": 750,
+            "height": 600,
+            "densityScale": 0.4,
+            "shadow": true
+          },
+          "shadow": {
+            "cascadeCount": 3,
+            "mapSize": [
+              256,
+              256
+            ]
+          },
+          "sunECEF": [
+            0.63469,
+            -0.46303,
+            -0.61868
+          ],
+          "passes": [
+            {
+              "name": "RenderPass",
+              "enabled": true
+            },
+            {
+              "name": "NormalPass",
+              "enabled": true
+            },
+            {
+              "name": "EffectPass",
+              "enabled": true
+            },
+            {
+              "name": "EffectPass",
+              "enabled": true
+            }
+          ]
+        },
+        "debug": {
+          "name": "Isometric Island",
+          "camera": [
+            "0.0",
+            "220.0",
+            "0.0"
+          ],
+          "triangles": 10,
+          "drawCalls": 9,
+          "trees": 533,
+          "worldSize": 2461,
+          "seaLevel": 9,
+          "sunElevationDeg": 9.5,
+          "seed": 1337
+        },
+        "canvas": [
+          1280,
+          800
+        ]
+      }
+    },
+    {
+      "file": "/Users/asmith/clouds/artifacts/cloud-grid/away-sun.png",
+      "probe": {
+        "name": "away-sun",
+        "takram": {
+          "enabled": true,
+          "cloudsEnabled": true,
+          "assetsReady": true,
+          "exposure": 10,
+          "qualityPreset": "medium",
+          "resolutionScale": 0.5,
+          "coverage": 0.68,
+          "skyVisible": true,
+          "temporalUpscale": true,
+          "lightShafts": false,
+          "cloudLayer": {
+            "altitude": 750,
+            "height": 600,
+            "densityScale": 0.4,
+            "shadow": true
+          },
+          "shadow": {
+            "cascadeCount": 3,
+            "mapSize": [
+              256,
+              256
+            ]
+          },
+          "sunECEF": [
+            0.63469,
+            -0.46303,
+            -0.61868
+          ],
+          "passes": [
+            {
+              "name": "RenderPass",
+              "enabled": true
+            },
+            {
+              "name": "NormalPass",
+              "enabled": true
+            },
+            {
+              "name": "EffectPass",
+              "enabled": true
+            },
+            {
+              "name": "EffectPass",
+              "enabled": true
+            }
+          ]
+        },
+        "debug": {
+          "name": "Isometric Island",
+          "camera": [
+            "0.0",
+            "220.0",
+            "0.0"
+          ],
+          "triangles": 10,
+          "drawCalls": 9,
+          "trees": 533,
+          "worldSize": 2461,
+          "seaLevel": 9,
+          "sunElevationDeg": 9.5,
+          "seed": 1337
+        },
+        "canvas": [
+          1280,
+          800
+        ]
+      }
+    }
+  ],
+  "eventCounts": [],
+  "chromeStderrLines": 28
+}

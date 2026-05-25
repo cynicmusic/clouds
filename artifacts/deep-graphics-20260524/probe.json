@@ -1,0 +1,534 @@
+[
+  {
+    "caseName": "legacy-no-cloud-route",
+    "takram": {
+      "enabled": false,
+      "cloudsEnabled": false,
+      "skyEnabled": false,
+      "aerialPerspectiveEnabled": false,
+      "assetsReady": true,
+      "exposure": 0.75,
+      "toneMapping": "aces",
+      "dithering": false,
+      "qualityPreset": "high",
+      "resolutionScale": 0.75,
+      "coverage": 0.75,
+      "skyVisible": false,
+      "temporalUpscale": true,
+      "lightShafts": false,
+      "cloudLayer": {
+        "layers": [
+          {
+            "channel": "r",
+            "altitude": 750,
+            "height": 650,
+            "densityScale": 0.2,
+            "shapeAmount": 1,
+            "shapeDetailAmount": 1,
+            "shadow": true
+          },
+          {
+            "channel": "g",
+            "altitude": 1000,
+            "height": 1200,
+            "densityScale": 0.2,
+            "shapeAmount": 1,
+            "shapeDetailAmount": 1,
+            "shadow": true
+          },
+          {
+            "channel": "b",
+            "altitude": 7500,
+            "height": 500,
+            "densityScale": 0.003,
+            "shapeAmount": 0.4,
+            "shapeDetailAmount": 0,
+            "shadow": false
+          },
+          {
+            "channel": "a",
+            "altitude": 0,
+            "height": 0,
+            "densityScale": 0,
+            "shapeAmount": 0,
+            "shapeDetailAmount": 0,
+            "shadow": false
+          }
+        ]
+      },
+      "shadow": {
+        "cascadeCount": 3,
+        "mapSize": [
+          256,
+          256
+        ],
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "sunECEF": [
+        0.63295,
+        0.10421,
+        -0.76715
+      ],
+      "passes": [
+        {
+          "name": "RenderPass",
+          "enabled": true
+        },
+        {
+          "name": "NormalPass",
+          "enabled": true
+        },
+        {
+          "name": "EffectPass",
+          "enabled": true
+        }
+      ]
+    },
+    "cloudsRender": {
+      "mode": 1,
+      "atmosphere": false,
+      "clouds": false,
+      "aerialPerspective": false,
+      "quality": 2,
+      "resolutionScale": 0.75,
+      "temporalUpscale": true,
+      "exposure": 0.75
+    },
+    "layer": {
+      "referenceStack": true,
+      "enabled": true,
+      "altitude": 750,
+      "height": 600,
+      "densityScale": 0.4,
+      "shapeAmount": 1,
+      "shapeDetailAmount": 0.8,
+      "weatherExponent": 1,
+      "shapeAlteringBias": 0.35,
+      "coverageFilterWidth": 0.6
+    },
+    "finishing": {
+      "toneMapping": 0,
+      "dithering": false
+    },
+    "renderExposure": 0.3,
+    "camera": {
+      "p": [
+        420,
+        230,
+        480
+      ],
+      "q": [
+        -0.13169662713270414,
+        0.3482284891533517,
+        0.049483047486336876,
+        0.9267925041536041
+      ]
+    }
+  },
+  {
+    "caseName": "legacy-cloud-effect-no-layer",
+    "takram": {
+      "enabled": true,
+      "cloudsEnabled": true,
+      "skyEnabled": false,
+      "aerialPerspectiveEnabled": false,
+      "assetsReady": true,
+      "exposure": 0.75,
+      "toneMapping": "aces",
+      "dithering": false,
+      "qualityPreset": "high",
+      "resolutionScale": 0.75,
+      "coverage": 0.75,
+      "skyVisible": false,
+      "temporalUpscale": true,
+      "lightShafts": false,
+      "cloudLayer": {
+        "layers": [
+          {
+            "channel": "r",
+            "altitude": 750,
+            "height": 0,
+            "densityScale": 0,
+            "shapeAmount": 1,
+            "shapeDetailAmount": 0.8,
+            "shadow": false
+          },
+          {
+            "channel": "g",
+            "altitude": 0,
+            "height": 0,
+            "densityScale": 0,
+            "shapeAmount": 0,
+            "shapeDetailAmount": 0,
+            "shadow": false
+          },
+          {
+            "channel": "b",
+            "altitude": 0,
+            "height": 0,
+            "densityScale": 0,
+            "shapeAmount": 0,
+            "shapeDetailAmount": 0,
+            "shadow": false
+          },
+          {
+            "channel": "a",
+            "altitude": 0,
+            "height": 0,
+            "densityScale": 0,
+            "shapeAmount": 0,
+            "shapeDetailAmount": 0,
+            "shadow": false
+          }
+        ]
+      },
+      "shadow": {
+        "cascadeCount": 3,
+        "mapSize": [
+          256,
+          256
+        ],
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "sunECEF": [
+        0.63295,
+        0.10421,
+        -0.76715
+      ],
+      "passes": [
+        {
+          "name": "RenderPass",
+          "enabled": true
+        },
+        {
+          "name": "NormalPass",
+          "enabled": true
+        },
+        {
+          "name": "EffectPass",
+          "enabled": true
+        },
+        {
+          "name": "EffectPass",
+          "enabled": true
+        }
+      ]
+    },
+    "cloudsRender": {
+      "mode": 1,
+      "atmosphere": false,
+      "clouds": true,
+      "aerialPerspective": false,
+      "quality": 2,
+      "resolutionScale": 0.75,
+      "temporalUpscale": true,
+      "exposure": 0.75
+    },
+    "layer": {
+      "referenceStack": true,
+      "enabled": false,
+      "altitude": 750,
+      "height": 600,
+      "densityScale": 0.4,
+      "shapeAmount": 1,
+      "shapeDetailAmount": 0.8,
+      "weatherExponent": 1,
+      "shapeAlteringBias": 0.35,
+      "coverageFilterWidth": 0.6
+    },
+    "finishing": {
+      "toneMapping": 0,
+      "dithering": false
+    },
+    "renderExposure": 0.3,
+    "camera": {
+      "p": [
+        420,
+        230,
+        480
+      ],
+      "q": [
+        -0.13169662713270414,
+        0.3482284891533517,
+        0.049483047486336876,
+        0.9267925041536041
+      ]
+    }
+  },
+  {
+    "caseName": "legacy-cloud-effect-with-layer",
+    "takram": {
+      "enabled": true,
+      "cloudsEnabled": true,
+      "skyEnabled": false,
+      "aerialPerspectiveEnabled": false,
+      "assetsReady": true,
+      "exposure": 0.75,
+      "toneMapping": "aces",
+      "dithering": false,
+      "qualityPreset": "high",
+      "resolutionScale": 0.75,
+      "coverage": 0.75,
+      "skyVisible": false,
+      "temporalUpscale": true,
+      "lightShafts": false,
+      "cloudLayer": {
+        "layers": [
+          {
+            "channel": "r",
+            "altitude": 750,
+            "height": 650,
+            "densityScale": 0.2,
+            "shapeAmount": 1,
+            "shapeDetailAmount": 1,
+            "shadow": true
+          },
+          {
+            "channel": "g",
+            "altitude": 1000,
+            "height": 1200,
+            "densityScale": 0.2,
+            "shapeAmount": 1,
+            "shapeDetailAmount": 1,
+            "shadow": true
+          },
+          {
+            "channel": "b",
+            "altitude": 7500,
+            "height": 500,
+            "densityScale": 0.003,
+            "shapeAmount": 0.4,
+            "shapeDetailAmount": 0,
+            "shadow": false
+          },
+          {
+            "channel": "a",
+            "altitude": 0,
+            "height": 0,
+            "densityScale": 0,
+            "shapeAmount": 0,
+            "shapeDetailAmount": 0,
+            "shadow": false
+          }
+        ]
+      },
+      "shadow": {
+        "cascadeCount": 3,
+        "mapSize": [
+          256,
+          256
+        ],
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "sunECEF": [
+        0.63295,
+        0.10421,
+        -0.76715
+      ],
+      "passes": [
+        {
+          "name": "RenderPass",
+          "enabled": true
+        },
+        {
+          "name": "NormalPass",
+          "enabled": true
+        },
+        {
+          "name": "EffectPass",
+          "enabled": true
+        },
+        {
+          "name": "EffectPass",
+          "enabled": true
+        }
+      ]
+    },
+    "cloudsRender": {
+      "mode": 1,
+      "atmosphere": false,
+      "clouds": true,
+      "aerialPerspective": false,
+      "quality": 2,
+      "resolutionScale": 0.75,
+      "temporalUpscale": true,
+      "exposure": 0.75
+    },
+    "layer": {
+      "referenceStack": true,
+      "enabled": true,
+      "altitude": 750,
+      "height": 600,
+      "densityScale": 0.4,
+      "shapeAmount": 1,
+      "shapeDetailAmount": 0.8,
+      "weatherExponent": 1,
+      "shapeAlteringBias": 0.35,
+      "coverageFilterWidth": 0.6
+    },
+    "finishing": {
+      "toneMapping": 0,
+      "dithering": false
+    },
+    "renderExposure": 0.3,
+    "camera": {
+      "p": [
+        420,
+        230,
+        480
+      ],
+      "q": [
+        -0.13169662713270414,
+        0.3482284891533517,
+        0.049483047486336876,
+        0.9267925041536041
+      ]
+    }
+  },
+  {
+    "caseName": "takram-ref-clouds",
+    "takram": {
+      "enabled": true,
+      "cloudsEnabled": true,
+      "skyEnabled": true,
+      "aerialPerspectiveEnabled": true,
+      "assetsReady": true,
+      "exposure": 0.75,
+      "toneMapping": "aces",
+      "dithering": false,
+      "qualityPreset": "high",
+      "resolutionScale": 0.75,
+      "coverage": 0.75,
+      "skyVisible": true,
+      "temporalUpscale": true,
+      "lightShafts": false,
+      "cloudLayer": {
+        "layers": [
+          {
+            "channel": "r",
+            "altitude": 750,
+            "height": 650,
+            "densityScale": 0.2,
+            "shapeAmount": 1,
+            "shapeDetailAmount": 1,
+            "shadow": true
+          },
+          {
+            "channel": "g",
+            "altitude": 1000,
+            "height": 1200,
+            "densityScale": 0.2,
+            "shapeAmount": 1,
+            "shapeDetailAmount": 1,
+            "shadow": true
+          },
+          {
+            "channel": "b",
+            "altitude": 7500,
+            "height": 500,
+            "densityScale": 0.003,
+            "shapeAmount": 0.4,
+            "shapeDetailAmount": 0,
+            "shadow": false
+          },
+          {
+            "channel": "a",
+            "altitude": 0,
+            "height": 0,
+            "densityScale": 0,
+            "shapeAmount": 0,
+            "shapeDetailAmount": 0,
+            "shadow": false
+          }
+        ]
+      },
+      "shadow": {
+        "cascadeCount": 3,
+        "mapSize": [
+          256,
+          256
+        ],
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "sunECEF": [
+        0.63295,
+        0.10421,
+        -0.76715
+      ],
+      "passes": [
+        {
+          "name": "RenderPass",
+          "enabled": true
+        },
+        {
+          "name": "NormalPass",
+          "enabled": true
+        },
+        {
+          "name": "EffectPass",
+          "enabled": true
+        },
+        {
+          "name": "EffectPass",
+          "enabled": true
+        }
+      ]
+    },
+    "cloudsRender": {
+      "mode": 1,
+      "atmosphere": true,
+      "clouds": true,
+      "aerialPerspective": true,
+      "quality": 2,
+      "resolutionScale": 0.75,
+      "temporalUpscale": true,
+      "exposure": 0.75
+    },
+    "layer": {
+      "referenceStack": true,
+      "enabled": true,
+      "altitude": 750,
+      "height": 600,
+      "densityScale": 0.4,
+      "shapeAmount": 1,
+      "shapeDetailAmount": 0.8,
+      "weatherExponent": 1,
+      "shapeAlteringBias": 0.35,
+      "coverageFilterWidth": 0.6
+    },
+    "finishing": {
+      "toneMapping": 0,
+      "dithering": false
+    },
+    "renderExposure": 0.3,
+    "camera": {
+      "p": [
+        420,
+        230,
+        480
+      ],
+      "q": [
+        -0.13169662713270414,
+        0.3482284891533517,
+        0.049483047486336876,
+        0.9267925041536041
+      ]
+    }
+  }
+]

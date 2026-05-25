@@ -1,0 +1,73 @@
+{
+  "summary": {
+    "takram": {
+      "enabled": true,
+      "cloudsEnabled": true,
+      "assetsReady": true,
+      "exposure": 10,
+      "qualityPreset": "high",
+      "resolutionScale": 0.75,
+      "coverage": 0.4,
+      "skyVisible": true,
+      "temporalUpscale": true,
+      "lightShafts": false,
+      "cloudLayer": {
+        "altitude": 750,
+        "height": 650,
+        "densityScale": 0.2,
+        "shadow": true
+      },
+      "shadow": {
+        "cascadeCount": 3,
+        "mapSize": [
+          256,
+          256
+        ],
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "sunECEF": [
+        0.96035,
+        0.24184,
+        -0.13872
+      ],
+      "passes": [
+        {
+          "name": "RenderPass",
+          "enabled": true
+        },
+        {
+          "name": "NormalPass",
+          "enabled": true
+        },
+        {
+          "name": "EffectPass",
+          "enabled": true
+        },
+        {
+          "name": "EffectPass",
+          "enabled": true
+        }
+      ]
+    },
+    "info": {
+      "name": "Isometric Island",
+      "camera": [
+        "0.0",
+        "500.0",
+        "0.0"
+      ],
+      "triangles": 10,
+      "drawCalls": 9,
+      "trees": 533,
+      "worldSize": 2461,
+      "seaLevel": 9,
+      "sunElevationDeg": 45,
+      "seed": 1337
+    }
+  },
+  "events": []
+}

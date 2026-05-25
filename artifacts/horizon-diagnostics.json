@@ -1,0 +1,903 @@
+{
+  "collectedAt": "2026-05-23T21:48:07.374Z",
+  "bodyText": "WATER WORKSHOP ASSET BUILD\n9138ms\n06 trees            +981.7ms  8824.9ms  533\n07 shadow bounds    +140.6ms  8965.5ms\n08 swap             +172.7ms  9138.2ms\n09 ready            +0.2ms  9138.4ms\n◐\nsky diagnosis\nhorizon strip isolation · no fixes\n▸\n◇\nSky only\nhide island, trees, sea, and floor\n◇\nFast sky boot\nskip the slow voxel island build until this is on\n◇\nHide island\nhide terrain, trees, and reference blocks while tuning sky/clouds\n◇\nSea only\nhide sky and terrain; keep sea surface/floor\n◇\nFloor only\nhide sky, terrain, and sea surface; keep floor disc\n◇\nMagenta clear\nreveals uncovered pixels behind all rendered layers\n◇\nDisable warp\nforces unwarped sky-view LUT latitude mapping\n◇\nBelow-horizon fog\ndiagnostic fill for rays that hit the planet\n≈\nwater\ndatum · seafloor · depth tint · masks\n▸\n◇\nWater\nC toggles only the water surface in this workshop\n◇\nWater datum\nstructural; rebuilds terrain/water data\n9.0 m\n◇\nSeafloor depth\n64 m\n◇\nShelf shape\nlower = quick deep drop · higher = long shallow shelf\n0.85\n◇\nSeafloor jag\nheight variation below water\n1.00\n◇\nDelta follow\ncarves underwater floor along the river/delta channel\n0.00\n◇\nSurface lift\nshore z-fighting diagnostic\n0.08 m\n◇\nLand mask\nf",
+  "logs": [
+    "debug: [vite] connecting...",
+    "debug: [vite] connected.",
+    "warning: [.WebGL-0x10400564800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "warning: [.WebGL-0x10400564800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "warning: [.WebGL-0x10400564800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "warning: [.WebGL-0x10400564800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+  ],
+  "snapshots": [
+    {
+      "name": "default",
+      "camera": [
+        -853.5,
+        101.7,
+        583.32
+      ],
+      "horizonWarp": true,
+      "forceBelowHorizonFog": false,
+      "diagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "fog": [
+        0.014849,
+        0.045127,
+        0.35825
+      ],
+      "rows": [
+        {
+          "row": 0,
+          "v": 0,
+          "avg": [
+            0.00030832,
+            0.0005263,
+            0.0019034
+          ],
+          "minLum": 0.00057492,
+          "maxLum": 0.0005842,
+          "darkPct": 0
+        },
+        {
+          "row": 32,
+          "v": 0.252,
+          "avg": [
+            0.0011497,
+            0.0019621,
+            0.0070947
+          ],
+          "minLum": 0.001518,
+          "maxLum": 0.0029667,
+          "darkPct": 0
+        },
+        {
+          "row": 61,
+          "v": 0.4803,
+          "avg": [
+            0.354,
+            0.56411,
+            1.8256
+          ],
+          "minLum": 0.41227,
+          "maxLum": 0.84649,
+          "darkPct": 0
+        },
+        {
+          "row": 63,
+          "v": 0.4961,
+          "avg": [
+            0.3366,
+            0.53779,
+            1.7545
+          ],
+          "minLum": 0.3935,
+          "maxLum": 0.80745,
+          "darkPct": 0
+        },
+        {
+          "row": 64,
+          "v": 0.5039,
+          "avg": [
+            0.33521,
+            0.53565,
+            1.7488
+          ],
+          "minLum": 0.39196,
+          "maxLum": 0.80438,
+          "darkPct": 0
+        },
+        {
+          "row": 65,
+          "v": 0.5118,
+          "avg": [
+            0.32971,
+            0.5273,
+            1.726
+          ],
+          "minLum": 0.38601,
+          "maxLum": 0.79178,
+          "darkPct": 0
+        },
+        {
+          "row": 96,
+          "v": 0.7559,
+          "avg": [
+            0.023924,
+            0.041021,
+            0.14954
+          ],
+          "minLum": 0.031946,
+          "maxLum": 0.062374,
+          "darkPct": 0
+        },
+        {
+          "row": 127,
+          "v": 1,
+          "avg": [
+            0.0069292,
+            0.011999,
+            0.043588
+          ],
+          "minLum": 0.013104,
+          "maxLum": 0.013306,
+          "darkPct": 0
+        }
+      ],
+      "renderer": {
+        "triangles": 17315094,
+        "calls": 5821
+      }
+    },
+    {
+      "name": "sky-only",
+      "camera": [
+        -853.5,
+        101.7,
+        583.32
+      ],
+      "horizonWarp": true,
+      "forceBelowHorizonFog": false,
+      "diagnosis": {
+        "skyOnly": true,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "fog": [
+        0.014849,
+        0.045127,
+        0.35825
+      ],
+      "rows": [
+        {
+          "row": 0,
+          "v": 0,
+          "avg": [
+            0.00030832,
+            0.0005263,
+            0.0019034
+          ],
+          "minLum": 0.00057492,
+          "maxLum": 0.0005842,
+          "darkPct": 0
+        },
+        {
+          "row": 32,
+          "v": 0.252,
+          "avg": [
+            0.0011497,
+            0.0019621,
+            0.0070947
+          ],
+          "minLum": 0.001518,
+          "maxLum": 0.0029667,
+          "darkPct": 0
+        },
+        {
+          "row": 61,
+          "v": 0.4803,
+          "avg": [
+            0.354,
+            0.56411,
+            1.8256
+          ],
+          "minLum": 0.41227,
+          "maxLum": 0.84649,
+          "darkPct": 0
+        },
+        {
+          "row": 63,
+          "v": 0.4961,
+          "avg": [
+            0.3366,
+            0.53779,
+            1.7545
+          ],
+          "minLum": 0.3935,
+          "maxLum": 0.80745,
+          "darkPct": 0
+        },
+        {
+          "row": 64,
+          "v": 0.5039,
+          "avg": [
+            0.33521,
+            0.53565,
+            1.7488
+          ],
+          "minLum": 0.39196,
+          "maxLum": 0.80438,
+          "darkPct": 0
+        },
+        {
+          "row": 65,
+          "v": 0.5118,
+          "avg": [
+            0.32971,
+            0.5273,
+            1.726
+          ],
+          "minLum": 0.38601,
+          "maxLum": 0.79178,
+          "darkPct": 0
+        },
+        {
+          "row": 96,
+          "v": 0.7559,
+          "avg": [
+            0.023924,
+            0.041021,
+            0.14954
+          ],
+          "minLum": 0.031946,
+          "maxLum": 0.062374,
+          "darkPct": 0
+        },
+        {
+          "row": 127,
+          "v": 1,
+          "avg": [
+            0.0069292,
+            0.011999,
+            0.043588
+          ],
+          "minLum": 0.013104,
+          "maxLum": 0.013306,
+          "darkPct": 0
+        }
+      ],
+      "renderer": {
+        "triangles": 14,
+        "calls": 7
+      }
+    },
+    {
+      "name": "sky-only-force-fog",
+      "camera": [
+        -853.5,
+        101.7,
+        583.32
+      ],
+      "horizonWarp": true,
+      "forceBelowHorizonFog": true,
+      "diagnosis": {
+        "skyOnly": true,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": true
+      },
+      "fog": [
+        0.014849,
+        0.045127,
+        0.35825
+      ],
+      "rows": [
+        {
+          "row": 0,
+          "v": 0,
+          "avg": [
+            0.00030832,
+            0.0005263,
+            0.0019034
+          ],
+          "minLum": 0.00057492,
+          "maxLum": 0.0005842,
+          "darkPct": 0
+        },
+        {
+          "row": 32,
+          "v": 0.252,
+          "avg": [
+            0.0011497,
+            0.0019621,
+            0.0070947
+          ],
+          "minLum": 0.001518,
+          "maxLum": 0.0029667,
+          "darkPct": 0
+        },
+        {
+          "row": 61,
+          "v": 0.4803,
+          "avg": [
+            0.354,
+            0.56411,
+            1.8256
+          ],
+          "minLum": 0.41227,
+          "maxLum": 0.84649,
+          "darkPct": 0
+        },
+        {
+          "row": 63,
+          "v": 0.4961,
+          "avg": [
+            0.3366,
+            0.53779,
+            1.7545
+          ],
+          "minLum": 0.3935,
+          "maxLum": 0.80745,
+          "darkPct": 0
+        },
+        {
+          "row": 64,
+          "v": 0.5039,
+          "avg": [
+            0.33521,
+            0.53565,
+            1.7488
+          ],
+          "minLum": 0.39196,
+          "maxLum": 0.80438,
+          "darkPct": 0
+        },
+        {
+          "row": 65,
+          "v": 0.5118,
+          "avg": [
+            0.32971,
+            0.5273,
+            1.726
+          ],
+          "minLum": 0.38601,
+          "maxLum": 0.79178,
+          "darkPct": 0
+        },
+        {
+          "row": 96,
+          "v": 0.7559,
+          "avg": [
+            0.023924,
+            0.041021,
+            0.14954
+          ],
+          "minLum": 0.031946,
+          "maxLum": 0.062374,
+          "darkPct": 0
+        },
+        {
+          "row": 127,
+          "v": 1,
+          "avg": [
+            0.0069292,
+            0.011999,
+            0.043588
+          ],
+          "minLum": 0.013104,
+          "maxLum": 0.013306,
+          "darkPct": 0
+        }
+      ],
+      "renderer": {
+        "triangles": 14,
+        "calls": 7
+      }
+    },
+    {
+      "name": "magenta-clear",
+      "camera": [
+        -853.5,
+        101.7,
+        583.32
+      ],
+      "horizonWarp": true,
+      "forceBelowHorizonFog": false,
+      "diagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": true,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "fog": [
+        0.014849,
+        0.045127,
+        0.35825
+      ],
+      "rows": [
+        {
+          "row": 0,
+          "v": 0,
+          "avg": [
+            0.00030832,
+            0.0005263,
+            0.0019034
+          ],
+          "minLum": 0.00057492,
+          "maxLum": 0.0005842,
+          "darkPct": 0
+        },
+        {
+          "row": 32,
+          "v": 0.252,
+          "avg": [
+            0.0011497,
+            0.0019621,
+            0.0070947
+          ],
+          "minLum": 0.001518,
+          "maxLum": 0.0029667,
+          "darkPct": 0
+        },
+        {
+          "row": 61,
+          "v": 0.4803,
+          "avg": [
+            0.354,
+            0.56411,
+            1.8256
+          ],
+          "minLum": 0.41227,
+          "maxLum": 0.84649,
+          "darkPct": 0
+        },
+        {
+          "row": 63,
+          "v": 0.4961,
+          "avg": [
+            0.3366,
+            0.53779,
+            1.7545
+          ],
+          "minLum": 0.3935,
+          "maxLum": 0.80745,
+          "darkPct": 0
+        },
+        {
+          "row": 64,
+          "v": 0.5039,
+          "avg": [
+            0.33521,
+            0.53565,
+            1.7488
+          ],
+          "minLum": 0.39196,
+          "maxLum": 0.80438,
+          "darkPct": 0
+        },
+        {
+          "row": 65,
+          "v": 0.5118,
+          "avg": [
+            0.32971,
+            0.5273,
+            1.726
+          ],
+          "minLum": 0.38601,
+          "maxLum": 0.79178,
+          "darkPct": 0
+        },
+        {
+          "row": 96,
+          "v": 0.7559,
+          "avg": [
+            0.023924,
+            0.041021,
+            0.14954
+          ],
+          "minLum": 0.031946,
+          "maxLum": 0.062374,
+          "darkPct": 0
+        },
+        {
+          "row": 127,
+          "v": 1,
+          "avg": [
+            0.0069292,
+            0.011999,
+            0.043588
+          ],
+          "minLum": 0.013104,
+          "maxLum": 0.013306,
+          "darkPct": 0
+        }
+      ],
+      "renderer": {
+        "triangles": 17315096,
+        "calls": 5822
+      }
+    },
+    {
+      "name": "sea-only",
+      "camera": [
+        -853.5,
+        101.7,
+        583.32
+      ],
+      "horizonWarp": true,
+      "forceBelowHorizonFog": false,
+      "diagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": true,
+        "floorOnlyStub": false,
+        "magentaClear": true,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "fog": [
+        0.014849,
+        0.045127,
+        0.35825
+      ],
+      "rows": [
+        {
+          "row": 0,
+          "v": 0,
+          "avg": [
+            0.00030832,
+            0.0005263,
+            0.0019034
+          ],
+          "minLum": 0.00057492,
+          "maxLum": 0.0005842,
+          "darkPct": 0
+        },
+        {
+          "row": 32,
+          "v": 0.252,
+          "avg": [
+            0.0011497,
+            0.0019621,
+            0.0070947
+          ],
+          "minLum": 0.001518,
+          "maxLum": 0.0029667,
+          "darkPct": 0
+        },
+        {
+          "row": 61,
+          "v": 0.4803,
+          "avg": [
+            0.354,
+            0.56411,
+            1.8256
+          ],
+          "minLum": 0.41227,
+          "maxLum": 0.84649,
+          "darkPct": 0
+        },
+        {
+          "row": 63,
+          "v": 0.4961,
+          "avg": [
+            0.3366,
+            0.53779,
+            1.7545
+          ],
+          "minLum": 0.3935,
+          "maxLum": 0.80745,
+          "darkPct": 0
+        },
+        {
+          "row": 64,
+          "v": 0.5039,
+          "avg": [
+            0.33521,
+            0.53565,
+            1.7488
+          ],
+          "minLum": 0.39196,
+          "maxLum": 0.80438,
+          "darkPct": 0
+        },
+        {
+          "row": 65,
+          "v": 0.5118,
+          "avg": [
+            0.32971,
+            0.5273,
+            1.726
+          ],
+          "minLum": 0.38601,
+          "maxLum": 0.79178,
+          "darkPct": 0
+        },
+        {
+          "row": 96,
+          "v": 0.7559,
+          "avg": [
+            0.023924,
+            0.041021,
+            0.14954
+          ],
+          "minLum": 0.031946,
+          "maxLum": 0.062374,
+          "darkPct": 0
+        },
+        {
+          "row": 127,
+          "v": 1,
+          "avg": [
+            0.0069292,
+            0.011999,
+            0.043588
+          ],
+          "minLum": 0.013104,
+          "maxLum": 0.013306,
+          "darkPct": 0
+        }
+      ],
+      "renderer": {
+        "triangles": 409802,
+        "calls": 9
+      }
+    },
+    {
+      "name": "floor-only",
+      "camera": [
+        -853.5,
+        101.7,
+        583.32
+      ],
+      "horizonWarp": true,
+      "forceBelowHorizonFog": false,
+      "diagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": true,
+        "magentaClear": true,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "fog": [
+        0.014849,
+        0.045127,
+        0.35825
+      ],
+      "rows": [
+        {
+          "row": 0,
+          "v": 0,
+          "avg": [
+            0.00030832,
+            0.0005263,
+            0.0019034
+          ],
+          "minLum": 0.00057492,
+          "maxLum": 0.0005842,
+          "darkPct": 0
+        },
+        {
+          "row": 32,
+          "v": 0.252,
+          "avg": [
+            0.0011497,
+            0.0019621,
+            0.0070947
+          ],
+          "minLum": 0.001518,
+          "maxLum": 0.0029667,
+          "darkPct": 0
+        },
+        {
+          "row": 61,
+          "v": 0.4803,
+          "avg": [
+            0.354,
+            0.56411,
+            1.8256
+          ],
+          "minLum": 0.41227,
+          "maxLum": 0.84649,
+          "darkPct": 0
+        },
+        {
+          "row": 63,
+          "v": 0.4961,
+          "avg": [
+            0.3366,
+            0.53779,
+            1.7545
+          ],
+          "minLum": 0.3935,
+          "maxLum": 0.80745,
+          "darkPct": 0
+        },
+        {
+          "row": 64,
+          "v": 0.5039,
+          "avg": [
+            0.33521,
+            0.53565,
+            1.7488
+          ],
+          "minLum": 0.39196,
+          "maxLum": 0.80438,
+          "darkPct": 0
+        },
+        {
+          "row": 65,
+          "v": 0.5118,
+          "avg": [
+            0.32971,
+            0.5273,
+            1.726
+          ],
+          "minLum": 0.38601,
+          "maxLum": 0.79178,
+          "darkPct": 0
+        },
+        {
+          "row": 96,
+          "v": 0.7559,
+          "avg": [
+            0.023924,
+            0.041021,
+            0.14954
+          ],
+          "minLum": 0.031946,
+          "maxLum": 0.062374,
+          "darkPct": 0
+        },
+        {
+          "row": 127,
+          "v": 1,
+          "avg": [
+            0.0069292,
+            0.011999,
+            0.043588
+          ],
+          "minLum": 0.013104,
+          "maxLum": 0.013306,
+          "darkPct": 0
+        }
+      ],
+      "renderer": {
+        "triangles": 202,
+        "calls": 7
+      }
+    },
+    {
+      "name": "disable-warp",
+      "camera": [
+        -853.5,
+        101.7,
+        583.32
+      ],
+      "horizonWarp": false,
+      "forceBelowHorizonFog": false,
+      "diagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": true,
+        "forceBelowHorizonFog": false
+      },
+      "fog": [
+        0.0004906,
+        0.0010962,
+        0.010276
+      ],
+      "rows": [
+        {
+          "row": 0,
+          "v": 0,
+          "avg": [
+            0.00030826,
+            0.0005262,
+            0.001903
+          ],
+          "minLum": 0.00057697,
+          "maxLum": 0.00058158,
+          "darkPct": 0
+        },
+        {
+          "row": 32,
+          "v": 0.252,
+          "avg": [
+            0.00054237,
+            0.00092578,
+            0.0033481
+          ],
+          "minLum": 0.00080727,
+          "maxLum": 0.0013513,
+          "darkPct": 0
+        },
+        {
+          "row": 61,
+          "v": 0.4803,
+          "avg": [
+            0.007313,
+            0.01247,
+            0.04498
+          ],
+          "minLum": 0.0092426,
+          "maxLum": 0.018371,
+          "darkPct": 0
+        },
+        {
+          "row": 63,
+          "v": 0.4961,
+          "avg": [
+            0.047726,
+            0.080883,
+            0.28727
+          ],
+          "minLum": 0.059724,
+          "maxLum": 0.11816,
+          "darkPct": 0
+        },
+        {
+          "row": 64,
+          "v": 0.5039,
+          "avg": [
+            0.26239,
+            0.42365,
+            1.4324
+          ],
+          "minLum": 0.3117,
+          "maxLum": 0.63718,
+          "darkPct": 0
+        },
+        {
+          "row": 65,
+          "v": 0.5118,
+          "avg": [
+            0.17554,
+            0.28694,
+            1.0114
+          ],
+          "minLum": 0.21266,
+          "maxLum": 0.43261,
+          "darkPct": 0
+        },
+        {
+          "row": 96,
+          "v": 0.7559,
+          "avg": [
+            0.011755,
+            0.020302,
+            0.07382
+          ],
+          "minLum": 0.017856,
+          "maxLum": 0.029541,
+          "darkPct": 0
+        },
+        {
+          "row": 127,
+          "v": 1,
+          "avg": [
+            0.0069263,
+            0.011993,
+            0.043568
+          ],
+          "minLum": 0.013145,
+          "maxLum": 0.013246,
+          "darkPct": 0
+        }
+      ],
+      "renderer": {
+        "triangles": 17315096,
+        "calls": 5822
+      }
+    }
+  ]
+}
