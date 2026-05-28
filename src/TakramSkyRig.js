@@ -115,6 +115,10 @@ export class TakramSkyRig {
     this.toneMappingIndex = 0;
     this.toneMappingMode = TONE_MAPPING_MODES[this.toneMappingIndex];
     this.dithering = true;
+    this.shadowTemporalSmoothing = 0.99;
+    this.shadowVarianceGamma = 1;
+    this._lastShadowTemporalPass = true;
+    this._lastShadowTemporalJitter = true;
 
     this.worldToECEFMatrix = makeWorldToECEFMatrix();
     this.sunECEF = new THREE.Vector3(0, 1, 0);
@@ -321,6 +325,10 @@ export class TakramSkyRig {
       shadow: {
         cascadeCount: this.clouds.shadowMaps.cascadeCount,
         mapSize: this.clouds.shadowMaps.mapSize.toArray(),
+        temporalPass: this.clouds.shadow.temporalPass,
+        temporalJitter: this.clouds.shadow.temporalJitter,
+        temporalSmoothing: this.shadowTemporalSmoothing,
+        varianceGamma: this.shadowVarianceGamma,
         shadowIterations: this.clouds.shadow.maxIterationCount,
         shadowStep: this.clouds.shadow.minStepSize,
         shadowLengthIterations: this.clouds.clouds.maxShadowLengthIterationCount,
@@ -411,12 +419,30 @@ export class TakramSkyRig {
     // cloud-shadow temporal stability is being tuned. Presets or console calls
     // may still contain shaft params; they should not re-enable the buffer.
     this.clouds.lightShafts = false;
+    const temporalPass = params.temporalPass !== false;
+    const temporalJitter = params.temporalJitter !== false;
+    const temporalStateChanged =
+      temporalPass !== this._lastShadowTemporalPass ||
+      temporalJitter !== this._lastShadowTemporalJitter;
+    this._lastShadowTemporalPass = temporalPass;
+    this._lastShadowTemporalJitter = temporalJitter;
+    this.clouds.shadow.temporalPass = temporalPass;
+    this.clouds.shadow.temporalJitter = temporalJitter;
+    if (temporalStateChanged) this.clouds.shadowMapSize?.set(0, 0);
     const cascadeCount = THREE.MathUtils.clamp(Math.round(params.cascadeCount ?? 3), 1, 4);
     const mapSize = SHADOW_MAP_SIZES[THREE.MathUtils.clamp(Math.round(params.mapSize ?? 0), 0, SHADOW_MAP_SIZES.length - 1)];
     this.clouds.shadowMaps.cascadeCount = cascadeCount;
     this.clouds.shadowMaps.mapSize.set(mapSize, mapSize);
     this.clouds.shadow.maxIterationCount = params.shadowIterations ?? 50;
     this.clouds.shadow.minStepSize = params.shadowStep ?? 100;
+    this.shadowTemporalSmoothing = THREE.MathUtils.clamp(params.temporalSmoothing ?? 0.99, 0, 0.999);
+    this.shadowVarianceGamma = THREE.MathUtils.clamp(params.varianceGamma ?? 1, 0, 6);
+    const resolveUniforms = this.clouds.shadowPass?.resolveMaterial?.uniforms;
+    if (resolveUniforms) {
+      resolveUniforms.temporalAlpha.value = THREE.MathUtils.clamp(1 - this.shadowTemporalSmoothing, 0.001, 1);
+      resolveUniforms.varianceGamma.value = this.shadowVarianceGamma;
+    }
+    if (temporalStateChanged) this.resetTemporalState();
   }
 
   _applyFinishingParams(params = {}) {
