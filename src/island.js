@@ -631,17 +631,13 @@ function makeWorkshopSchema() {
   out.cloudShadows = {
     label: 'cloud shadows',
     icon: '◒',
-    blurb: 'Beer map · layer shadows · shafts',
+    blurb: 'Beer map · layer shadows',
     fields: {
       layerShadow: { type: 'bool', label: 'Layer shadow', default: true },
-      lightShafts: { type: 'bool', label: 'Light shafts', default: false, hint: 'enables Takram shadow-length buffer into AerialPerspectiveEffect' },
       cascadeCount: { type: 'int', label: 'Cascades', min: 1, max: 4, step: 1, default: 3 },
       mapSize: { type: 'int', label: 'Map size', min: 0, max: 3, step: 1, default: 0, labels: ['256', '512', '1024', '2048'] },
       shadowIterations: { type: 'int', label: 'Shadow steps', min: 8, max: 160, step: 1, default: 50 },
       shadowStep: { type: 'float', label: 'Shadow min step', min: 20, max: 500, step: 5, default: 100, unit: 'm' },
-      shadowLengthIterations: { type: 'int', label: 'Shaft steps', min: 16, max: 500, step: 4, default: 180 },
-      shadowLengthStep: { type: 'float', label: 'Shaft min step', min: 20, max: 500, step: 5, default: 80, unit: 'm' },
-      shadowLengthDistance: { type: 'float', label: 'Shaft reach', min: 20000, max: 220000, step: 5000, default: 120000, unit: 'm' },
     },
   };
   out.cloudDebug = {

@@ -407,16 +407,16 @@ export class TakramSkyRig {
   }
 
   _applyShadowParams(params = {}) {
-    this.clouds.lightShafts = !!params.lightShafts;
+    // The light-shaft path is intentionally muted for the island lab while
+    // cloud-shadow temporal stability is being tuned. Presets or console calls
+    // may still contain shaft params; they should not re-enable the buffer.
+    this.clouds.lightShafts = false;
     const cascadeCount = THREE.MathUtils.clamp(Math.round(params.cascadeCount ?? 3), 1, 4);
     const mapSize = SHADOW_MAP_SIZES[THREE.MathUtils.clamp(Math.round(params.mapSize ?? 0), 0, SHADOW_MAP_SIZES.length - 1)];
     this.clouds.shadowMaps.cascadeCount = cascadeCount;
     this.clouds.shadowMaps.mapSize.set(mapSize, mapSize);
     this.clouds.shadow.maxIterationCount = params.shadowIterations ?? 50;
     this.clouds.shadow.minStepSize = params.shadowStep ?? 100;
-    this.clouds.clouds.maxShadowLengthIterationCount = params.shadowLengthIterations ?? 180;
-    this.clouds.clouds.minShadowLengthStepSize = params.shadowLengthStep ?? 80;
-    this.clouds.clouds.maxShadowLengthRayDistance = params.shadowLengthDistance ?? 120000;
   }
 
   _applyFinishingParams(params = {}) {
@@ -465,7 +465,7 @@ export class TakramSkyRig {
     const useCloudAtmosphereBuffers = this.cloudsEnabled && this.aerialPerspectiveEnabled;
     this.aerialPerspective.overlay = useCloudAtmosphereBuffers ? this.clouds.atmosphereOverlay : null;
     this.aerialPerspective.shadow = useCloudAtmosphereBuffers ? this.clouds.atmosphereShadow : null;
-    this.aerialPerspective.shadowLength = useCloudAtmosphereBuffers ? this.clouds.atmosphereShadowLength : null;
+    this.aerialPerspective.shadowLength = null;
 
     const effects = [];
     if (this.cloudsEnabled) effects.push(this.clouds);
@@ -488,7 +488,7 @@ export class TakramSkyRig {
         this.aerialPerspective.shadow = this.clouds.atmosphereShadow;
         break;
       case 'atmosphereShadowLength':
-        this.aerialPerspective.shadowLength = this.clouds.atmosphereShadowLength;
+        this.aerialPerspective.shadowLength = null;
         break;
       default:
         break;
