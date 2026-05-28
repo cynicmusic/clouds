@@ -115,10 +115,10 @@ export class TakramSkyRig {
     this.toneMappingIndex = 0;
     this.toneMappingMode = TONE_MAPPING_MODES[this.toneMappingIndex];
     this.dithering = true;
-    this.shadowTemporalSmoothing = 0.99;
+    this.shadowTemporalSmoothing = 0.999;
     this.shadowVarianceGamma = 1;
     this._lastShadowTemporalPass = true;
-    this._lastShadowTemporalJitter = true;
+    this._lastShadowTemporalJitter = false;
 
     this.worldToECEFMatrix = makeWorldToECEFMatrix();
     this.sunECEF = new THREE.Vector3(0, 1, 0);
@@ -420,7 +420,7 @@ export class TakramSkyRig {
     // may still contain shaft params; they should not re-enable the buffer.
     this.clouds.lightShafts = false;
     const temporalPass = params.temporalPass !== false;
-    const temporalJitter = params.temporalJitter !== false;
+    const temporalJitter = params.temporalJitter === true;
     const temporalStateChanged =
       temporalPass !== this._lastShadowTemporalPass ||
       temporalJitter !== this._lastShadowTemporalJitter;
@@ -435,11 +435,11 @@ export class TakramSkyRig {
     this.clouds.shadowMaps.mapSize.set(mapSize, mapSize);
     this.clouds.shadow.maxIterationCount = params.shadowIterations ?? 50;
     this.clouds.shadow.minStepSize = params.shadowStep ?? 100;
-    this.shadowTemporalSmoothing = THREE.MathUtils.clamp(params.temporalSmoothing ?? 0.99, 0, 0.999);
+    this.shadowTemporalSmoothing = THREE.MathUtils.clamp(params.temporalSmoothing ?? 0.999, 0.99, 0.99995);
     this.shadowVarianceGamma = THREE.MathUtils.clamp(params.varianceGamma ?? 1, 0, 6);
     const resolveUniforms = this.clouds.shadowPass?.resolveMaterial?.uniforms;
     if (resolveUniforms) {
-      resolveUniforms.temporalAlpha.value = THREE.MathUtils.clamp(1 - this.shadowTemporalSmoothing, 0.001, 1);
+      resolveUniforms.temporalAlpha.value = THREE.MathUtils.clamp(1 - this.shadowTemporalSmoothing, 0.00005, 0.01);
       resolveUniforms.varianceGamma.value = this.shadowVarianceGamma;
     }
     if (temporalStateChanged) this.resetTemporalState();
