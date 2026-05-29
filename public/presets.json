@@ -929,14 +929,26 @@
   },
   "A1": {
     "params": {
+      "orbitSweep": {
+        "enable": false,
+        "speed": 1,
+        "elevationDeg": 15,
+        "azimuthDeg": 117,
+        "elevationSpeed": 4,
+        "azimuthSpeed": 0.5,
+        "elevationRange": [
+          2,
+          50
+        ]
+      },
       "sun": {
-        "elevationDeg": 9.5,
-        "azimuthDeg": -118,
-        "intensity": 60
+        "elevationDeg": 15,
+        "azimuthDeg": 117,
+        "intensity": 33.5
       },
       "atmosphere": {
-        "rayleighMul": 0.05,
-        "mieBeta": 0,
+        "rayleighMul": 1.06,
+        "mieBeta": 0.0095,
         "mieG": 0,
         "ozoneMul": 3,
         "planetRadiusKm": 6350
@@ -945,6 +957,10 @@
         "skyBounce": 1.38,
         "bounceTint": 0.22,
         "groundBounce": 0.9,
+        "sunElevationGain": 1,
+        "sunFloor": 4,
+        "sunCeiling": 5,
+        "secondaryEnergy": 0.49,
         "sunGlint": 1.7,
         "glintSpread": 3.4,
         "bloom": 0,
@@ -959,7 +975,7 @@
         "radius": 1070,
         "shape": 3,
         "lowland": 38,
-        "massif": 470,
+        "massif": 280,
         "massifSharpness": 1,
         "massifOffsetX": 0,
         "massifOffsetZ": 0,
@@ -968,6 +984,20 @@
         "beachWidth": 3,
         "valleyDepth": 110,
         "valleyWidth": 18
+      },
+      "lagoon": {
+        "enable": true,
+        "x": 0.24,
+        "z": -0.12,
+        "radiusX": 230,
+        "radiusZ": 135,
+        "rotation": -24,
+        "depth": 1.4,
+        "lowlandCap": 54,
+        "inlet": 0.12,
+        "apronWidth": 42,
+        "whiteSand": 0.9,
+        "treeAttraction": 1.1
       },
       "seasons": {
         "sweepDeg": 38,
@@ -982,23 +1012,54 @@
         "bunkerSize": 22
       },
       "water": {
+        "enable": true,
         "seaLevel": 32.5,
-        "causticScale": 4.6,
-        "causticIntensity": 2.8,
-        "causticOpacity": 0,
         "floorDepth": 50,
         "floorShape": 0.85,
         "floorRoughness": 1,
         "deltaFloor": 1,
+        "surfaceLift": 0.08,
+        "landMask": 1,
+        "debugView": 0,
+        "depthTint": 0.78,
+        "lagoonTint": 0.18,
+        "causticScale": 4.6,
+        "causticIntensity": 2.8,
+        "causticOpacity": 0,
         "shoreGlow": 1.35,
         "shoreGlowWidth": 1.3,
         "shoreGlowFollow": 0
       },
+      "waves": {
+        "waveSpeed": 2.7,
+        "glintSpeed": 3.5,
+        "glintScale": 1.34,
+        "waveScale": 0.0275,
+        "waveRotation": 143,
+        "surfaceOpacity": 0.55,
+        "waveHeight": 1.92,
+        "waveChoppy": 5.95,
+        "surfaceStage": 5,
+        "detailMix": 0.42,
+        "normalStrength": 0.4,
+        "refractionStrength": 0.18
+      },
       "tree": {
-        "palmCount": 499,
-        "palmLine": 0.58,
-        "mixedTreeCount": 34,
-        "palmSway": 1
+        "enable": true,
+        "totalCount": 1300,
+        "globalScale": 1.35,
+        "spacing": 9,
+        "clusterBias": 1,
+        "autumnWeight": 1.55,
+        "summerWeight": 0.95,
+        "spruceWeight": 0.75,
+        "palmWeight": 0.25,
+        "palmTarget": 400,
+        "peakSparse": 0.08,
+        "openCuts": 0.6,
+        "autumnScale": 1.3,
+        "spruceScale": 1.22,
+        "palmScale": 0.9
       },
       "shadows": {
         "enable": true,
@@ -1016,9 +1077,9 @@
         "normalBias": 2.2
       },
       "render": {
-        "fov": 81,
-        "exposure": 0.3,
-        "fogDensity": 0.0003,
+        "fov": 65,
+        "exposure": 0.2,
+        "fogDensity": 0,
         "horizonWarp": true
       },
       "godrays": {
@@ -1051,22 +1112,115 @@
         "focusShoreline": 0.24,
         "focusPalms": 0.12,
         "focusWater": 0.16
+      },
+      "cloudFinishing": {
+        "toneMapping": 1,
+        "dithering": true
+      },
+      "skyDiagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "takramAtmosphere": {
+        "sunLight": true,
+        "skyLight": true,
+        "ground": true,
+        "groundAlbedo": 0,
+        "albedoScale": 0.36,
+        "sun": true,
+        "transmittance": true,
+        "inscatter": true
+      },
+      "cloudWeather": {
+        "coverage": 0.38,
+        "weatherRepeatX": 77,
+        "weatherRepeatY": 100,
+        "weatherVelocityX": 0.001,
+        "weatherVelocityY": 0,
+        "shapeRepeat": 0.0003,
+        "detailRepeat": 0.006,
+        "turbulenceRepeat": 20,
+        "turbulenceDisplacement": 350
+      },
+      "cloudLighting": {
+        "scatteringCoefficient": 3,
+        "groundBounceScale": 2,
+        "skyLightScale": 0,
+        "powderScale": 0,
+        "absorptionCoefficient": 2.46,
+        "powderExponent": 150,
+        "anisotropy1": 0.7,
+        "anisotropy2": -0.2,
+        "anisotropyMix": 0.5,
+        "shapeDetail": true,
+        "turbulence": false,
+        "haze": true
+      },
+      "cloudShadows": {
+        "layerShadow": true,
+        "lightShafts": false,
+        "cascadeCount": 3,
+        "mapSize": 0,
+        "shadowIterations": 160,
+        "shadowStep": 20,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000,
+        "temporalPass": true,
+        "temporalSmoothing": 0.999,
+        "varianceGamma": 1,
+        "temporalJitter": true
+      },
+      "cloudsRender": {
+        "exposure": 3.9,
+        "mode": 0,
+        "atmosphere": true,
+        "clouds": true,
+        "aerialPerspective": true,
+        "quality": 2,
+        "resolutionScale": 0.75,
+        "temporalUpscale": true
+      },
+      "cloudLayer0": {
+        "referenceStack": true,
+        "enabled": true,
+        "altitude": 750,
+        "height": 600,
+        "densityScale": 0.4,
+        "shapeAmount": 1,
+        "shapeDetailAmount": 0.8,
+        "weatherExponent": 1,
+        "shapeAlteringBias": 0.35,
+        "coverageFilterWidth": 0.6
+      },
+      "cloudDebug": {
+        "mode": 0,
+        "primarySteps": 200,
+        "minStep": 80,
+        "maxStep": 1000,
+        "rayDistance": 120000
       }
     },
     "cam": {
       "p": [
-        -853.502142601015,
-        101.70024983367787,
-        583.3214926770827
+        -804.2891748925716,
+        249.35342899640176,
+        889.8875492613403
       ],
       "q": [
-        -0.03256969247008698,
-        -0.28274151478434767,
-        -0.009606565059421784,
-        0.9585948908989739
+        -0.06265811423939308,
+        -0.26378711517536546,
+        -0.017174321866120307,
+        0.9623904411702459
       ]
     },
-    "t": 1779410503117
+    "t": 1780027532093
   },
   "B4": {
     "params": {
@@ -1262,113 +1416,29 @@
   },
   "C1": {
     "params": {
+      "orbitSweep": {
+        "enable": false,
+        "speed": 1,
+        "elevationDeg": 1.5,
+        "azimuthDeg": -47,
+        "elevationSpeed": 4,
+        "azimuthSpeed": 0.5,
+        "elevationRange": [
+          2,
+          50
+        ]
+      },
       "sun": {
-        "elevationDeg": 10.133404620809934,
-        "azimuthDeg": -159.589483794465,
-        "intensity": 28.5
+        "elevationDeg": 1.5,
+        "azimuthDeg": -47,
+        "intensity": 60
       },
       "atmosphere": {
-        "rayleighMul": 0.03,
-        "mieBeta": 0.0105,
-        "mieG": 0.025,
-        "ozoneMul": 0
-      },
-      "lighting": {
-        "skyBounce": 1.34,
-        "bounceTint": 0.16,
-        "groundBounce": 0.68,
-        "sunGlint": 0.45,
-        "glintSpread": 1.1,
-        "bloom": 0,
-        "aerialHaze": 0
-      },
-      "voxel": {
-        "seed": 14074,
-        "resolution": 736,
-        "terraceStep": 0.5
-      },
-      "island": {
-        "radius": 1070,
-        "shape": 3,
-        "lowland": 21.538229314746044,
-        "massif": 97.66824773411881,
-        "warp": 0.5206552464219077,
-        "ridge": 0.7720145486861713,
-        "beachWidth": 44,
-        "valleyDepth": 55,
-        "valleyWidth": 22
-      },
-      "seasons": {
-        "sweepDeg": -70.80465957984272,
-        "summerEnd": 0.38,
-        "autumnEnd": 0.5,
-        "coniferEnd": 0.79,
-        "borderWarp": 1.15,
-        "craggy": 0.4,
-        "fairway": 0,
-        "fairwayBand": 24,
-        "bunkerDensity": 0.18,
-        "bunkerSize": 11
-      },
-      "water": {
-        "seaLevel": 24.5,
-        "causticScale": 4.6,
-        "causticIntensity": 2.8,
-        "floorDepth": 45,
-        "shoreGlow": 1.1,
-        "causticOpacity": 0
-      },
-      "render": {
-        "fov": 68,
-        "exposure": 0.3,
-        "fogDensity": 0.0003,
-        "horizonWarp": true
-      },
-      "godrays": {
-        "enable": true,
-        "source": 1,
-        "intensity": 0.85,
-        "density": 0.32,
-        "decay": 0.915,
-        "weight": 2,
-        "exposure": 0.7,
-        "threshold": 0.62,
-        "groundMask": 0.5,
-        "reach": 1.45,
-        "warmth": 0.5,
-        "samples": 16,
-        "resScale": 0.25,
-        "sharp": 0.25
-      }
-    },
-    "cam": {
-      "p": [
-        762.9215570474947,
-        274.83056971861646,
-        385.8474336234401
-      ],
-      "q": [
-        -0.23907784841684582,
-        0.5739957505438273,
-        0.18004320255039874,
-        0.7622041104385334
-      ]
-    },
-    "t": 1779003452222
-  },
-  "A2": {
-    "params": {
-      "sun": {
-        "elevationDeg": 4,
-        "azimuthDeg": -172,
-        "intensity": 21
-      },
-      "atmosphere": {
-        "rayleighMul": 0.56,
-        "mieBeta": 0.0105,
-        "mieG": 0.295,
-        "ozoneMul": 2.92,
-        "planetRadiusKm": 6371
+        "rayleighMul": 0.05,
+        "mieBeta": 0,
+        "mieG": 0,
+        "ozoneMul": 3,
+        "planetRadiusKm": 6350
       },
       "lighting": {
         "skyBounce": 1.38,
@@ -1380,15 +1450,15 @@
         "aerialHaze": 0
       },
       "voxel": {
-        "seed": 14074,
-        "resolution": 736,
+        "seed": 21155,
+        "resolution": 992,
         "terraceStep": 0.5
       },
       "island": {
         "radius": 1070,
         "shape": 3,
         "lowland": 38,
-        "massif": 360,
+        "massif": 470,
         "massifSharpness": 1,
         "massifOffsetX": 0,
         "massifOffsetZ": 0,
@@ -1411,17 +1481,38 @@
         "bunkerSize": 22
       },
       "water": {
-        "seaLevel": 24.5,
+        "enable": true,
+        "seaLevel": 32.5,
+        "floorDepth": 50,
+        "floorShape": 0.85,
+        "floorRoughness": 1,
+        "deltaFloor": 1,
+        "surfaceLift": 0.08,
+        "landMask": 1,
+        "debugView": 0,
+        "depthTint": 0.78,
+        "lagoonTint": 0.18,
+        "referenceBlocks": true,
         "causticScale": 4.6,
         "causticIntensity": 2.8,
         "causticOpacity": 0,
-        "floorDepth": 90,
-        "floorShape": 0.85,
-        "floorRoughness": 1,
-        "deltaFloor": 0,
-        "shoreGlow": 0.05,
-        "shoreGlowWidth": 2.75,
-        "shoreGlowFollow": 0.68
+        "shoreGlow": 1.35,
+        "shoreGlowWidth": 1.3,
+        "shoreGlowFollow": 0
+      },
+      "waves": {
+        "waveSpeed": 3,
+        "glintSpeed": 5,
+        "glintScale": 1.34,
+        "waveScale": 0.017328903180189877,
+        "waveRotation": 141,
+        "surfaceOpacity": 0.91,
+        "waveHeight": 3,
+        "waveChoppy": 7.35,
+        "surfaceStage": 5,
+        "detailMix": 0.42,
+        "normalStrength": 2,
+        "refractionStrength": 0.18
       },
       "tree": {
         "palmCount": 499,
@@ -1445,7 +1536,7 @@
         "normalBias": 2.2
       },
       "render": {
-        "fov": 68,
+        "fov": 81,
         "exposure": 0.3,
         "fogDensity": 0.0003,
         "horizonWarp": true
@@ -1453,7 +1544,7 @@
       "godrays": {
         "enable": true,
         "source": 1,
-        "intensity": 2.95,
+        "intensity": 0.25,
         "density": 0.86,
         "decay": 0.915,
         "weight": 2,
@@ -1465,9 +1556,9 @@
         "samples": 16,
         "resScale": 0.25,
         "sharp": 0.25,
-        "blurEnable": false,
-        "blurAmount": 0.18,
-        "blurRadius": 1.5,
+        "blurEnable": true,
+        "blurAmount": 1,
+        "blurRadius": 8,
         "blurPasses": 1
       },
       "camera": {
@@ -1480,287 +1571,272 @@
         "focusShoreline": 0.24,
         "focusPalms": 0.12,
         "focusWater": 0.16
+      },
+      "skyDiagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "cloudsRender": {
+        "mode": 0,
+        "atmosphere": true,
+        "clouds": true,
+        "aerialPerspective": true,
+        "quality": 2,
+        "resolutionScale": 0.75,
+        "temporalUpscale": true,
+        "exposure": 15
+      },
+      "takramAtmosphere": {
+        "sun": true,
+        "ground": true,
+        "groundAlbedo": 0,
+        "transmittance": true,
+        "inscatter": true,
+        "sunLight": true,
+        "skyLight": true,
+        "albedoScale": 1
+      },
+      "cloudWeather": {
+        "coverage": 0.4,
+        "weatherRepeatX": 100,
+        "weatherRepeatY": 100,
+        "weatherVelocityX": 0.001,
+        "weatherVelocityY": 0,
+        "shapeRepeat": 0.0003,
+        "detailRepeat": 0.006,
+        "turbulenceRepeat": 20,
+        "turbulenceDisplacement": 350
+      },
+      "cloudLayer0": {
+        "referenceStack": true,
+        "enabled": true,
+        "altitude": 750,
+        "height": 600,
+        "densityScale": 0.4,
+        "shapeAmount": 1,
+        "shapeDetailAmount": 0.8,
+        "weatherExponent": 1,
+        "shapeAlteringBias": 0.35,
+        "coverageFilterWidth": 0.6
+      },
+      "cloudLighting": {
+        "scatteringCoefficient": 1.5222677306879997,
+        "absorptionCoefficient": 0.72,
+        "skyLightScale": 1.3,
+        "groundBounceScale": 0.6,
+        "powderScale": 0.26,
+        "powderExponent": 150,
+        "anisotropy1": 0.7,
+        "anisotropy2": -0.2,
+        "anisotropyMix": 0.5,
+        "shapeDetail": true,
+        "turbulence": false,
+        "haze": true
+      },
+      "cloudShadows": {
+        "layerShadow": true,
+        "lightShafts": false,
+        "cascadeCount": 3,
+        "mapSize": 0,
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "cloudDebug": {
+        "mode": 0,
+        "primarySteps": 200,
+        "minStep": 80,
+        "maxStep": 1000,
+        "rayDistance": 120000
+      },
+      "cloudFinishing": {
+        "toneMapping": 0,
+        "dithering": true
       }
     },
     "cam": {
       "p": [
-        753.1100610274822,
-        344.9099462397224,
-        889.6882387093731
+        -334.19543361278653,
+        514.2531706192191,
+        -608.7048579979994
       ],
       "q": [
-        -0.12782143143650934,
-        0.4259130114399713,
-        0.0609219771681369,
-        0.8936152981286644
+        -0.023172935601031446,
+        -0.7093149285759852,
+        -0.02334377516519411,
+        0.7041238636176964
       ]
     },
-    "t": 1779470362038
+    "t": 1779728745865
   },
-  "D1": {
+  "A2": {
     "params": {
+      "orbitSweep": {
+        "enable": false,
+        "speed": 1,
+        "elevationDeg": 17.5,
+        "azimuthDeg": 117,
+        "elevationSpeed": 4,
+        "azimuthSpeed": 0.5,
+        "elevationRange": [
+          2,
+          50
+        ]
+      },
       "sun": {
-        "elevationDeg": 33.5,
-        "azimuthDeg": -168,
-        "intensity": 30.5
+        "elevationDeg": 17.5,
+        "azimuthDeg": 117,
+        "intensity": 33.5
       },
       "atmosphere": {
-        "rayleighMul": 0.03,
-        "mieBeta": 0.0105,
-        "mieG": 0.025,
-        "ozoneMul": 0
+        "rayleighMul": 1.06,
+        "mieBeta": 0.0095,
+        "mieG": 0,
+        "ozoneMul": 3,
+        "planetRadiusKm": 6350
       },
       "lighting": {
-        "skyBounce": 1.34,
-        "bounceTint": 0.16,
-        "groundBounce": 0.68,
-        "sunGlint": 0.45,
-        "glintSpread": 1.1,
+        "skyBounce": 1.38,
+        "bounceTint": 0.22,
+        "groundBounce": 0.9,
+        "sunElevationGain": 1,
+        "sunFloor": 4,
+        "sunCeiling": 5,
+        "secondaryEnergy": 0.49,
+        "sunGlint": 1.7,
+        "glintSpread": 3.4,
         "bloom": 0,
         "aerialHaze": 0
       },
       "voxel": {
-        "seed": 14074,
-        "resolution": 736,
+        "seed": 64916,
+        "resolution": 992,
         "terraceStep": 0.5
       },
       "island": {
         "radius": 1070,
         "shape": 3,
-        "lowland": 24,
-        "massif": 240,
-        "warp": 0.5206552464219077,
-        "ridge": 1.05,
-        "beachWidth": 44,
-        "valleyDepth": 90,
-        "valleyWidth": 22
+        "lowland": 38,
+        "massif": 280,
+        "massifSharpness": 1,
+        "massifOffsetX": 0,
+        "massifOffsetZ": 0,
+        "warp": 1.65,
+        "ridge": 0.55,
+        "beachWidth": 3,
+        "valleyDepth": 110,
+        "valleyWidth": 18
       },
-      "seasons": {
-        "sweepDeg": -70.80465957984272,
-        "summerEnd": 0.38,
-        "autumnEnd": 0.5,
-        "coniferEnd": 0.79,
-        "borderWarp": 1.15,
-        "craggy": 0.4,
-        "fairway": 0,
-        "fairwayBand": 24,
-        "bunkerDensity": 0.18,
-        "bunkerSize": 11
-      },
-      "water": {
-        "seaLevel": 24.5,
-        "causticScale": 4.6,
-        "causticIntensity": 2.8,
-        "floorDepth": 45,
-        "shoreGlow": 1.1,
-        "causticOpacity": 0
-      },
-      "render": {
-        "fov": 68,
-        "exposure": 0.3,
-        "fogDensity": 0.0003,
-        "horizonWarp": true
-      },
-      "godrays": {
+      "lagoon": {
         "enable": true,
-        "source": 1,
-        "intensity": 2.95,
-        "density": 0.86,
-        "decay": 0.915,
-        "weight": 2,
-        "exposure": 0.7,
-        "threshold": 0.62,
-        "groundMask": 0.5,
-        "reach": 1.45,
-        "warmth": 0.5,
-        "samples": 16,
-        "resScale": 0.25,
-        "sharp": 0.25
-      }
-    },
-    "cam": {
-      "p": [
-        950.7033351883048,
-        347.46304349132345,
-        580.8306226361635
-      ],
-      "q": [
-        -0.21377271857203997,
-        0.5324506073626383,
-        0.14108369242997904,
-        0.8067793795355704
-      ]
-    },
-    "t": 1779004965309
-  },
-  "D2": {
-    "params": {
-      "sun": {
-        "elevationDeg": 4,
-        "azimuthDeg": -172,
-        "intensity": 21
-      },
-      "atmosphere": {
-        "rayleighMul": 0.56,
-        "mieBeta": 0.0105,
-        "mieG": 0.63,
-        "ozoneMul": 2.47
-      },
-      "lighting": {
-        "skyBounce": 1.34,
-        "bounceTint": 0.16,
-        "groundBounce": 0.68,
-        "sunGlint": 0.45,
-        "glintSpread": 1.1,
-        "bloom": 0,
-        "aerialHaze": 0
-      },
-      "voxel": {
-        "seed": 14074,
-        "resolution": 736,
-        "terraceStep": 0.5
-      },
-      "island": {
-        "radius": 1070,
-        "shape": 3,
-        "lowland": 28,
-        "massif": 320,
-        "warp": 0.9,
-        "ridge": 1.05,
-        "beachWidth": 44,
-        "valleyDepth": 90,
-        "valleyWidth": 22
+        "x": 0.24,
+        "z": -0.12,
+        "radiusX": 230,
+        "radiusZ": 135,
+        "rotation": -24,
+        "depth": 1.4,
+        "lowlandCap": 54,
+        "inlet": 0.12,
+        "apronWidth": 42,
+        "whiteSand": 0.9,
+        "treeAttraction": 1.1
       },
       "seasons": {
-        "sweepDeg": -70.80465957984272,
-        "summerEnd": 0.38,
+        "sweepDeg": 38,
+        "summerEnd": 0.26,
         "autumnEnd": 0.5,
         "coniferEnd": 0.79,
         "borderWarp": 1.15,
         "craggy": 0.4,
-        "fairway": 0.44,
-        "fairwayBand": 24,
-        "bunkerDensity": 0.18,
-        "bunkerSize": 11
-      },
-      "water": {
-        "seaLevel": 24.5,
-        "causticScale": 4.6,
-        "causticIntensity": 2.8,
-        "floorDepth": 45,
-        "shoreGlow": 1.1,
-        "causticOpacity": 0
-      },
-      "tree": {
-        "palmCount": 499
-      },
-      "render": {
-        "fov": 68,
-        "exposure": 0.3,
-        "fogDensity": 0.0003,
-        "horizonWarp": true
-      },
-      "godrays": {
-        "enable": true,
-        "source": 1,
-        "intensity": 2.95,
-        "density": 0.86,
-        "decay": 0.915,
-        "weight": 2,
-        "exposure": 0.7,
-        "threshold": 0.62,
-        "groundMask": 0.5,
-        "reach": 1.45,
-        "warmth": 0.5,
-        "samples": 16,
-        "resScale": 0.25,
-        "sharp": 0.25
-      }
-    },
-    "cam": {
-      "p": [
-        614.1450126230047,
-        307.5424878895668,
-        955.3172935652868
-      ],
-      "q": [
-        -0.16451159561818793,
-        0.3380151381671107,
-        0.06013578739457136,
-        0.9246974577403475
-      ]
-    },
-    "t": 1779079734287
-  },
-  "D3": {
-    "params": {
-      "sun": {
-        "elevationDeg": 31,
-        "azimuthDeg": -159.589483794465,
-        "intensity": 28.5
-      },
-      "atmosphere": {
-        "rayleighMul": 2.89,
-        "mieBeta": 0.0435,
-        "mieG": 0.715,
-        "ozoneMul": 1.55
-      },
-      "lighting": {
-        "skyBounce": 1.34,
-        "bounceTint": 0.16,
-        "groundBounce": 0.68,
-        "sunGlint": 0.45,
-        "glintSpread": 1.1,
-        "bloom": 0,
-        "aerialHaze": 0
-      },
-      "voxel": {
-        "seed": 14074,
-        "resolution": 736,
-        "terraceStep": 0.5
-      },
-      "island": {
-        "radius": 1070,
-        "shape": 3,
-        "lowland": 21.538229314746044,
-        "massif": 97.66824773411881,
-        "warp": 0.5206552464219077,
-        "ridge": 0.7720145486861713,
-        "beachWidth": 44,
-        "valleyDepth": 55,
-        "valleyWidth": 22
-      },
-      "seasons": {
-        "sweepDeg": -70.80465957984272,
-        "summerEnd": 0.47,
-        "autumnEnd": 0.5,
-        "coniferEnd": 0.79,
-        "borderWarp": 1.15,
-        "craggy": 0.4,
-        "fairway": 0.5,
-        "fairwayBand": 62,
-        "bunkerDensity": 0.76,
+        "fairway": 0.86,
+        "fairwayBand": 56,
+        "bunkerDensity": 0.3,
         "bunkerSize": 22
       },
       "water": {
-        "seaLevel": 24.5,
+        "enable": true,
+        "seaLevel": 32.5,
+        "floorDepth": 50,
+        "floorShape": 0.85,
+        "floorRoughness": 1,
+        "deltaFloor": 1,
+        "surfaceLift": 0.08,
+        "landMask": 1,
+        "debugView": 0,
+        "depthTint": 0.78,
+        "lagoonTint": 0.18,
         "causticScale": 4.6,
         "causticIntensity": 2.8,
-        "floorDepth": 45,
-        "shoreGlow": 1.1,
-        "causticOpacity": 0
+        "causticOpacity": 0,
+        "shoreGlow": 1.35,
+        "shoreGlowWidth": 1.3,
+        "shoreGlowFollow": 0
+      },
+      "waves": {
+        "waveSpeed": 2.7,
+        "glintSpeed": 3.5,
+        "glintScale": 1.34,
+        "waveScale": 0.0275,
+        "waveRotation": 143,
+        "surfaceOpacity": 0.55,
+        "waveHeight": 1.92,
+        "waveChoppy": 5.95,
+        "surfaceStage": 5,
+        "detailMix": 0.42,
+        "normalStrength": 0.4,
+        "refractionStrength": 0.18
+      },
+      "tree": {
+        "enable": true,
+        "totalCount": 1300,
+        "globalScale": 1.35,
+        "spacing": 9,
+        "clusterBias": 1,
+        "autumnWeight": 1.55,
+        "summerWeight": 0.95,
+        "spruceWeight": 0.75,
+        "palmWeight": 0.25,
+        "palmTarget": 400,
+        "peakSparse": 0.08,
+        "openCuts": 0.6,
+        "autumnScale": 1.3,
+        "spruceScale": 1.22,
+        "palmScale": 0.9
+      },
+      "shadows": {
+        "enable": true,
+        "primaryEnable": true,
+        "primarySize": 8192,
+        "primaryCoverage": 1.28,
+        "secondaryEnable": true,
+        "secondarySize": 2560,
+        "secondaryCoverage": 1,
+        "secondaryMix": 1,
+        "blendMode": 1,
+        "filterMode": 1,
+        "softness": 1.7,
+        "bias": -0.0006,
+        "normalBias": 2.2
       },
       "render": {
-        "fov": 68,
-        "exposure": 0.3,
-        "fogDensity": 0.0003,
+        "fov": 65,
+        "exposure": 0.2,
+        "fogDensity": 0,
         "horizonWarp": true
       },
       "godrays": {
         "enable": true,
         "source": 1,
-        "intensity": 0.85,
-        "density": 0.32,
+        "intensity": 0.25,
+        "density": 0.86,
         "decay": 0.915,
         "weight": 2,
         "exposure": 0.7,
@@ -1770,23 +1846,1012 @@
         "warmth": 0.5,
         "samples": 16,
         "resScale": 0.25,
-        "sharp": 0.25
+        "sharp": 0.25,
+        "blurEnable": true,
+        "blurAmount": 1,
+        "blurRadius": 8,
+        "blurPasses": 1
+      },
+      "camera": {
+        "director": false,
+        "focusMountain": 0.35,
+        "focusSky": 0.18,
+        "focusGreenway": 0.16,
+        "focusMassif": 0.22,
+        "focusValley": 0.14,
+        "focusShoreline": 0.24,
+        "focusPalms": 0.12,
+        "focusWater": 0.16
+      },
+      "cloudFinishing": {
+        "toneMapping": 1,
+        "dithering": true
+      },
+      "skyDiagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "takramAtmosphere": {
+        "sunLight": true,
+        "skyLight": true,
+        "ground": true,
+        "groundAlbedo": 0,
+        "albedoScale": 0.36,
+        "sun": true,
+        "transmittance": true,
+        "inscatter": true
+      },
+      "cloudWeather": {
+        "coverage": 0.38,
+        "weatherRepeatX": 77,
+        "weatherRepeatY": 100,
+        "weatherVelocityX": 0.001,
+        "weatherVelocityY": 0,
+        "shapeRepeat": 0.0003,
+        "detailRepeat": 0.006,
+        "turbulenceRepeat": 20,
+        "turbulenceDisplacement": 350
+      },
+      "cloudLighting": {
+        "scatteringCoefficient": 3,
+        "groundBounceScale": 2,
+        "skyLightScale": 0,
+        "powderScale": 0,
+        "absorptionCoefficient": 2.46,
+        "powderExponent": 150,
+        "anisotropy1": 0.7,
+        "anisotropy2": -0.2,
+        "anisotropyMix": 0.5,
+        "shapeDetail": true,
+        "turbulence": false,
+        "haze": true
+      },
+      "cloudShadows": {
+        "layerShadow": true,
+        "lightShafts": false,
+        "cascadeCount": 3,
+        "mapSize": 0,
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "cloudsRender": {
+        "exposure": 3.9,
+        "mode": 0,
+        "atmosphere": true,
+        "clouds": true,
+        "aerialPerspective": true,
+        "quality": 2,
+        "resolutionScale": 0.75,
+        "temporalUpscale": true
+      },
+      "cloudLayer0": {
+        "referenceStack": true,
+        "enabled": true,
+        "altitude": 750,
+        "height": 600,
+        "densityScale": 0.4,
+        "shapeAmount": 1,
+        "shapeDetailAmount": 0.8,
+        "weatherExponent": 1,
+        "shapeAlteringBias": 0.35,
+        "coverageFilterWidth": 0.6
+      },
+      "cloudDebug": {
+        "mode": 0,
+        "primarySteps": 200,
+        "minStep": 80,
+        "maxStep": 1000,
+        "rayDistance": 120000
       }
     },
     "cam": {
       "p": [
-        577.5700565318878,
-        218.35131161298318,
-        1159.9631904494959
+        -624.0870546020698,
+        188.233256028708,
+        593.9649059343573
       ],
       "q": [
-        -0.06735585993848497,
-        0.2588912512997187,
-        0.01810059406168558,
-        0.9633851133513676
+        -0.07733165364167964,
+        -0.445295261681246,
+        -0.03863934727866357,
+        0.8912008449901474
       ]
     },
-    "t": 1779003829284
+    "t": 1779941989334
+  },
+  "D1": {
+    "params": {
+      "orbitSweep": {
+        "enable": false,
+        "speed": 1,
+        "elevationDeg": 1,
+        "azimuthDeg": -47,
+        "elevationSpeed": 4,
+        "azimuthSpeed": 0.5,
+        "elevationRange": [
+          2,
+          50
+        ]
+      },
+      "sun": {
+        "elevationDeg": 1,
+        "azimuthDeg": -47,
+        "intensity": 60
+      },
+      "atmosphere": {
+        "rayleighMul": 4,
+        "mieBeta": 0.0405,
+        "mieG": 0,
+        "ozoneMul": 2.16,
+        "planetRadiusKm": 6350
+      },
+      "lighting": {
+        "skyBounce": 1.28,
+        "bounceTint": 0.92,
+        "groundBounce": 0.36,
+        "sunElevationGain": 0.45,
+        "sunFloor": 0.8,
+        "sunCeiling": 2,
+        "secondaryEnergy": 0.3,
+        "sunGlint": 1.05,
+        "glintSpread": 1.25,
+        "bloom": 0,
+        "aerialHaze": 0
+      },
+      "voxel": {
+        "seed": 21155,
+        "resolution": 992,
+        "terraceStep": 0.5
+      },
+      "island": {
+        "radius": 1070,
+        "shape": 3,
+        "lowland": 38,
+        "massif": 470,
+        "massifSharpness": 1,
+        "massifOffsetX": 0,
+        "massifOffsetZ": 0,
+        "warp": 1.65,
+        "ridge": 0.55,
+        "beachWidth": 3,
+        "valleyDepth": 110,
+        "valleyWidth": 18
+      },
+      "lagoon": {
+        "enable": true,
+        "x": 0.24,
+        "z": -0.12,
+        "radiusX": 230,
+        "radiusZ": 135,
+        "rotation": -24,
+        "depth": 1.4,
+        "lowlandCap": 54,
+        "inlet": 0.12,
+        "apronWidth": 42,
+        "whiteSand": 0.9,
+        "treeAttraction": 1.1
+      },
+      "seasons": {
+        "sweepDeg": 38,
+        "summerEnd": 0.26,
+        "autumnEnd": 0.5,
+        "coniferEnd": 0.79,
+        "borderWarp": 1.15,
+        "craggy": 0.4,
+        "fairway": 0.86,
+        "fairwayBand": 56,
+        "bunkerDensity": 0.3,
+        "bunkerSize": 22
+      },
+      "water": {
+        "enable": true,
+        "seaLevel": 32.5,
+        "floorDepth": 50,
+        "floorShape": 0.85,
+        "floorRoughness": 1,
+        "deltaFloor": 1,
+        "surfaceLift": 0.08,
+        "landMask": 1,
+        "debugView": 0,
+        "depthTint": 0.78,
+        "lagoonTint": 0.18,
+        "causticScale": 4.6,
+        "causticIntensity": 2.8,
+        "causticOpacity": 0,
+        "shoreGlow": 1.35,
+        "shoreGlowWidth": 1.3,
+        "shoreGlowFollow": 0
+      },
+      "waves": {
+        "waveSpeed": 3,
+        "glintSpeed": 5,
+        "glintScale": 1.34,
+        "waveScale": 0.017328903180189877,
+        "waveRotation": 141,
+        "surfaceOpacity": 0.91,
+        "waveHeight": 3,
+        "waveChoppy": 7.35,
+        "surfaceStage": 5,
+        "detailMix": 0.42,
+        "normalStrength": 2,
+        "refractionStrength": 0.18
+      },
+      "tree": {
+        "enable": true,
+        "totalCount": 1300,
+        "globalScale": 1.35,
+        "spacing": 9,
+        "clusterBias": 1,
+        "autumnWeight": 1.55,
+        "summerWeight": 0.95,
+        "spruceWeight": 0.75,
+        "palmWeight": 0.25,
+        "palmTarget": 400,
+        "peakSparse": 0.08,
+        "openCuts": 0.6,
+        "autumnScale": 1.3,
+        "spruceScale": 1.22,
+        "palmScale": 0.9
+      },
+      "shadows": {
+        "enable": true,
+        "primaryEnable": true,
+        "primarySize": 8192,
+        "primaryCoverage": 1.28,
+        "secondaryEnable": true,
+        "secondarySize": 2560,
+        "secondaryCoverage": 1,
+        "secondaryMix": 0.16,
+        "blendMode": 0,
+        "filterMode": 1,
+        "softness": 1.7,
+        "bias": -0.0006,
+        "normalBias": 2.2
+      },
+      "render": {
+        "fov": 81,
+        "exposure": 0.3,
+        "fogDensity": 0.0003,
+        "horizonWarp": true
+      },
+      "godrays": {
+        "enable": true,
+        "source": 1,
+        "intensity": 0.25,
+        "density": 0.86,
+        "decay": 0.915,
+        "weight": 2,
+        "exposure": 0.7,
+        "threshold": 0.62,
+        "groundMask": 0.5,
+        "reach": 1.45,
+        "warmth": 0.5,
+        "samples": 16,
+        "resScale": 0.25,
+        "sharp": 0.25,
+        "blurEnable": true,
+        "blurAmount": 1,
+        "blurRadius": 8,
+        "blurPasses": 1
+      },
+      "camera": {
+        "director": false,
+        "focusMountain": 0.35,
+        "focusSky": 0.18,
+        "focusGreenway": 0.16,
+        "focusMassif": 0.22,
+        "focusValley": 0.14,
+        "focusShoreline": 0.24,
+        "focusPalms": 0.12,
+        "focusWater": 0.16
+      },
+      "cloudFinishing": {
+        "toneMapping": 0,
+        "dithering": true
+      },
+      "skyDiagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "takramAtmosphere": {
+        "sunLight": true,
+        "skyLight": true,
+        "ground": true,
+        "groundAlbedo": 0,
+        "albedoScale": 2,
+        "sun": true,
+        "transmittance": true,
+        "inscatter": true
+      },
+      "cloudWeather": {
+        "coverage": 0.4,
+        "weatherRepeatX": 100,
+        "weatherRepeatY": 100,
+        "weatherVelocityX": 0.001,
+        "weatherVelocityY": 0,
+        "shapeRepeat": 0.0003,
+        "detailRepeat": 0.006,
+        "turbulenceRepeat": 20,
+        "turbulenceDisplacement": 350
+      },
+      "cloudLighting": {
+        "scatteringCoefficient": 1.5222677306879997,
+        "groundBounceScale": 0.6,
+        "skyLightScale": 1.3,
+        "powderScale": 0.26,
+        "absorptionCoefficient": 0.72,
+        "powderExponent": 150,
+        "anisotropy1": 0.7,
+        "anisotropy2": -0.2,
+        "anisotropyMix": 0.5,
+        "shapeDetail": true,
+        "turbulence": false,
+        "haze": true
+      },
+      "cloudShadows": {
+        "layerShadow": true,
+        "cascadeCount": 3,
+        "mapSize": 0,
+        "temporalPass": true,
+        "temporalSmoothing": 0.999,
+        "varianceGamma": 1,
+        "temporalJitter": false,
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "lightShafts": false,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "cloudsRender": {
+        "exposure": 10,
+        "mode": 0,
+        "atmosphere": false,
+        "clouds": true,
+        "aerialPerspective": true,
+        "quality": 2,
+        "resolutionScale": 0.75,
+        "temporalUpscale": true
+      },
+      "cloudLayer0": {
+        "referenceStack": false,
+        "enabled": true,
+        "altitude": 3300,
+        "height": 1675,
+        "densityScale": 0.4,
+        "shapeAmount": 1,
+        "shapeDetailAmount": 0.8,
+        "weatherExponent": 1,
+        "shapeAlteringBias": 0.35,
+        "coverageFilterWidth": 0.6
+      },
+      "cloudDebug": {
+        "mode": 0,
+        "primarySteps": 200,
+        "minStep": 80,
+        "maxStep": 1000,
+        "rayDistance": 120000
+      }
+    },
+    "cam": {
+      "p": [
+        -480.63754850922965,
+        109.11060621235629,
+        -42.78627593829501
+      ],
+      "q": [
+        0.0669925629632234,
+        -0.6692633874575729,
+        0.0607943343223345,
+        0.7374975007623669
+      ]
+    },
+    "t": 1780026553554
+  },
+  "D2": {
+    "params": {
+      "orbitSweep": {
+        "enable": false,
+        "speed": 1,
+        "elevationDeg": 1,
+        "azimuthDeg": -57,
+        "elevationSpeed": 4,
+        "azimuthSpeed": 0.5,
+        "elevationRange": [
+          2,
+          50
+        ]
+      },
+      "sun": {
+        "elevationDeg": 1,
+        "azimuthDeg": -57,
+        "intensity": 60
+      },
+      "atmosphere": {
+        "rayleighMul": 4,
+        "mieBeta": 0.05,
+        "mieG": 0,
+        "ozoneMul": 2.16,
+        "planetRadiusKm": 6350
+      },
+      "lighting": {
+        "skyBounce": 1.28,
+        "bounceTint": 0.92,
+        "groundBounce": 0.36,
+        "sunElevationGain": 0.77,
+        "sunFloor": 4,
+        "sunCeiling": 2.4,
+        "secondaryEnergy": 0.95,
+        "sunGlint": 1.05,
+        "glintSpread": 1.25,
+        "bloom": 0,
+        "aerialHaze": 0
+      },
+      "voxel": {
+        "seed": 21155,
+        "resolution": 992,
+        "terraceStep": 0.5
+      },
+      "island": {
+        "radius": 1070,
+        "shape": 3,
+        "lowland": 38,
+        "massif": 470,
+        "massifSharpness": 1,
+        "massifOffsetX": 0,
+        "massifOffsetZ": 0,
+        "warp": 1.65,
+        "ridge": 0.55,
+        "beachWidth": 3,
+        "valleyDepth": 110,
+        "valleyWidth": 18
+      },
+      "lagoon": {
+        "enable": true,
+        "x": 0.24,
+        "z": -0.12,
+        "radiusX": 230,
+        "radiusZ": 135,
+        "rotation": -24,
+        "depth": 1.4,
+        "lowlandCap": 54,
+        "inlet": 0.12,
+        "apronWidth": 42,
+        "whiteSand": 0.9,
+        "treeAttraction": 1.1
+      },
+      "seasons": {
+        "sweepDeg": 38,
+        "summerEnd": 0.26,
+        "autumnEnd": 0.5,
+        "coniferEnd": 0.79,
+        "borderWarp": 1.15,
+        "craggy": 0.4,
+        "fairway": 0.86,
+        "fairwayBand": 56,
+        "bunkerDensity": 0.3,
+        "bunkerSize": 22
+      },
+      "water": {
+        "enable": true,
+        "seaLevel": 32.5,
+        "floorDepth": 50,
+        "floorShape": 0.85,
+        "floorRoughness": 1,
+        "deltaFloor": 1,
+        "surfaceLift": 0.08,
+        "landMask": 1,
+        "debugView": 0,
+        "depthTint": 0.78,
+        "lagoonTint": 0.18,
+        "causticScale": 4.6,
+        "causticIntensity": 2.8,
+        "causticOpacity": 0,
+        "shoreGlow": 1.35,
+        "shoreGlowWidth": 1.3,
+        "shoreGlowFollow": 0
+      },
+      "waves": {
+        "waveSpeed": 3,
+        "glintSpeed": 5,
+        "glintScale": 1.34,
+        "waveScale": 0.017328903180189877,
+        "waveRotation": 141,
+        "surfaceOpacity": 0.91,
+        "waveHeight": 3,
+        "waveChoppy": 7.35,
+        "surfaceStage": 5,
+        "detailMix": 0.42,
+        "normalStrength": 2,
+        "refractionStrength": 0.18
+      },
+      "tree": {
+        "enable": true,
+        "totalCount": 1300,
+        "globalScale": 1.35,
+        "spacing": 9,
+        "clusterBias": 1,
+        "autumnWeight": 1.55,
+        "summerWeight": 0.95,
+        "spruceWeight": 0.75,
+        "palmWeight": 0.25,
+        "palmTarget": 400,
+        "peakSparse": 0.08,
+        "openCuts": 0.6,
+        "autumnScale": 1.3,
+        "spruceScale": 1.22,
+        "palmScale": 0.9
+      },
+      "shadows": {
+        "enable": true,
+        "primaryEnable": true,
+        "primarySize": 8192,
+        "primaryCoverage": 1.28,
+        "secondaryEnable": true,
+        "secondarySize": 2560,
+        "secondaryCoverage": 1,
+        "secondaryMix": 0.16,
+        "blendMode": 0,
+        "filterMode": 1,
+        "softness": 1.7,
+        "bias": -0.0006,
+        "normalBias": 2.2
+      },
+      "render": {
+        "fov": 81,
+        "exposure": 0.3,
+        "fogDensity": 0.0003,
+        "horizonWarp": true
+      },
+      "godrays": {
+        "enable": true,
+        "source": 1,
+        "intensity": 0.25,
+        "density": 0.86,
+        "decay": 0.915,
+        "weight": 2,
+        "exposure": 0.7,
+        "threshold": 0.62,
+        "groundMask": 0.5,
+        "reach": 1.45,
+        "warmth": 0.5,
+        "samples": 16,
+        "resScale": 0.25,
+        "sharp": 0.25,
+        "blurEnable": true,
+        "blurAmount": 1,
+        "blurRadius": 8,
+        "blurPasses": 1
+      },
+      "camera": {
+        "director": false,
+        "focusMountain": 0.35,
+        "focusSky": 0.18,
+        "focusGreenway": 0.16,
+        "focusMassif": 0.22,
+        "focusValley": 0.14,
+        "focusShoreline": 0.24,
+        "focusPalms": 0.12,
+        "focusWater": 0.16
+      },
+      "cloudFinishing": {
+        "toneMapping": 0,
+        "dithering": true
+      },
+      "skyDiagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "takramAtmosphere": {
+        "sunLight": true,
+        "skyLight": true,
+        "ground": true,
+        "groundAlbedo": 0,
+        "albedoScale": 0.68,
+        "sun": true,
+        "transmittance": true,
+        "inscatter": true
+      },
+      "cloudWeather": {
+        "coverage": 0.33,
+        "weatherRepeatX": 100,
+        "weatherRepeatY": 100,
+        "weatherVelocityX": 0.001,
+        "weatherVelocityY": 0,
+        "shapeRepeat": 0.0003,
+        "detailRepeat": 0.006,
+        "turbulenceRepeat": 20,
+        "turbulenceDisplacement": 350
+      },
+      "cloudLighting": {
+        "scatteringCoefficient": 1.5222677306879997,
+        "groundBounceScale": 0.6,
+        "skyLightScale": 1.3,
+        "powderScale": 0.26,
+        "absorptionCoefficient": 0.72,
+        "powderExponent": 150,
+        "anisotropy1": 0.7,
+        "anisotropy2": -0.2,
+        "anisotropyMix": 0.5,
+        "shapeDetail": true,
+        "turbulence": false,
+        "haze": true
+      },
+      "cloudShadows": {
+        "layerShadow": true,
+        "cascadeCount": 3,
+        "mapSize": 0,
+        "temporalPass": true,
+        "temporalSmoothing": 0.999,
+        "varianceGamma": 1,
+        "temporalJitter": false,
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "lightShafts": false,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "cloudsRender": {
+        "exposure": 5,
+        "mode": 0,
+        "atmosphere": false,
+        "clouds": true,
+        "aerialPerspective": true,
+        "quality": 2,
+        "resolutionScale": 0.75,
+        "temporalUpscale": true
+      },
+      "cloudLayer0": {
+        "referenceStack": false,
+        "enabled": true,
+        "altitude": 3300,
+        "height": 1675,
+        "densityScale": 0.4,
+        "shapeAmount": 1,
+        "shapeDetailAmount": 0.8,
+        "weatherExponent": 1,
+        "shapeAlteringBias": 0.35,
+        "coverageFilterWidth": 0.6
+      },
+      "cloudDebug": {
+        "mode": 0,
+        "primarySteps": 200,
+        "minStep": 80,
+        "maxStep": 1000,
+        "rayDistance": 120000
+      }
+    },
+    "cam": {
+      "p": [
+        -480.63754850922965,
+        109.11060621235629,
+        -42.78627593829501
+      ],
+      "q": [
+        0.0669925629632234,
+        -0.6692633874575729,
+        0.0607943343223345,
+        0.7374975007623669
+      ]
+    },
+    "t": 1780026687493
+  },
+  "D3": {
+    "params": {
+      "orbitSweep": {
+        "enable": false,
+        "speed": 1,
+        "elevationDeg": 1,
+        "azimuthDeg": 18,
+        "elevationSpeed": 4,
+        "azimuthSpeed": 0.5,
+        "elevationRange": [
+          2,
+          50
+        ]
+      },
+      "sun": {
+        "elevationDeg": 1,
+        "azimuthDeg": 18,
+        "intensity": 60
+      },
+      "atmosphere": {
+        "rayleighMul": 4,
+        "mieBeta": 0.0405,
+        "mieG": 0,
+        "ozoneMul": 2.16,
+        "planetRadiusKm": 6350
+      },
+      "lighting": {
+        "skyBounce": 1.28,
+        "bounceTint": 0.92,
+        "groundBounce": 0.36,
+        "sunElevationGain": 0.45,
+        "sunFloor": 0.84,
+        "sunCeiling": 2,
+        "secondaryEnergy": 0.3,
+        "sunGlint": 1.05,
+        "glintSpread": 1.25,
+        "bloom": 0,
+        "aerialHaze": 0
+      },
+      "voxel": {
+        "seed": 21155,
+        "resolution": 992,
+        "terraceStep": 0.5
+      },
+      "island": {
+        "radius": 1070,
+        "shape": 3,
+        "lowland": 38,
+        "massif": 470,
+        "massifSharpness": 1,
+        "massifOffsetX": 0,
+        "massifOffsetZ": 0,
+        "warp": 1.65,
+        "ridge": 0.55,
+        "beachWidth": 3,
+        "valleyDepth": 110,
+        "valleyWidth": 18
+      },
+      "lagoon": {
+        "enable": true,
+        "x": 0.24,
+        "z": -0.12,
+        "radiusX": 230,
+        "radiusZ": 135,
+        "rotation": -24,
+        "depth": 1.4,
+        "lowlandCap": 54,
+        "inlet": 0.12,
+        "apronWidth": 42,
+        "whiteSand": 0.9,
+        "treeAttraction": 1.1
+      },
+      "seasons": {
+        "sweepDeg": 38,
+        "summerEnd": 0.26,
+        "autumnEnd": 0.5,
+        "coniferEnd": 0.79,
+        "borderWarp": 1.15,
+        "craggy": 0.4,
+        "fairway": 0.86,
+        "fairwayBand": 56,
+        "bunkerDensity": 0.3,
+        "bunkerSize": 22
+      },
+      "water": {
+        "enable": true,
+        "seaLevel": 32.5,
+        "floorDepth": 50,
+        "floorShape": 0.85,
+        "floorRoughness": 1,
+        "deltaFloor": 1,
+        "surfaceLift": 0.08,
+        "landMask": 1,
+        "debugView": 0,
+        "depthTint": 0.78,
+        "lagoonTint": 0.18,
+        "causticScale": 4.6,
+        "causticIntensity": 2.8,
+        "causticOpacity": 0,
+        "shoreGlow": 1.35,
+        "shoreGlowWidth": 1.3,
+        "shoreGlowFollow": 0
+      },
+      "waves": {
+        "waveSpeed": 3,
+        "glintSpeed": 5,
+        "glintScale": 1.34,
+        "waveScale": 0.017328903180189877,
+        "waveRotation": 141,
+        "surfaceOpacity": 0.91,
+        "waveHeight": 3,
+        "waveChoppy": 7.35,
+        "surfaceStage": 5,
+        "detailMix": 0.42,
+        "normalStrength": 2,
+        "refractionStrength": 0.18
+      },
+      "tree": {
+        "enable": true,
+        "totalCount": 1300,
+        "globalScale": 1.35,
+        "spacing": 9,
+        "clusterBias": 1,
+        "autumnWeight": 1.55,
+        "summerWeight": 0.95,
+        "spruceWeight": 0.75,
+        "palmWeight": 0.25,
+        "palmTarget": 400,
+        "peakSparse": 0.08,
+        "openCuts": 0.6,
+        "autumnScale": 1.3,
+        "spruceScale": 1.22,
+        "palmScale": 0.9
+      },
+      "shadows": {
+        "enable": true,
+        "primaryEnable": true,
+        "primarySize": 8192,
+        "primaryCoverage": 1.28,
+        "secondaryEnable": true,
+        "secondarySize": 2560,
+        "secondaryCoverage": 1,
+        "secondaryMix": 0.16,
+        "blendMode": 0,
+        "filterMode": 1,
+        "softness": 1.7,
+        "bias": -0.0006,
+        "normalBias": 2.2
+      },
+      "render": {
+        "fov": 81,
+        "exposure": 0.3,
+        "fogDensity": 0.0003,
+        "horizonWarp": true
+      },
+      "godrays": {
+        "enable": true,
+        "source": 1,
+        "intensity": 0.25,
+        "density": 0.86,
+        "decay": 0.915,
+        "weight": 2,
+        "exposure": 0.7,
+        "threshold": 0.62,
+        "groundMask": 0.5,
+        "reach": 1.45,
+        "warmth": 0.5,
+        "samples": 16,
+        "resScale": 0.25,
+        "sharp": 0.25,
+        "blurEnable": true,
+        "blurAmount": 1,
+        "blurRadius": 8,
+        "blurPasses": 1
+      },
+      "camera": {
+        "director": false,
+        "focusMountain": 0.35,
+        "focusSky": 0.18,
+        "focusGreenway": 0.16,
+        "focusMassif": 0.22,
+        "focusValley": 0.14,
+        "focusShoreline": 0.24,
+        "focusPalms": 0.12,
+        "focusWater": 0.16
+      },
+      "cloudFinishing": {
+        "toneMapping": 0,
+        "dithering": true
+      },
+      "skyDiagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "takramAtmosphere": {
+        "sunLight": true,
+        "skyLight": true,
+        "ground": true,
+        "groundAlbedo": 0,
+        "albedoScale": 2,
+        "sun": true,
+        "transmittance": true,
+        "inscatter": true
+      },
+      "cloudWeather": {
+        "coverage": 0.4,
+        "weatherRepeatX": 100,
+        "weatherRepeatY": 100,
+        "weatherVelocityX": 0.001,
+        "weatherVelocityY": 0,
+        "shapeRepeat": 0.0003,
+        "detailRepeat": 0.006,
+        "turbulenceRepeat": 20,
+        "turbulenceDisplacement": 350
+      },
+      "cloudLighting": {
+        "scatteringCoefficient": 1.5222677306879997,
+        "groundBounceScale": 0.6,
+        "skyLightScale": 1.3,
+        "powderScale": 0.26,
+        "absorptionCoefficient": 0.72,
+        "powderExponent": 150,
+        "anisotropy1": 0.7,
+        "anisotropy2": -0.2,
+        "anisotropyMix": 0.5,
+        "shapeDetail": true,
+        "turbulence": false,
+        "haze": true
+      },
+      "cloudShadows": {
+        "layerShadow": true,
+        "cascadeCount": 3,
+        "mapSize": 0,
+        "temporalPass": true,
+        "temporalSmoothing": 0.999,
+        "varianceGamma": 1,
+        "temporalJitter": false,
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "lightShafts": false,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "cloudsRender": {
+        "exposure": 10,
+        "mode": 0,
+        "atmosphere": false,
+        "clouds": true,
+        "aerialPerspective": true,
+        "quality": 2,
+        "resolutionScale": 0.75,
+        "temporalUpscale": true
+      },
+      "cloudLayer0": {
+        "referenceStack": false,
+        "enabled": true,
+        "altitude": 3300,
+        "height": 1675,
+        "densityScale": 0.4,
+        "shapeAmount": 1,
+        "shapeDetailAmount": 0.8,
+        "weatherExponent": 1,
+        "shapeAlteringBias": 0.35,
+        "coverageFilterWidth": 0.6
+      },
+      "cloudDebug": {
+        "mode": 0,
+        "primarySteps": 200,
+        "minStep": 80,
+        "maxStep": 1000,
+        "rayDistance": 120000
+      }
+    },
+    "cam": {
+      "p": [
+        360.419592068236,
+        79.0291810817331,
+        -803.3856492238809
+      ],
+      "q": [
+        0.018640014861384818,
+        -0.9793423487003988,
+        0.17053620648202653,
+        0.10704445883217553
+      ]
+    },
+    "t": 1780027244930
   },
   "D5": {
     "params": {
@@ -1982,14 +3047,26 @@
   },
   "A3": {
     "params": {
+      "orbitSweep": {
+        "enable": false,
+        "speed": 1,
+        "elevationDeg": 14,
+        "azimuthDeg": -118,
+        "elevationSpeed": 4,
+        "azimuthSpeed": 0.5,
+        "elevationRange": [
+          2,
+          50
+        ]
+      },
       "sun": {
-        "elevationDeg": 4,
-        "azimuthDeg": -172,
-        "intensity": 20.5
+        "elevationDeg": 14,
+        "azimuthDeg": -118,
+        "intensity": 60
       },
       "atmosphere": {
-        "rayleighMul": 0.15,
-        "mieBeta": 0.003,
+        "rayleighMul": 0.05,
+        "mieBeta": 0,
         "mieG": 0,
         "ozoneMul": 3,
         "planetRadiusKm": 6350
@@ -2004,17 +3081,17 @@
         "aerialHaze": 0
       },
       "voxel": {
-        "seed": 14074,
-        "resolution": 736,
+        "seed": 64916,
+        "resolution": 992,
         "terraceStep": 0.5
       },
       "island": {
         "radius": 1070,
         "shape": 3,
         "lowland": 38,
-        "massif": 420,
+        "massif": 470,
         "massifSharpness": 1,
-        "massifOffsetX": -0.19,
+        "massifOffsetX": 0,
         "massifOffsetZ": 0,
         "warp": 1.65,
         "ridge": 0.55,
@@ -2035,17 +3112,38 @@
         "bunkerSize": 22
       },
       "water": {
-        "seaLevel": 5.5,
-        "causticScale": 4.6,
-        "causticIntensity": 2.8,
-        "causticOpacity": 0,
-        "floorDepth": 90,
+        "enable": true,
+        "seaLevel": 32.5,
+        "floorDepth": 50,
         "floorShape": 0.85,
         "floorRoughness": 1,
         "deltaFloor": 1,
-        "shoreGlow": 1.4,
-        "shoreGlowWidth": 0.85,
-        "shoreGlowFollow": 0.64
+        "surfaceLift": 0.08,
+        "landMask": 1,
+        "debugView": 0,
+        "depthTint": 0.78,
+        "lagoonTint": 0.18,
+        "causticScale": 4.6,
+        "causticIntensity": 2.8,
+        "causticOpacity": 0,
+        "shoreGlow": 1.35,
+        "shoreGlowWidth": 1.3,
+        "shoreGlowFollow": 0,
+        "referenceBlocks": true
+      },
+      "waves": {
+        "waveSpeed": 2.7,
+        "glintSpeed": 3.5,
+        "glintScale": 1.34,
+        "waveScale": 0.0275,
+        "waveRotation": 143,
+        "surfaceOpacity": 0.55,
+        "waveHeight": 1.92,
+        "waveChoppy": 5.95,
+        "surfaceStage": 5,
+        "detailMix": 0.42,
+        "normalStrength": 0.4,
+        "refractionStrength": 0.18
       },
       "tree": {
         "palmCount": 499,
@@ -2069,7 +3167,7 @@
         "normalBias": 2.2
       },
       "render": {
-        "fov": 68,
+        "fov": 65,
         "exposure": 0.3,
         "fogDensity": 0.0003,
         "horizonWarp": true
@@ -2077,7 +3175,7 @@
       "godrays": {
         "enable": true,
         "source": 1,
-        "intensity": 2.95,
+        "intensity": 0.25,
         "density": 0.86,
         "decay": 0.915,
         "weight": 2,
@@ -2089,9 +3187,9 @@
         "samples": 16,
         "resScale": 0.25,
         "sharp": 0.25,
-        "blurEnable": false,
-        "blurAmount": 0.18,
-        "blurRadius": 1.5,
+        "blurEnable": true,
+        "blurAmount": 1,
+        "blurRadius": 8,
         "blurPasses": 1
       },
       "camera": {
@@ -2104,33 +3202,134 @@
         "focusShoreline": 0.24,
         "focusPalms": 0.12,
         "focusWater": 0.16
+      },
+      "skyDiagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "cloudsRender": {
+        "mode": 0,
+        "atmosphere": true,
+        "clouds": true,
+        "aerialPerspective": true,
+        "quality": 2,
+        "resolutionScale": 0.75,
+        "temporalUpscale": true,
+        "exposure": 10
+      },
+      "takramAtmosphere": {
+        "sun": true,
+        "ground": true,
+        "groundAlbedo": 0.018,
+        "transmittance": true,
+        "inscatter": true,
+        "sunLight": true,
+        "skyLight": true,
+        "albedoScale": 1
+      },
+      "cloudWeather": {
+        "coverage": 0.4,
+        "weatherRepeatX": 100,
+        "weatherRepeatY": 100,
+        "weatherVelocityX": 0.001,
+        "weatherVelocityY": 0,
+        "shapeRepeat": 0.0003,
+        "detailRepeat": 0.006,
+        "turbulenceRepeat": 20,
+        "turbulenceDisplacement": 350
+      },
+      "cloudLayer0": {
+        "referenceStack": true,
+        "enabled": true,
+        "altitude": 750,
+        "height": 600,
+        "densityScale": 0.4,
+        "shapeAmount": 1,
+        "shapeDetailAmount": 0.8,
+        "weatherExponent": 1,
+        "shapeAlteringBias": 0.35,
+        "coverageFilterWidth": 0.6
+      },
+      "cloudLighting": {
+        "scatteringCoefficient": 1,
+        "absorptionCoefficient": 0,
+        "skyLightScale": 1,
+        "groundBounceScale": 1,
+        "powderScale": 0.8,
+        "powderExponent": 150,
+        "anisotropy1": 0.7,
+        "anisotropy2": -0.2,
+        "anisotropyMix": 0.5,
+        "shapeDetail": true,
+        "turbulence": false,
+        "haze": true
+      },
+      "cloudShadows": {
+        "layerShadow": true,
+        "lightShafts": false,
+        "cascadeCount": 3,
+        "mapSize": 0,
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "cloudDebug": {
+        "mode": 0,
+        "primarySteps": 200,
+        "minStep": 80,
+        "maxStep": 1000,
+        "rayDistance": 120000
+      },
+      "cloudFinishing": {
+        "toneMapping": 0,
+        "dithering": true
       }
     },
     "cam": {
       "p": [
-        -137.4680010140176,
-        156.55125932014198,
-        1221.3580476537718
+        1030.6330317860704,
+        233.54673381043386,
+        -381.2905291140103
       ],
       "q": [
-        -0.048726853703798687,
-        -0.12654232172740768,
-        -0.006223613939718345,
-        0.9907441653471876
+        -0.05070426723298078,
+        0.7493164235084565,
+        0.057764075631256795,
+        0.657736486984969
       ]
     },
-    "t": 1779468795116
+    "t": 1779732097211
   },
   "A4": {
     "params": {
+      "orbitSweep": {
+        "enable": false,
+        "speed": 1,
+        "elevationDeg": 14,
+        "azimuthDeg": -118,
+        "elevationSpeed": 4,
+        "azimuthSpeed": 0.5,
+        "elevationRange": [
+          2,
+          50
+        ]
+      },
       "sun": {
-        "elevationDeg": 4,
-        "azimuthDeg": -172,
-        "intensity": 20.5
+        "elevationDeg": 14,
+        "azimuthDeg": -118,
+        "intensity": 60
       },
       "atmosphere": {
-        "rayleighMul": 0.15,
-        "mieBeta": 0.003,
+        "rayleighMul": 0.05,
+        "mieBeta": 0,
         "mieG": 0,
         "ozoneMul": 3,
         "planetRadiusKm": 6350
@@ -2145,17 +3344,17 @@
         "aerialHaze": 0
       },
       "voxel": {
-        "seed": 14074,
-        "resolution": 736,
+        "seed": 64916,
+        "resolution": 992,
         "terraceStep": 0.5
       },
       "island": {
         "radius": 1070,
         "shape": 3,
         "lowland": 38,
-        "massif": 420,
+        "massif": 470,
         "massifSharpness": 1,
-        "massifOffsetX": -0.19,
+        "massifOffsetX": 0,
         "massifOffsetZ": 0,
         "warp": 1.65,
         "ridge": 0.55,
@@ -2176,17 +3375,38 @@
         "bunkerSize": 22
       },
       "water": {
-        "seaLevel": 5.5,
-        "causticScale": 4.6,
-        "causticIntensity": 2.8,
-        "causticOpacity": 0,
-        "floorDepth": 90,
+        "enable": true,
+        "seaLevel": 32.5,
+        "floorDepth": 50,
         "floorShape": 0.85,
         "floorRoughness": 1,
         "deltaFloor": 1,
-        "shoreGlow": 1.4,
-        "shoreGlowWidth": 0.85,
-        "shoreGlowFollow": 0.64
+        "surfaceLift": 0.08,
+        "landMask": 1,
+        "debugView": 0,
+        "depthTint": 0.78,
+        "lagoonTint": 0.18,
+        "referenceBlocks": true,
+        "causticScale": 4.6,
+        "causticIntensity": 2.8,
+        "causticOpacity": 0,
+        "shoreGlow": 1.35,
+        "shoreGlowWidth": 1.3,
+        "shoreGlowFollow": 0
+      },
+      "waves": {
+        "waveSpeed": 2.7,
+        "glintSpeed": 3.5,
+        "glintScale": 1.34,
+        "waveScale": 0.0275,
+        "waveRotation": 143,
+        "surfaceOpacity": 0.55,
+        "waveHeight": 1.92,
+        "waveChoppy": 5.95,
+        "surfaceStage": 5,
+        "detailMix": 0.42,
+        "normalStrength": 0.4,
+        "refractionStrength": 0.18
       },
       "tree": {
         "palmCount": 499,
@@ -2210,7 +3430,7 @@
         "normalBias": 2.2
       },
       "render": {
-        "fov": 68,
+        "fov": 65,
         "exposure": 0.3,
         "fogDensity": 0.0003,
         "horizonWarp": true
@@ -2218,7 +3438,7 @@
       "godrays": {
         "enable": true,
         "source": 1,
-        "intensity": 2.95,
+        "intensity": 0.25,
         "density": 0.86,
         "decay": 0.915,
         "weight": 2,
@@ -2230,9 +3450,9 @@
         "samples": 16,
         "resScale": 0.25,
         "sharp": 0.25,
-        "blurEnable": false,
-        "blurAmount": 0.18,
-        "blurRadius": 1.5,
+        "blurEnable": true,
+        "blurAmount": 1,
+        "blurRadius": 8,
         "blurPasses": 1
       },
       "camera": {
@@ -2245,22 +3465,111 @@
         "focusShoreline": 0.24,
         "focusPalms": 0.12,
         "focusWater": 0.16
+      },
+      "skyDiagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "cloudsRender": {
+        "mode": 0,
+        "atmosphere": true,
+        "clouds": true,
+        "aerialPerspective": true,
+        "quality": 2,
+        "resolutionScale": 0.75,
+        "temporalUpscale": true,
+        "exposure": 10
+      },
+      "takramAtmosphere": {
+        "sun": true,
+        "ground": true,
+        "groundAlbedo": 0.018,
+        "transmittance": true,
+        "inscatter": true,
+        "sunLight": true,
+        "skyLight": true,
+        "albedoScale": 1
+      },
+      "cloudWeather": {
+        "coverage": 0.4,
+        "weatherRepeatX": 100,
+        "weatherRepeatY": 100,
+        "weatherVelocityX": 0.001,
+        "weatherVelocityY": 0,
+        "shapeRepeat": 0.0003,
+        "detailRepeat": 0.006,
+        "turbulenceRepeat": 20,
+        "turbulenceDisplacement": 350
+      },
+      "cloudLayer0": {
+        "referenceStack": true,
+        "enabled": true,
+        "altitude": 750,
+        "height": 600,
+        "densityScale": 0.4,
+        "shapeAmount": 1,
+        "shapeDetailAmount": 0.8,
+        "weatherExponent": 1,
+        "shapeAlteringBias": 0.35,
+        "coverageFilterWidth": 0.6
+      },
+      "cloudLighting": {
+        "scatteringCoefficient": 3,
+        "absorptionCoefficient": 1.7,
+        "skyLightScale": 1,
+        "groundBounceScale": 1.74,
+        "powderScale": 0.1,
+        "powderExponent": 300,
+        "anisotropy1": 0.95,
+        "anisotropy2": -0.2,
+        "anisotropyMix": 0.17,
+        "shapeDetail": false,
+        "turbulence": false,
+        "haze": false
+      },
+      "cloudShadows": {
+        "layerShadow": true,
+        "lightShafts": false,
+        "cascadeCount": 2,
+        "mapSize": 0,
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "cloudDebug": {
+        "mode": 0,
+        "primarySteps": 200,
+        "minStep": 80,
+        "maxStep": 1000,
+        "rayDistance": 120000
+      },
+      "cloudFinishing": {
+        "toneMapping": 0,
+        "dithering": true
       }
     },
     "cam": {
       "p": [
-        -137.4680010140176,
-        156.55125932014198,
-        1221.3580476537718
+        980.5721960221853,
+        434.3554139310841,
+        -632.7751285717718
       ],
       "q": [
-        -0.05961591597655843,
-        -0.12085199512090573,
-        -0.00727121883133627,
-        0.9908520914921052
+        -0.11670360781932457,
+        0.8121780307853601,
+        0.17408707497825757,
+        0.5444637770844653
       ]
     },
-    "t": 1779468740541
+    "t": 1779732326648
   },
   "D4": {
     "params": {
@@ -2660,77 +3969,165 @@
   },
   "E1": {
     "params": {
+      "orbitSweep": {
+        "enable": false,
+        "speed": 1,
+        "elevationDeg": 17.5,
+        "azimuthDeg": 117,
+        "elevationSpeed": 4,
+        "azimuthSpeed": 0.5,
+        "elevationRange": [
+          2,
+          50
+        ]
+      },
       "sun": {
-        "elevationDeg": 3.5,
-        "azimuthDeg": -168,
-        "intensity": 30.5
+        "elevationDeg": 17.5,
+        "azimuthDeg": 117,
+        "intensity": 33.5
       },
       "atmosphere": {
-        "rayleighMul": 0.99,
-        "mieBeta": 0.028,
-        "mieG": 0.47,
-        "ozoneMul": 1.86
+        "rayleighMul": 1.06,
+        "mieBeta": 0.0095,
+        "mieG": 0,
+        "ozoneMul": 3,
+        "planetRadiusKm": 6350
       },
       "lighting": {
-        "skyBounce": 1.34,
-        "bounceTint": 0.18,
-        "groundBounce": 0.74,
-        "sunGlint": 2.1,
-        "glintSpread": 1.1,
+        "skyBounce": 1.38,
+        "bounceTint": 0.22,
+        "groundBounce": 0.9,
+        "sunElevationGain": 1,
+        "sunFloor": 4,
+        "sunCeiling": 5,
+        "secondaryEnergy": 0.49,
+        "sunGlint": 1.7,
+        "glintSpread": 3.4,
         "bloom": 0,
         "aerialHaze": 0
       },
       "voxel": {
-        "seed": 24196,
-        "resolution": 384,
+        "seed": 64916,
+        "resolution": 992,
         "terraceStep": 0.5
       },
       "island": {
         "radius": 1070,
         "shape": 3,
-        "lowland": 24,
-        "massif": 240,
-        "warp": 0.5206552464219077,
-        "ridge": 1.05,
-        "beachWidth": 44,
-        "valleyDepth": 90,
-        "valleyWidth": 22
+        "lowland": 38,
+        "massif": 280,
+        "massifSharpness": 1,
+        "massifOffsetX": 0,
+        "massifOffsetZ": 0,
+        "warp": 1.65,
+        "ridge": 0.55,
+        "beachWidth": 3,
+        "valleyDepth": 110,
+        "valleyWidth": 18
+      },
+      "lagoon": {
+        "enable": true,
+        "x": 0.24,
+        "z": -0.12,
+        "radiusX": 230,
+        "radiusZ": 135,
+        "rotation": -24,
+        "depth": 1.4,
+        "lowlandCap": 54,
+        "inlet": 0.12,
+        "apronWidth": 42,
+        "whiteSand": 0.9,
+        "treeAttraction": 1.1
       },
       "seasons": {
-        "sweepDeg": 61,
-        "summerEnd": 0.55,
+        "sweepDeg": 38,
+        "summerEnd": 0.26,
         "autumnEnd": 0.5,
-        "coniferEnd": 0.82,
+        "coniferEnd": 0.79,
         "borderWarp": 1.15,
         "craggy": 0.4,
-        "fairway": 0.66,
-        "fairwayBand": 46,
-        "bunkerDensity": 0.18,
-        "bunkerSize": 11
+        "fairway": 0.86,
+        "fairwayBand": 56,
+        "bunkerDensity": 0.3,
+        "bunkerSize": 22
       },
       "water": {
-        "seaLevel": 4.5,
-        "causticScale": 2.9,
-        "causticIntensity": 1,
-        "floorDepth": 100,
-        "shoreGlow": 1.1,
-        "causticOpacity": 0
+        "enable": true,
+        "seaLevel": 32.5,
+        "floorDepth": 50,
+        "floorShape": 0.85,
+        "floorRoughness": 1,
+        "deltaFloor": 1,
+        "surfaceLift": 0.08,
+        "landMask": 1,
+        "debugView": 0,
+        "depthTint": 0.78,
+        "lagoonTint": 0.18,
+        "causticScale": 4.6,
+        "causticIntensity": 2.8,
+        "causticOpacity": 0,
+        "shoreGlow": 1.35,
+        "shoreGlowWidth": 1.3,
+        "shoreGlowFollow": 0
+      },
+      "waves": {
+        "waveSpeed": 2.7,
+        "glintSpeed": 3.5,
+        "glintScale": 1.34,
+        "waveScale": 0.0275,
+        "waveRotation": 143,
+        "surfaceOpacity": 0.55,
+        "waveHeight": 1.92,
+        "waveChoppy": 5.95,
+        "surfaceStage": 5,
+        "detailMix": 0.42,
+        "normalStrength": 0.4,
+        "refractionStrength": 0.18
       },
       "tree": {
-        "palmCount": 499
+        "enable": true,
+        "totalCount": 1300,
+        "globalScale": 1.35,
+        "spacing": 9,
+        "clusterBias": 1,
+        "autumnWeight": 1.55,
+        "summerWeight": 0.95,
+        "spruceWeight": 0.75,
+        "palmWeight": 0.25,
+        "palmTarget": 400,
+        "peakSparse": 0.08,
+        "openCuts": 0.6,
+        "autumnScale": 1.3,
+        "spruceScale": 1.22,
+        "palmScale": 0.9
+      },
+      "shadows": {
+        "enable": true,
+        "primaryEnable": true,
+        "primarySize": 8192,
+        "primaryCoverage": 1.28,
+        "secondaryEnable": true,
+        "secondarySize": 2560,
+        "secondaryCoverage": 1,
+        "secondaryMix": 1,
+        "blendMode": 1,
+        "filterMode": 1,
+        "softness": 1.7,
+        "bias": -0.0006,
+        "normalBias": 2.2
       },
       "render": {
-        "fov": 68,
-        "exposure": 0.3,
-        "fogDensity": 0.0003,
+        "fov": 65,
+        "exposure": 0.2,
+        "fogDensity": 0,
         "horizonWarp": true
       },
       "godrays": {
         "enable": true,
         "source": 1,
-        "intensity": 2.75,
+        "intensity": 0.25,
         "density": 0.86,
-        "decay": 0.98,
+        "decay": 0.915,
         "weight": 2,
         "exposure": 0.7,
         "threshold": 0.62,
@@ -2742,98 +4139,286 @@
         "sharp": 0.25,
         "blurEnable": true,
         "blurAmount": 1,
-        "blurRadius": 7.6,
+        "blurRadius": 8,
         "blurPasses": 1
+      },
+      "camera": {
+        "director": false,
+        "focusMountain": 0.35,
+        "focusSky": 0.18,
+        "focusGreenway": 0.16,
+        "focusMassif": 0.22,
+        "focusValley": 0.14,
+        "focusShoreline": 0.24,
+        "focusPalms": 0.12,
+        "focusWater": 0.16
+      },
+      "cloudFinishing": {
+        "toneMapping": 0,
+        "dithering": true
+      },
+      "skyDiagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "takramAtmosphere": {
+        "sunLight": true,
+        "skyLight": true,
+        "ground": true,
+        "groundAlbedo": 0.065,
+        "albedoScale": 0.34,
+        "sun": true,
+        "transmittance": true,
+        "inscatter": true
+      },
+      "cloudWeather": {
+        "coverage": 0.38,
+        "weatherRepeatX": 77,
+        "weatherRepeatY": 100,
+        "weatherVelocityX": 0.001,
+        "weatherVelocityY": 0,
+        "shapeRepeat": 0.0003,
+        "detailRepeat": 0.006,
+        "turbulenceRepeat": 20,
+        "turbulenceDisplacement": 350
+      },
+      "cloudLighting": {
+        "scatteringCoefficient": 3,
+        "groundBounceScale": 2,
+        "skyLightScale": 0,
+        "powderScale": 0,
+        "absorptionCoefficient": 2.46,
+        "powderExponent": 150,
+        "anisotropy1": 0.7,
+        "anisotropy2": -0.2,
+        "anisotropyMix": 0.5,
+        "shapeDetail": true,
+        "turbulence": false,
+        "haze": true
+      },
+      "cloudShadows": {
+        "layerShadow": true,
+        "lightShafts": false,
+        "cascadeCount": 3,
+        "mapSize": 0,
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "cloudsRender": {
+        "exposure": 4.1,
+        "mode": 0,
+        "atmosphere": true,
+        "clouds": true,
+        "aerialPerspective": true,
+        "quality": 2,
+        "resolutionScale": 0.75,
+        "temporalUpscale": true
+      },
+      "cloudLayer0": {
+        "referenceStack": true,
+        "enabled": true,
+        "altitude": 750,
+        "height": 600,
+        "densityScale": 0.4,
+        "shapeAmount": 1,
+        "shapeDetailAmount": 0.8,
+        "weatherExponent": 1,
+        "shapeAlteringBias": 0.35,
+        "coverageFilterWidth": 0.6
+      },
+      "cloudDebug": {
+        "mode": 0,
+        "primarySteps": 200,
+        "minStep": 80,
+        "maxStep": 1000,
+        "rayDistance": 120000
       }
     },
     "cam": {
       "p": [
-        1483.0911119137945,
-        231.44430618873466,
-        554.260601408057
+        -1010.35105979366,
+        332.5647808301038,
+        832.3314753208052
       ],
       "q": [
-        -0.06901618476179006,
-        0.6446189134550505,
-        0.05860592505128253,
-        0.7591235526617784
+        -0.1503836684506681,
+        -0.378275005210099,
+        -0.062426036000821375,
+        0.9112605350424451
       ]
     },
-    "t": 1779257394891
+    "t": 1779940088633
   },
   "E2": {
     "params": {
+      "orbitSweep": {
+        "enable": false,
+        "speed": 1,
+        "elevationDeg": 17.5,
+        "azimuthDeg": 117,
+        "elevationSpeed": 4,
+        "azimuthSpeed": 0.5,
+        "elevationRange": [
+          2,
+          50
+        ]
+      },
       "sun": {
-        "elevationDeg": 3.5,
-        "azimuthDeg": -168,
-        "intensity": 30.5
+        "elevationDeg": 17.5,
+        "azimuthDeg": 117,
+        "intensity": 33.5
       },
       "atmosphere": {
-        "rayleighMul": 0.99,
-        "mieBeta": 0.028,
-        "mieG": 0.47,
-        "ozoneMul": 1.86
+        "rayleighMul": 1.06,
+        "mieBeta": 0.0095,
+        "mieG": 0,
+        "ozoneMul": 3,
+        "planetRadiusKm": 6350
       },
       "lighting": {
-        "skyBounce": 1.34,
-        "bounceTint": 0.18,
-        "groundBounce": 0.74,
-        "sunGlint": 2.1,
-        "glintSpread": 1.1,
+        "skyBounce": 1.38,
+        "bounceTint": 0.22,
+        "groundBounce": 0.9,
+        "sunElevationGain": 1,
+        "sunFloor": 4,
+        "sunCeiling": 5,
+        "secondaryEnergy": 0.49,
+        "sunGlint": 1.7,
+        "glintSpread": 3.4,
         "bloom": 0,
         "aerialHaze": 0
       },
       "voxel": {
-        "seed": 24196,
-        "resolution": 384,
+        "seed": 64916,
+        "resolution": 992,
         "terraceStep": 0.5
       },
       "island": {
         "radius": 1070,
         "shape": 3,
-        "lowland": 24,
-        "massif": 240,
-        "warp": 0.5206552464219077,
-        "ridge": 1.05,
-        "beachWidth": 44,
-        "valleyDepth": 90,
-        "valleyWidth": 22
+        "lowland": 38,
+        "massif": 280,
+        "massifSharpness": 1,
+        "massifOffsetX": 0,
+        "massifOffsetZ": 0,
+        "warp": 1.65,
+        "ridge": 0.55,
+        "beachWidth": 3,
+        "valleyDepth": 110,
+        "valleyWidth": 18
+      },
+      "lagoon": {
+        "enable": true,
+        "x": 0.24,
+        "z": -0.12,
+        "radiusX": 230,
+        "radiusZ": 135,
+        "rotation": -24,
+        "depth": 1.4,
+        "lowlandCap": 54,
+        "inlet": 0.12,
+        "apronWidth": 42,
+        "whiteSand": 0.9,
+        "treeAttraction": 1.1
       },
       "seasons": {
-        "sweepDeg": 61,
-        "summerEnd": 0.55,
+        "sweepDeg": 38,
+        "summerEnd": 0.26,
         "autumnEnd": 0.5,
-        "coniferEnd": 0.82,
+        "coniferEnd": 0.79,
         "borderWarp": 1.15,
         "craggy": 0.4,
-        "fairway": 0.66,
-        "fairwayBand": 46,
-        "bunkerDensity": 0.18,
-        "bunkerSize": 11
+        "fairway": 0.86,
+        "fairwayBand": 56,
+        "bunkerDensity": 0.3,
+        "bunkerSize": 22
       },
       "water": {
-        "seaLevel": 4.5,
-        "causticScale": 2.9,
-        "causticIntensity": 1,
-        "floorDepth": 100,
-        "shoreGlow": 1.1,
-        "causticOpacity": 0
+        "enable": true,
+        "seaLevel": 32.5,
+        "floorDepth": 50,
+        "floorShape": 0.85,
+        "floorRoughness": 1,
+        "deltaFloor": 1,
+        "surfaceLift": 0.08,
+        "landMask": 1,
+        "debugView": 0,
+        "depthTint": 0.78,
+        "lagoonTint": 0.18,
+        "causticScale": 4.6,
+        "causticIntensity": 2.8,
+        "causticOpacity": 0,
+        "shoreGlow": 1.35,
+        "shoreGlowWidth": 1.3,
+        "shoreGlowFollow": 0
+      },
+      "waves": {
+        "waveSpeed": 2.7,
+        "glintSpeed": 3.5,
+        "glintScale": 1.34,
+        "waveScale": 0.0275,
+        "waveRotation": 143,
+        "surfaceOpacity": 0.55,
+        "waveHeight": 1.92,
+        "waveChoppy": 5.95,
+        "surfaceStage": 5,
+        "detailMix": 0.42,
+        "normalStrength": 0.4,
+        "refractionStrength": 0.18
       },
       "tree": {
-        "palmCount": 499
+        "enable": true,
+        "totalCount": 1300,
+        "globalScale": 1.35,
+        "spacing": 9,
+        "clusterBias": 1,
+        "autumnWeight": 1.55,
+        "summerWeight": 0.95,
+        "spruceWeight": 0.75,
+        "palmWeight": 0.25,
+        "palmTarget": 400,
+        "peakSparse": 0.08,
+        "openCuts": 0.6,
+        "autumnScale": 1.3,
+        "spruceScale": 1.22,
+        "palmScale": 0.9
+      },
+      "shadows": {
+        "enable": true,
+        "primaryEnable": true,
+        "primarySize": 8192,
+        "primaryCoverage": 1.28,
+        "secondaryEnable": true,
+        "secondarySize": 2560,
+        "secondaryCoverage": 1,
+        "secondaryMix": 1,
+        "blendMode": 1,
+        "filterMode": 1,
+        "softness": 1.7,
+        "bias": -0.0006,
+        "normalBias": 2.2
       },
       "render": {
-        "fov": 68,
-        "exposure": 0.3,
-        "fogDensity": 0.0003,
+        "fov": 65,
+        "exposure": 0.2,
+        "fogDensity": 0,
         "horizonWarp": true
       },
       "godrays": {
         "enable": true,
         "source": 1,
-        "intensity": 2.75,
+        "intensity": 0.25,
         "density": 0.86,
-        "decay": 0.98,
+        "decay": 0.915,
         "weight": 2,
         "exposure": 0.7,
         "threshold": 0.62,
@@ -2845,201 +4430,286 @@
         "sharp": 0.25,
         "blurEnable": true,
         "blurAmount": 1,
-        "blurRadius": 7.6,
+        "blurRadius": 8,
         "blurPasses": 1
+      },
+      "camera": {
+        "director": false,
+        "focusMountain": 0.35,
+        "focusSky": 0.18,
+        "focusGreenway": 0.16,
+        "focusMassif": 0.22,
+        "focusValley": 0.14,
+        "focusShoreline": 0.24,
+        "focusPalms": 0.12,
+        "focusWater": 0.16
+      },
+      "cloudFinishing": {
+        "toneMapping": 1,
+        "dithering": true
+      },
+      "skyDiagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "takramAtmosphere": {
+        "sunLight": true,
+        "skyLight": true,
+        "ground": true,
+        "groundAlbedo": 0,
+        "albedoScale": 0.36,
+        "sun": true,
+        "transmittance": true,
+        "inscatter": true
+      },
+      "cloudWeather": {
+        "coverage": 0.38,
+        "weatherRepeatX": 77,
+        "weatherRepeatY": 100,
+        "weatherVelocityX": 0.001,
+        "weatherVelocityY": 0,
+        "shapeRepeat": 0.0003,
+        "detailRepeat": 0.006,
+        "turbulenceRepeat": 20,
+        "turbulenceDisplacement": 350
+      },
+      "cloudLighting": {
+        "scatteringCoefficient": 3,
+        "groundBounceScale": 2,
+        "skyLightScale": 0,
+        "powderScale": 0,
+        "absorptionCoefficient": 2.46,
+        "powderExponent": 150,
+        "anisotropy1": 0.7,
+        "anisotropy2": -0.2,
+        "anisotropyMix": 0.5,
+        "shapeDetail": true,
+        "turbulence": false,
+        "haze": true
+      },
+      "cloudShadows": {
+        "layerShadow": true,
+        "lightShafts": false,
+        "cascadeCount": 3,
+        "mapSize": 0,
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "cloudsRender": {
+        "exposure": 3.9,
+        "mode": 0,
+        "atmosphere": true,
+        "clouds": true,
+        "aerialPerspective": true,
+        "quality": 2,
+        "resolutionScale": 0.75,
+        "temporalUpscale": true
+      },
+      "cloudLayer0": {
+        "referenceStack": true,
+        "enabled": true,
+        "altitude": 750,
+        "height": 600,
+        "densityScale": 0.4,
+        "shapeAmount": 1,
+        "shapeDetailAmount": 0.8,
+        "weatherExponent": 1,
+        "shapeAlteringBias": 0.35,
+        "coverageFilterWidth": 0.6
+      },
+      "cloudDebug": {
+        "mode": 0,
+        "primarySteps": 200,
+        "minStep": 80,
+        "maxStep": 1000,
+        "rayDistance": 120000
       }
     },
     "cam": {
       "p": [
-        1080.7282431152948,
-        76.38048662210475,
-        497.70509744125565
+        -1010.35105979366,
+        332.5647808301038,
+        832.3314753208052
       ],
       "q": [
-        0.030798944577583698,
-        0.6864282655573425,
-        -0.029121759816941945,
-        0.7259611452150933
+        -0.1503836684506681,
+        -0.378275005210099,
+        -0.062426036000821375,
+        0.9112605350424451
       ]
     },
-    "t": 1779257431277
+    "t": 1779940316981
   },
   "E3": {
     "params": {
+      "orbitSweep": {
+        "enable": false,
+        "speed": 1,
+        "elevationDeg": 58,
+        "azimuthDeg": 117,
+        "elevationSpeed": 4,
+        "azimuthSpeed": 0.5,
+        "elevationRange": [
+          2,
+          50
+        ]
+      },
       "sun": {
-        "elevationDeg": 4,
-        "azimuthDeg": -172,
-        "intensity": 21
+        "elevationDeg": 58,
+        "azimuthDeg": 117,
+        "intensity": 33.5
       },
       "atmosphere": {
-        "rayleighMul": 0.56,
-        "mieBeta": 0.0105,
-        "mieG": 0.63,
-        "ozoneMul": 2.47
+        "rayleighMul": 1.06,
+        "mieBeta": 0.0095,
+        "mieG": 0,
+        "ozoneMul": 3,
+        "planetRadiusKm": 6350
       },
       "lighting": {
-        "skyBounce": 1.34,
-        "bounceTint": 0.16,
-        "groundBounce": 0.68,
-        "sunGlint": 0.45,
-        "glintSpread": 1.1,
+        "skyBounce": 1.38,
+        "bounceTint": 0.22,
+        "groundBounce": 0.9,
+        "sunElevationGain": 1,
+        "sunFloor": 4,
+        "sunCeiling": 5,
+        "secondaryEnergy": 0.49,
+        "sunGlint": 1.7,
+        "glintSpread": 3.4,
         "bloom": 0,
         "aerialHaze": 0
       },
       "voxel": {
-        "seed": 35466,
-        "resolution": 128,
-        "terraceStep": 0.5
-      },
-      "island": {
-        "radius": 1010,
-        "shape": 4,
-        "lowland": 22,
-        "massif": 360,
-        "warp": 1.65,
-        "ridge": 1.05,
-        "beachWidth": 35,
-        "valleyDepth": 90,
-        "valleyWidth": 22
-      },
-      "seasons": {
-        "sweepDeg": -70.80465957984272,
-        "summerEnd": 0.38,
-        "autumnEnd": 0.5,
-        "coniferEnd": 0.79,
-        "borderWarp": 1.15,
-        "craggy": 0.4,
-        "fairway": 0.44,
-        "fairwayBand": 24,
-        "bunkerDensity": 0.18,
-        "bunkerSize": 11
-      },
-      "water": {
-        "seaLevel": 24.5,
-        "causticScale": 4.6,
-        "causticIntensity": 2.8,
-        "floorDepth": 45,
-        "shoreGlow": 1.1,
-        "causticOpacity": 0
-      },
-      "tree": {
-        "palmCount": 499
-      },
-      "render": {
-        "fov": 68,
-        "exposure": 0.3,
-        "fogDensity": 0.0003,
-        "horizonWarp": true
-      },
-      "godrays": {
-        "enable": true,
-        "source": 1,
-        "intensity": 2.95,
-        "density": 0.86,
-        "decay": 0.915,
-        "weight": 2,
-        "exposure": 0.7,
-        "threshold": 0.62,
-        "groundMask": 0.5,
-        "reach": 1.45,
-        "warmth": 0.5,
-        "samples": 16,
-        "resScale": 0.25,
-        "sharp": 0.25,
-        "blurEnable": false,
-        "blurAmount": 0.18,
-        "blurRadius": 1.5,
-        "blurPasses": 1
-      }
-    },
-    "cam": {
-      "p": [
-        690.6567161782414,
-        307.72359476132306,
-        -84.61531981400081
-      ],
-      "q": [
-        0.012511079258824184,
-        0.64694054362489,
-        -0.010616878125389403,
-        0.7623638814955638
-      ]
-    },
-    "t": 1779256414967
-  },
-  "E4": {
-    "params": {
-      "sun": {
-        "elevationDeg": 3.5,
-        "azimuthDeg": -168,
-        "intensity": 30.5
-      },
-      "atmosphere": {
-        "rayleighMul": 0.99,
-        "mieBeta": 0.028,
-        "mieG": 0.47,
-        "ozoneMul": 1.86
-      },
-      "lighting": {
-        "skyBounce": 1.34,
-        "bounceTint": 0.18,
-        "groundBounce": 0.74,
-        "sunGlint": 2.1,
-        "glintSpread": 1.1,
-        "bloom": 0,
-        "aerialHaze": 0
-      },
-      "voxel": {
-        "seed": 24196,
-        "resolution": 960,
+        "seed": 64916,
+        "resolution": 992,
         "terraceStep": 0.5
       },
       "island": {
         "radius": 1070,
         "shape": 3,
-        "lowland": 24,
-        "massif": 240,
-        "warp": 0.5206552464219077,
-        "ridge": 1.05,
-        "beachWidth": 44,
-        "valleyDepth": 90,
-        "valleyWidth": 22
+        "lowland": 38,
+        "massif": 280,
+        "massifSharpness": 1,
+        "massifOffsetX": 0,
+        "massifOffsetZ": 0,
+        "warp": 1.65,
+        "ridge": 0.55,
+        "beachWidth": 3,
+        "valleyDepth": 110,
+        "valleyWidth": 18
+      },
+      "lagoon": {
+        "enable": true,
+        "x": 0.24,
+        "z": -0.12,
+        "radiusX": 230,
+        "radiusZ": 135,
+        "rotation": -24,
+        "depth": 1.4,
+        "lowlandCap": 54,
+        "inlet": 0.12,
+        "apronWidth": 42,
+        "whiteSand": 0.9,
+        "treeAttraction": 1.1
       },
       "seasons": {
-        "sweepDeg": 61,
-        "summerEnd": 0.55,
+        "sweepDeg": 38,
+        "summerEnd": 0.26,
         "autumnEnd": 0.5,
-        "coniferEnd": 0.82,
+        "coniferEnd": 0.79,
         "borderWarp": 1.15,
         "craggy": 0.4,
-        "fairway": 0.66,
-        "fairwayBand": 46,
-        "bunkerDensity": 0.18,
-        "bunkerSize": 11
+        "fairway": 0.86,
+        "fairwayBand": 56,
+        "bunkerDensity": 0.3,
+        "bunkerSize": 22
       },
       "water": {
-        "seaLevel": 4.5,
-        "causticScale": 2.9,
-        "causticIntensity": 1,
-        "floorDepth": 100,
-        "shoreGlow": 1.1,
-        "causticOpacity": 0
+        "enable": true,
+        "seaLevel": 32.5,
+        "floorDepth": 50,
+        "floorShape": 0.85,
+        "floorRoughness": 1,
+        "deltaFloor": 1,
+        "surfaceLift": 0.08,
+        "landMask": 1,
+        "debugView": 0,
+        "depthTint": 0.78,
+        "lagoonTint": 0.18,
+        "causticScale": 4.6,
+        "causticIntensity": 2.8,
+        "causticOpacity": 0,
+        "shoreGlow": 1.35,
+        "shoreGlowWidth": 1.3,
+        "shoreGlowFollow": 0
+      },
+      "waves": {
+        "waveSpeed": 2.7,
+        "glintSpeed": 3.5,
+        "glintScale": 1.34,
+        "waveScale": 0.0275,
+        "waveRotation": 143,
+        "surfaceOpacity": 0.55,
+        "waveHeight": 1.92,
+        "waveChoppy": 5.95,
+        "surfaceStage": 5,
+        "detailMix": 0.42,
+        "normalStrength": 0.4,
+        "refractionStrength": 0.18
       },
       "tree": {
-        "palmCount": 499
+        "enable": true,
+        "totalCount": 1300,
+        "globalScale": 1.35,
+        "spacing": 9,
+        "clusterBias": 1,
+        "autumnWeight": 1.55,
+        "summerWeight": 0.95,
+        "spruceWeight": 0.75,
+        "palmWeight": 0.25,
+        "palmTarget": 400,
+        "peakSparse": 0.08,
+        "openCuts": 0.6,
+        "autumnScale": 1.3,
+        "spruceScale": 1.22,
+        "palmScale": 0.9
+      },
+      "shadows": {
+        "enable": true,
+        "primaryEnable": true,
+        "primarySize": 8192,
+        "primaryCoverage": 1.28,
+        "secondaryEnable": true,
+        "secondarySize": 2560,
+        "secondaryCoverage": 1,
+        "secondaryMix": 1,
+        "blendMode": 1,
+        "filterMode": 1,
+        "softness": 1.7,
+        "bias": -0.0006,
+        "normalBias": 2.2
       },
       "render": {
-        "fov": 68,
-        "exposure": 0.3,
-        "fogDensity": 0.0003,
+        "fov": 65,
+        "exposure": 0.2,
+        "fogDensity": 0,
         "horizonWarp": true
       },
       "godrays": {
         "enable": true,
         "source": 1,
-        "intensity": 2.75,
+        "intensity": 0.25,
         "density": 0.86,
-        "decay": 0.98,
+        "decay": 0.915,
         "weight": 2,
         "exposure": 0.7,
         "threshold": 0.62,
@@ -3051,96 +4721,284 @@
         "sharp": 0.25,
         "blurEnable": true,
         "blurAmount": 1,
-        "blurRadius": 7.6,
+        "blurRadius": 8,
         "blurPasses": 1
+      },
+      "camera": {
+        "director": false,
+        "focusMountain": 0.35,
+        "focusSky": 0.18,
+        "focusGreenway": 0.16,
+        "focusMassif": 0.22,
+        "focusValley": 0.14,
+        "focusShoreline": 0.24,
+        "focusPalms": 0.12,
+        "focusWater": 0.16
+      },
+      "cloudFinishing": {
+        "toneMapping": 0,
+        "dithering": true
+      },
+      "skyDiagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "takramAtmosphere": {
+        "sunLight": true,
+        "skyLight": true,
+        "ground": true,
+        "groundAlbedo": 0.11,
+        "albedoScale": 0.42,
+        "sun": true,
+        "transmittance": true,
+        "inscatter": true
+      },
+      "cloudWeather": {
+        "coverage": 0.52,
+        "weatherRepeatX": 77,
+        "weatherRepeatY": 100,
+        "weatherVelocityX": 0.001,
+        "weatherVelocityY": 0,
+        "shapeRepeat": 0.0003,
+        "detailRepeat": 0.006,
+        "turbulenceRepeat": 20,
+        "turbulenceDisplacement": 350
+      },
+      "cloudLighting": {
+        "scatteringCoefficient": 3,
+        "groundBounceScale": 2,
+        "skyLightScale": 0.28,
+        "powderScale": 0,
+        "absorptionCoefficient": 0,
+        "powderExponent": 150,
+        "anisotropy1": 0.7,
+        "anisotropy2": -0.2,
+        "anisotropyMix": 0.5,
+        "shapeDetail": true,
+        "turbulence": false,
+        "haze": true
+      },
+      "cloudShadows": {
+        "layerShadow": true,
+        "lightShafts": false,
+        "cascadeCount": 3,
+        "mapSize": 0,
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "cloudsRender": {
+        "exposure": 4.1,
+        "mode": 0,
+        "atmosphere": true,
+        "clouds": true,
+        "aerialPerspective": true,
+        "quality": 2,
+        "resolutionScale": 0.75,
+        "temporalUpscale": true
+      },
+      "cloudLayer0": {
+        "referenceStack": true,
+        "enabled": true,
+        "altitude": 750,
+        "height": 600,
+        "densityScale": 0.4,
+        "shapeAmount": 1,
+        "shapeDetailAmount": 0.8,
+        "weatherExponent": 1,
+        "shapeAlteringBias": 0.35,
+        "coverageFilterWidth": 0.6
+      },
+      "cloudDebug": {
+        "mode": 0,
+        "primarySteps": 200,
+        "minStep": 80,
+        "maxStep": 1000,
+        "rayDistance": 120000
       }
     },
     "cam": {
       "p": [
-        1080.7282431152948,
-        76.38048662210475,
-        497.70509744125565
+        218.99074956785438,
+        356.5437799976012,
+        1124.118923585198
       ],
       "q": [
-        0.030798944577583698,
-        0.6864282655573425,
-        -0.029121759816941945,
-        0.7259611452150933
+        -0.09397914149189843,
+        0.16236341114842504,
+        0.01553652783083887,
+        0.9821225279911132
       ]
     },
-    "t": 1779257859853
+    "t": 1779937820705
   },
-  "E5": {
+  "E4": {
     "params": {
+      "orbitSweep": {
+        "enable": false,
+        "speed": 1,
+        "elevationDeg": 48.5,
+        "azimuthDeg": 117,
+        "elevationSpeed": 4,
+        "azimuthSpeed": 0.5,
+        "elevationRange": [
+          2,
+          50
+        ]
+      },
       "sun": {
-        "elevationDeg": 4,
-        "azimuthDeg": -172,
-        "intensity": 21
+        "elevationDeg": 48.5,
+        "azimuthDeg": 117,
+        "intensity": 33.5
       },
       "atmosphere": {
-        "rayleighMul": 0.56,
-        "mieBeta": 0.0105,
-        "mieG": 0.63,
-        "ozoneMul": 2.47
+        "rayleighMul": 1.06,
+        "mieBeta": 0.0095,
+        "mieG": 0,
+        "ozoneMul": 3,
+        "planetRadiusKm": 6350
       },
       "lighting": {
-        "skyBounce": 1.34,
-        "bounceTint": 0.16,
-        "groundBounce": 0.68,
-        "sunGlint": 0.45,
-        "glintSpread": 1.1,
+        "skyBounce": 1.38,
+        "bounceTint": 0.22,
+        "groundBounce": 0.9,
+        "sunElevationGain": 1,
+        "sunFloor": 4,
+        "sunCeiling": 5,
+        "secondaryEnergy": 0.49,
+        "sunGlint": 1.7,
+        "glintSpread": 3.4,
         "bloom": 0,
         "aerialHaze": 0
       },
       "voxel": {
-        "seed": 53581,
-        "resolution": 736,
+        "seed": 64916,
+        "resolution": 992,
         "terraceStep": 0.5
       },
       "island": {
         "radius": 1070,
-        "shape": 2,
-        "lowland": 28,
-        "massif": 320,
-        "warp": 0.9,
-        "ridge": 0.3,
-        "beachWidth": 50,
-        "valleyDepth": 90,
-        "valleyWidth": 22
+        "shape": 3,
+        "lowland": 38,
+        "massif": 280,
+        "massifSharpness": 1,
+        "massifOffsetX": 0,
+        "massifOffsetZ": 0,
+        "warp": 1.65,
+        "ridge": 0.55,
+        "beachWidth": 3,
+        "valleyDepth": 110,
+        "valleyWidth": 18
+      },
+      "lagoon": {
+        "enable": true,
+        "x": 0.24,
+        "z": -0.12,
+        "radiusX": 230,
+        "radiusZ": 135,
+        "rotation": -24,
+        "depth": 1.4,
+        "lowlandCap": 54,
+        "inlet": 0.12,
+        "apronWidth": 42,
+        "whiteSand": 0.9,
+        "treeAttraction": 1.1
       },
       "seasons": {
-        "sweepDeg": -70.80465957984272,
-        "summerEnd": 0.38,
+        "sweepDeg": 38,
+        "summerEnd": 0.26,
         "autumnEnd": 0.5,
         "coniferEnd": 0.79,
         "borderWarp": 1.15,
         "craggy": 0.4,
-        "fairway": 0.44,
-        "fairwayBand": 24,
-        "bunkerDensity": 0.18,
-        "bunkerSize": 11
+        "fairway": 0.86,
+        "fairwayBand": 56,
+        "bunkerDensity": 0.3,
+        "bunkerSize": 22
       },
       "water": {
-        "seaLevel": 24.5,
+        "enable": true,
+        "seaLevel": 32.5,
+        "floorDepth": 50,
+        "floorShape": 0.85,
+        "floorRoughness": 1,
+        "deltaFloor": 1,
+        "surfaceLift": 0.08,
+        "landMask": 1,
+        "debugView": 0,
+        "depthTint": 0.78,
+        "lagoonTint": 0.18,
         "causticScale": 4.6,
         "causticIntensity": 2.8,
-        "floorDepth": 45,
-        "shoreGlow": 1.1,
-        "causticOpacity": 0
+        "causticOpacity": 0,
+        "shoreGlow": 1.35,
+        "shoreGlowWidth": 1.3,
+        "shoreGlowFollow": 0
+      },
+      "waves": {
+        "waveSpeed": 2.7,
+        "glintSpeed": 3.5,
+        "glintScale": 1.34,
+        "waveScale": 0.0275,
+        "waveRotation": 143,
+        "surfaceOpacity": 0.55,
+        "waveHeight": 1.92,
+        "waveChoppy": 5.95,
+        "surfaceStage": 5,
+        "detailMix": 0.42,
+        "normalStrength": 0.4,
+        "refractionStrength": 0.18
       },
       "tree": {
-        "palmCount": 499
+        "enable": true,
+        "totalCount": 1300,
+        "globalScale": 1.35,
+        "spacing": 9,
+        "clusterBias": 1,
+        "autumnWeight": 1.55,
+        "summerWeight": 0.95,
+        "spruceWeight": 0.75,
+        "palmWeight": 0.25,
+        "palmTarget": 400,
+        "peakSparse": 0.08,
+        "openCuts": 0.6,
+        "autumnScale": 1.3,
+        "spruceScale": 1.22,
+        "palmScale": 0.9
+      },
+      "shadows": {
+        "enable": true,
+        "primaryEnable": true,
+        "primarySize": 8192,
+        "primaryCoverage": 1.28,
+        "secondaryEnable": true,
+        "secondarySize": 2560,
+        "secondaryCoverage": 1,
+        "secondaryMix": 1,
+        "blendMode": 1,
+        "filterMode": 1,
+        "softness": 1.7,
+        "bias": -0.0006,
+        "normalBias": 2.2
       },
       "render": {
-        "fov": 68,
-        "exposure": 0.3,
-        "fogDensity": 0.0003,
+        "fov": 65,
+        "exposure": 0.2,
+        "fogDensity": 0,
         "horizonWarp": true
       },
       "godrays": {
         "enable": true,
         "source": 1,
-        "intensity": 2.95,
+        "intensity": 0.25,
         "density": 0.86,
         "decay": 0.915,
         "weight": 2,
@@ -3152,26 +5010,417 @@
         "samples": 16,
         "resScale": 0.25,
         "sharp": 0.25,
-        "blurEnable": false,
-        "blurAmount": 0.18,
-        "blurRadius": 1.5,
+        "blurEnable": true,
+        "blurAmount": 1,
+        "blurRadius": 8,
         "blurPasses": 1
+      },
+      "camera": {
+        "director": false,
+        "focusMountain": 0.35,
+        "focusSky": 0.18,
+        "focusGreenway": 0.16,
+        "focusMassif": 0.22,
+        "focusValley": 0.14,
+        "focusShoreline": 0.24,
+        "focusPalms": 0.12,
+        "focusWater": 0.16
+      },
+      "cloudFinishing": {
+        "toneMapping": 0,
+        "dithering": true
+      },
+      "skyDiagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "takramAtmosphere": {
+        "sunLight": true,
+        "skyLight": true,
+        "ground": true,
+        "groundAlbedo": 0.11,
+        "albedoScale": 0.42,
+        "sun": true,
+        "transmittance": true,
+        "inscatter": true
+      },
+      "cloudWeather": {
+        "coverage": 0.52,
+        "weatherRepeatX": 77,
+        "weatherRepeatY": 100,
+        "weatherVelocityX": 0.001,
+        "weatherVelocityY": 0,
+        "shapeRepeat": 0.0003,
+        "detailRepeat": 0.006,
+        "turbulenceRepeat": 20,
+        "turbulenceDisplacement": 350
+      },
+      "cloudLighting": {
+        "scatteringCoefficient": 3,
+        "groundBounceScale": 2,
+        "skyLightScale": 0,
+        "powderScale": 0,
+        "absorptionCoefficient": 2.46,
+        "powderExponent": 150,
+        "anisotropy1": 0.7,
+        "anisotropy2": -0.2,
+        "anisotropyMix": 0.5,
+        "shapeDetail": true,
+        "turbulence": false,
+        "haze": true
+      },
+      "cloudShadows": {
+        "layerShadow": true,
+        "lightShafts": false,
+        "cascadeCount": 3,
+        "mapSize": 0,
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "cloudsRender": {
+        "exposure": 4.1,
+        "mode": 0,
+        "atmosphere": true,
+        "clouds": true,
+        "aerialPerspective": true,
+        "quality": 2,
+        "resolutionScale": 0.75,
+        "temporalUpscale": true
+      },
+      "cloudLayer0": {
+        "referenceStack": true,
+        "enabled": true,
+        "altitude": 750,
+        "height": 600,
+        "densityScale": 0.4,
+        "shapeAmount": 1,
+        "shapeDetailAmount": 0.8,
+        "weatherExponent": 1,
+        "shapeAlteringBias": 0.35,
+        "coverageFilterWidth": 0.6
+      },
+      "cloudDebug": {
+        "mode": 0,
+        "primarySteps": 200,
+        "minStep": 80,
+        "maxStep": 1000,
+        "rayDistance": 120000
       }
     },
     "cam": {
       "p": [
-        772.6818758660718,
-        288.64835396897905,
-        335.4216187164444
+        -1160.294164090182,
+        320.55138476715973,
+        647.9613524874511
       ],
       "q": [
-        -0.05400547541057561,
-        0.4948942227325465,
-        0.030836768344074793,
-        0.8667249913609969
+        -0.17614209393247393,
+        -0.4911600151081728,
+        -0.10214928761703307,
+        0.8469364352437293
       ]
     },
-    "t": 1779258412642
+    "t": 1779937987791
+  },
+  "E5": {
+    "params": {
+      "orbitSweep": {
+        "enable": false,
+        "speed": 1,
+        "elevationDeg": 48.5,
+        "azimuthDeg": 117,
+        "elevationSpeed": 4,
+        "azimuthSpeed": 0.5,
+        "elevationRange": [
+          2,
+          50
+        ]
+      },
+      "sun": {
+        "elevationDeg": 48.5,
+        "azimuthDeg": 117,
+        "intensity": 33.5
+      },
+      "atmosphere": {
+        "rayleighMul": 1.06,
+        "mieBeta": 0.0095,
+        "mieG": 0,
+        "ozoneMul": 3,
+        "planetRadiusKm": 6350
+      },
+      "lighting": {
+        "skyBounce": 1.38,
+        "bounceTint": 0.22,
+        "groundBounce": 0.9,
+        "sunElevationGain": 1,
+        "sunFloor": 4,
+        "sunCeiling": 5,
+        "secondaryEnergy": 0.49,
+        "sunGlint": 1.7,
+        "glintSpread": 3.4,
+        "bloom": 0,
+        "aerialHaze": 0
+      },
+      "voxel": {
+        "seed": 64916,
+        "resolution": 992,
+        "terraceStep": 0.5
+      },
+      "island": {
+        "radius": 1070,
+        "shape": 3,
+        "lowland": 38,
+        "massif": 280,
+        "massifSharpness": 1,
+        "massifOffsetX": 0,
+        "massifOffsetZ": 0,
+        "warp": 1.65,
+        "ridge": 0.55,
+        "beachWidth": 3,
+        "valleyDepth": 110,
+        "valleyWidth": 18
+      },
+      "lagoon": {
+        "enable": true,
+        "x": 0.24,
+        "z": -0.12,
+        "radiusX": 230,
+        "radiusZ": 135,
+        "rotation": -24,
+        "depth": 1.4,
+        "lowlandCap": 54,
+        "inlet": 0.12,
+        "apronWidth": 42,
+        "whiteSand": 0.9,
+        "treeAttraction": 1.1
+      },
+      "seasons": {
+        "sweepDeg": 38,
+        "summerEnd": 0.26,
+        "autumnEnd": 0.5,
+        "coniferEnd": 0.79,
+        "borderWarp": 1.15,
+        "craggy": 0.4,
+        "fairway": 0.86,
+        "fairwayBand": 56,
+        "bunkerDensity": 0.3,
+        "bunkerSize": 22
+      },
+      "water": {
+        "enable": true,
+        "seaLevel": 32.5,
+        "floorDepth": 50,
+        "floorShape": 0.85,
+        "floorRoughness": 1,
+        "deltaFloor": 1,
+        "surfaceLift": 0.08,
+        "landMask": 1,
+        "debugView": 0,
+        "depthTint": 0.78,
+        "lagoonTint": 0.18,
+        "causticScale": 4.6,
+        "causticIntensity": 2.8,
+        "causticOpacity": 0,
+        "shoreGlow": 1.35,
+        "shoreGlowWidth": 1.3,
+        "shoreGlowFollow": 0
+      },
+      "waves": {
+        "waveSpeed": 2.7,
+        "glintSpeed": 3.5,
+        "glintScale": 1.34,
+        "waveScale": 0.0275,
+        "waveRotation": 143,
+        "surfaceOpacity": 0.55,
+        "waveHeight": 1.92,
+        "waveChoppy": 5.95,
+        "surfaceStage": 5,
+        "detailMix": 0.42,
+        "normalStrength": 0.4,
+        "refractionStrength": 0.18
+      },
+      "tree": {
+        "enable": true,
+        "totalCount": 1300,
+        "globalScale": 1.35,
+        "spacing": 9,
+        "clusterBias": 1,
+        "autumnWeight": 1.55,
+        "summerWeight": 0.95,
+        "spruceWeight": 0.75,
+        "palmWeight": 0.25,
+        "palmTarget": 400,
+        "peakSparse": 0.08,
+        "openCuts": 0.6,
+        "autumnScale": 1.3,
+        "spruceScale": 1.22,
+        "palmScale": 0.9
+      },
+      "shadows": {
+        "enable": true,
+        "primaryEnable": true,
+        "primarySize": 8192,
+        "primaryCoverage": 1.28,
+        "secondaryEnable": true,
+        "secondarySize": 2560,
+        "secondaryCoverage": 1,
+        "secondaryMix": 1,
+        "blendMode": 1,
+        "filterMode": 1,
+        "softness": 1.7,
+        "bias": -0.0006,
+        "normalBias": 2.2
+      },
+      "render": {
+        "fov": 65,
+        "exposure": 0.2,
+        "fogDensity": 0,
+        "horizonWarp": true
+      },
+      "godrays": {
+        "enable": true,
+        "source": 1,
+        "intensity": 0.25,
+        "density": 0.86,
+        "decay": 0.915,
+        "weight": 2,
+        "exposure": 0.7,
+        "threshold": 0.62,
+        "groundMask": 0.5,
+        "reach": 1.45,
+        "warmth": 0.5,
+        "samples": 16,
+        "resScale": 0.25,
+        "sharp": 0.25,
+        "blurEnable": true,
+        "blurAmount": 1,
+        "blurRadius": 8,
+        "blurPasses": 1
+      },
+      "camera": {
+        "director": false,
+        "focusMountain": 0.35,
+        "focusSky": 0.18,
+        "focusGreenway": 0.16,
+        "focusMassif": 0.22,
+        "focusValley": 0.14,
+        "focusShoreline": 0.24,
+        "focusPalms": 0.12,
+        "focusWater": 0.16
+      },
+      "cloudFinishing": {
+        "toneMapping": 0,
+        "dithering": true
+      },
+      "skyDiagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "takramAtmosphere": {
+        "sunLight": true,
+        "skyLight": true,
+        "ground": true,
+        "groundAlbedo": 0.065,
+        "albedoScale": 0.34,
+        "sun": true,
+        "transmittance": true,
+        "inscatter": true
+      },
+      "cloudWeather": {
+        "coverage": 0.45,
+        "weatherRepeatX": 77,
+        "weatherRepeatY": 100,
+        "weatherVelocityX": 0.001,
+        "weatherVelocityY": 0,
+        "shapeRepeat": 0.0003,
+        "detailRepeat": 0.006,
+        "turbulenceRepeat": 20,
+        "turbulenceDisplacement": 350
+      },
+      "cloudLighting": {
+        "scatteringCoefficient": 3,
+        "groundBounceScale": 2,
+        "skyLightScale": 0,
+        "powderScale": 0,
+        "absorptionCoefficient": 2.46,
+        "powderExponent": 150,
+        "anisotropy1": 0.7,
+        "anisotropy2": -0.2,
+        "anisotropyMix": 0.5,
+        "shapeDetail": true,
+        "turbulence": false,
+        "haze": true
+      },
+      "cloudShadows": {
+        "layerShadow": true,
+        "lightShafts": false,
+        "cascadeCount": 3,
+        "mapSize": 0,
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "cloudsRender": {
+        "exposure": 2.8,
+        "mode": 0,
+        "atmosphere": true,
+        "clouds": true,
+        "aerialPerspective": true,
+        "quality": 2,
+        "resolutionScale": 1,
+        "temporalUpscale": true
+      },
+      "cloudLayer0": {
+        "referenceStack": true,
+        "enabled": true,
+        "altitude": 750,
+        "height": 600,
+        "densityScale": 0.4,
+        "shapeAmount": 1,
+        "shapeDetailAmount": 0.8,
+        "weatherExponent": 1,
+        "shapeAlteringBias": 0.35,
+        "coverageFilterWidth": 0.6
+      },
+      "cloudDebug": {
+        "mode": 0,
+        "primarySteps": 200,
+        "minStep": 80,
+        "maxStep": 1000,
+        "rayDistance": 120000
+      }
+    },
+    "cam": {
+      "p": [
+        -1046.960499022214,
+        315.9414563818671,
+        791.3248051882077
+      ],
+      "q": [
+        -0.1428709430717737,
+        -0.4014994256303927,
+        -0.0635659432513791,
+        0.9024109239713409
+      ]
+    },
+    "t": 1779938363855
   },
   "E6": {
     "params": {
@@ -4974,16 +7223,291 @@
   },
   "A5": {
     "params": {
+      "orbitSweep": {
+        "enable": false,
+        "speed": 1,
+        "elevationDeg": 9.5,
+        "azimuthDeg": -118,
+        "elevationSpeed": 4,
+        "azimuthSpeed": 0.5,
+        "elevationRange": [
+          2,
+          50
+        ]
+      },
       "sun": {
-        "elevationDeg": 5,
-        "azimuthDeg": 68,
-        "intensity": 46
+        "elevationDeg": 9.5,
+        "azimuthDeg": -118,
+        "intensity": 60
       },
       "atmosphere": {
-        "rayleighMul": 1.9,
-        "mieBeta": 0.0395,
-        "mieG": 0.86,
-        "ozoneMul": 1.26,
+        "rayleighMul": 0.05,
+        "mieBeta": 0,
+        "mieG": 0,
+        "ozoneMul": 3,
+        "planetRadiusKm": 6350
+      },
+      "lighting": {
+        "skyBounce": 1.38,
+        "bounceTint": 0.22,
+        "groundBounce": 0.9,
+        "sunGlint": 1.7,
+        "glintSpread": 3.4,
+        "bloom": 0,
+        "aerialHaze": 0
+      },
+      "voxel": {
+        "seed": 64916,
+        "resolution": 992,
+        "terraceStep": 0.5
+      },
+      "island": {
+        "radius": 1070,
+        "shape": 3,
+        "lowland": 38,
+        "massif": 470,
+        "massifSharpness": 1,
+        "massifOffsetX": 0,
+        "massifOffsetZ": 0,
+        "warp": 1.65,
+        "ridge": 0.55,
+        "beachWidth": 3,
+        "valleyDepth": 110,
+        "valleyWidth": 18
+      },
+      "seasons": {
+        "sweepDeg": 38,
+        "summerEnd": 0.26,
+        "autumnEnd": 0.5,
+        "coniferEnd": 0.79,
+        "borderWarp": 1.15,
+        "craggy": 0.4,
+        "fairway": 0.86,
+        "fairwayBand": 56,
+        "bunkerDensity": 0.3,
+        "bunkerSize": 22
+      },
+      "water": {
+        "enable": true,
+        "seaLevel": 32.5,
+        "floorDepth": 50,
+        "floorShape": 0.85,
+        "floorRoughness": 1,
+        "deltaFloor": 1,
+        "surfaceLift": 0.08,
+        "landMask": 1,
+        "debugView": 0,
+        "depthTint": 0.78,
+        "lagoonTint": 0.18,
+        "causticScale": 4.6,
+        "causticIntensity": 2.8,
+        "causticOpacity": 0,
+        "shoreGlow": 1.35,
+        "shoreGlowWidth": 1.3,
+        "shoreGlowFollow": 0,
+        "referenceBlocks": true
+      },
+      "waves": {
+        "waveSpeed": 2.7,
+        "glintSpeed": 3.5,
+        "glintScale": 1.34,
+        "waveScale": 0.0275,
+        "waveRotation": 143,
+        "surfaceOpacity": 0.55,
+        "waveHeight": 1.92,
+        "waveChoppy": 5.95,
+        "surfaceStage": 5,
+        "detailMix": 0.42,
+        "normalStrength": 0.4,
+        "refractionStrength": 0.18
+      },
+      "tree": {
+        "palmCount": 499,
+        "palmLine": 0.58,
+        "mixedTreeCount": 34,
+        "palmSway": 1
+      },
+      "shadows": {
+        "enable": true,
+        "primaryEnable": true,
+        "primarySize": 8192,
+        "primaryCoverage": 1.28,
+        "secondaryEnable": true,
+        "secondarySize": 2560,
+        "secondaryCoverage": 1,
+        "secondaryMix": 1,
+        "blendMode": 1,
+        "filterMode": 1,
+        "softness": 1.7,
+        "bias": -0.0006,
+        "normalBias": 2.2
+      },
+      "render": {
+        "fov": 65,
+        "exposure": 0.3,
+        "fogDensity": 0.0003,
+        "horizonWarp": true
+      },
+      "godrays": {
+        "enable": true,
+        "source": 1,
+        "intensity": 0.25,
+        "density": 0.86,
+        "decay": 0.915,
+        "weight": 2,
+        "exposure": 0.7,
+        "threshold": 0.62,
+        "groundMask": 0.5,
+        "reach": 1.45,
+        "warmth": 0.5,
+        "samples": 16,
+        "resScale": 0.25,
+        "sharp": 0.25,
+        "blurEnable": true,
+        "blurAmount": 1,
+        "blurRadius": 8,
+        "blurPasses": 1
+      },
+      "camera": {
+        "director": false,
+        "focusMountain": 0.35,
+        "focusSky": 0.18,
+        "focusGreenway": 0.16,
+        "focusMassif": 0.22,
+        "focusValley": 0.14,
+        "focusShoreline": 0.24,
+        "focusPalms": 0.12,
+        "focusWater": 0.16
+      },
+      "skyDiagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "cloudsRender": {
+        "mode": 0,
+        "atmosphere": true,
+        "clouds": true,
+        "aerialPerspective": true,
+        "quality": 2,
+        "resolutionScale": 0.75,
+        "temporalUpscale": true,
+        "exposure": 10
+      },
+      "takramAtmosphere": {
+        "sun": true,
+        "ground": true,
+        "groundAlbedo": 0.018,
+        "transmittance": true,
+        "inscatter": true,
+        "sunLight": true,
+        "skyLight": true,
+        "albedoScale": 1
+      },
+      "cloudWeather": {
+        "coverage": 0.4,
+        "weatherRepeatX": 100,
+        "weatherRepeatY": 100,
+        "weatherVelocityX": 0.001,
+        "weatherVelocityY": 0,
+        "shapeRepeat": 0.0003,
+        "detailRepeat": 0.006,
+        "turbulenceRepeat": 20,
+        "turbulenceDisplacement": 350
+      },
+      "cloudLayer0": {
+        "referenceStack": true,
+        "enabled": true,
+        "altitude": 750,
+        "height": 600,
+        "densityScale": 0.4,
+        "shapeAmount": 1,
+        "shapeDetailAmount": 0.8,
+        "weatherExponent": 1,
+        "shapeAlteringBias": 0.35,
+        "coverageFilterWidth": 0.6
+      },
+      "cloudLighting": {
+        "scatteringCoefficient": 1,
+        "absorptionCoefficient": 0,
+        "skyLightScale": 1,
+        "groundBounceScale": 1,
+        "powderScale": 0.8,
+        "powderExponent": 150,
+        "anisotropy1": 0.7,
+        "anisotropy2": -0.2,
+        "anisotropyMix": 0.5,
+        "shapeDetail": true,
+        "turbulence": false,
+        "haze": true
+      },
+      "cloudShadows": {
+        "layerShadow": true,
+        "lightShafts": false,
+        "cascadeCount": 3,
+        "mapSize": 0,
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "cloudDebug": {
+        "mode": 0,
+        "primarySteps": 200,
+        "minStep": 80,
+        "maxStep": 1000,
+        "rayDistance": 120000
+      },
+      "cloudFinishing": {
+        "toneMapping": 0,
+        "dithering": true
+      }
+    },
+    "cam": {
+      "p": [
+        -685.8805709941141,
+        408.7737349827536,
+        1084.2703180182011
+      ],
+      "q": [
+        -0.1458493129659333,
+        -0.18167352851383453,
+        -0.027257422768793112,
+        0.9721006840079384
+      ]
+    },
+    "t": 1779731673493
+  },
+  "C2": {
+    "params": {
+      "orbitSweep": {
+        "enable": false,
+        "speed": 1,
+        "elevationDeg": 10.133404620809934,
+        "azimuthDeg": -159.58948379446497,
+        "elevationSpeed": 4,
+        "azimuthSpeed": 0.5,
+        "elevationRange": [
+          2,
+          50
+        ]
+      },
+      "sun": {
+        "elevationDeg": 10.133404620809934,
+        "azimuthDeg": -159.589483794465,
+        "intensity": 28.5
+      },
+      "atmosphere": {
+        "rayleighMul": 2.56,
+        "mieBeta": 0,
+        "mieG": 0,
+        "ozoneMul": 0,
         "planetRadiusKm": 6371
       },
       "lighting": {
@@ -4996,22 +7520,22 @@
         "aerialHaze": 0
       },
       "voxel": {
-        "seed": 24196,
-        "resolution": 1024,
+        "seed": 54203,
+        "resolution": 736,
         "terraceStep": 0.5
       },
       "island": {
         "radius": 1070,
-        "shape": 4,
-        "lowland": 24,
-        "massif": 240,
+        "shape": 0,
+        "lowland": 12,
+        "massif": 10,
         "massifSharpness": 1,
         "massifOffsetX": 0,
         "massifOffsetZ": 0,
         "warp": 0.5206552464219077,
-        "ridge": 1.05,
+        "ridge": 0.7720145486861713,
         "beachWidth": 44,
-        "valleyDepth": 90,
+        "valleyDepth": 55,
         "valleyWidth": 22
       },
       "seasons": {
@@ -5021,23 +7545,44 @@
         "coniferEnd": 0.79,
         "borderWarp": 1.15,
         "craggy": 0.4,
-        "fairway": 0.66,
-        "fairwayBand": 46,
+        "fairway": 0,
+        "fairwayBand": 24,
         "bunkerDensity": 0.18,
         "bunkerSize": 11
       },
       "water": {
+        "enable": true,
         "seaLevel": 24.5,
-        "causticScale": 4.6,
-        "causticIntensity": 2.8,
-        "causticOpacity": 0,
         "floorDepth": 45,
         "floorShape": 0.85,
         "floorRoughness": 1,
         "deltaFloor": 0,
+        "surfaceLift": 0.08,
+        "landMask": 1,
+        "debugView": 0,
+        "depthTint": 0.78,
+        "lagoonTint": 0.18,
+        "causticScale": 4.6,
+        "causticIntensity": 2.8,
+        "causticOpacity": 0,
         "shoreGlow": 1.1,
-        "shoreGlowWidth": 1,
-        "shoreGlowFollow": 1
+        "shoreGlowWidth": 2.75,
+        "shoreGlowFollow": 0.68,
+        "referenceBlocks": true
+      },
+      "waves": {
+        "waveSpeed": 0.78,
+        "glintSpeed": 3.5,
+        "glintScale": 1.34,
+        "waveScale": 0.0275,
+        "waveRotation": 143,
+        "surfaceOpacity": 0.55,
+        "waveHeight": 2.52,
+        "waveChoppy": 8,
+        "surfaceStage": 5,
+        "detailMix": 0.42,
+        "normalStrength": 1.76,
+        "refractionStrength": 0.18
       },
       "tree": {
         "palmCount": 499,
@@ -5069,8 +7614,8 @@
       "godrays": {
         "enable": true,
         "source": 1,
-        "intensity": 2.95,
-        "density": 0.86,
+        "intensity": 0.85,
+        "density": 0.32,
         "decay": 0.915,
         "weight": 2,
         "exposure": 0.7,
@@ -5096,21 +7641,2366 @@
         "focusShoreline": 0.24,
         "focusPalms": 0.12,
         "focusWater": 0.16
+      },
+      "skyDiagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "cloudsRender": {
+        "mode": 0,
+        "atmosphere": true,
+        "clouds": true,
+        "aerialPerspective": true,
+        "quality": 2,
+        "resolutionScale": 0.75,
+        "temporalUpscale": true,
+        "exposure": 10
+      },
+      "takramAtmosphere": {
+        "sun": true,
+        "ground": true,
+        "groundAlbedo": 0.018,
+        "transmittance": true,
+        "inscatter": true,
+        "sunLight": true,
+        "skyLight": true,
+        "albedoScale": 1
+      },
+      "cloudWeather": {
+        "coverage": 0.4,
+        "weatherRepeatX": 100,
+        "weatherRepeatY": 100,
+        "weatherVelocityX": 0.001,
+        "weatherVelocityY": 0,
+        "shapeRepeat": 0.0003,
+        "detailRepeat": 0.006,
+        "turbulenceRepeat": 20,
+        "turbulenceDisplacement": 350
+      },
+      "cloudLayer0": {
+        "referenceStack": true,
+        "enabled": true,
+        "altitude": 750,
+        "height": 600,
+        "densityScale": 0.4,
+        "shapeAmount": 1,
+        "shapeDetailAmount": 0.8,
+        "weatherExponent": 1,
+        "shapeAlteringBias": 0.35,
+        "coverageFilterWidth": 0.6
+      },
+      "cloudLighting": {
+        "scatteringCoefficient": 1,
+        "absorptionCoefficient": 0,
+        "skyLightScale": 1,
+        "groundBounceScale": 1,
+        "powderScale": 0.8,
+        "powderExponent": 150,
+        "anisotropy1": 0.7,
+        "anisotropy2": -0.2,
+        "anisotropyMix": 0.5,
+        "shapeDetail": true,
+        "turbulence": false,
+        "haze": true
+      },
+      "cloudShadows": {
+        "layerShadow": true,
+        "lightShafts": false,
+        "cascadeCount": 3,
+        "mapSize": 0,
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "cloudDebug": {
+        "mode": 0,
+        "primarySteps": 200,
+        "minStep": 80,
+        "maxStep": 1000,
+        "rayDistance": 120000
+      },
+      "cloudFinishing": {
+        "toneMapping": 0,
+        "dithering": true
       }
     },
     "cam": {
       "p": [
-        -388.2304295055578,
-        121.06586439479817,
-        -34.44549069688813
+        1241.6562601251815,
+        229.0788483728404,
+        507.509956007174
       ],
       "q": [
-        -0.01573372588660522,
-        -0.8259436837877335,
-        -0.023079540987295897,
-        0.5630602240157703
+        -0.061173145202355096,
+        0.6107678573574113,
+        0.047413369457099064,
+        0.7880180474594558
       ]
     },
-    "t": 1779468726114
+    "t": 1779721944405
+  },
+  "C3": {
+    "params": {
+      "orbitSweep": {
+        "enable": false,
+        "speed": 1,
+        "elevationDeg": 9.5,
+        "azimuthDeg": -118,
+        "elevationSpeed": 4,
+        "azimuthSpeed": 0.5,
+        "elevationRange": [
+          2,
+          50
+        ]
+      },
+      "sun": {
+        "elevationDeg": 9.5,
+        "azimuthDeg": -118,
+        "intensity": 60
+      },
+      "atmosphere": {
+        "rayleighMul": 0.05,
+        "mieBeta": 0,
+        "mieG": 0,
+        "ozoneMul": 3,
+        "planetRadiusKm": 6350
+      },
+      "lighting": {
+        "skyBounce": 1.38,
+        "bounceTint": 0.22,
+        "groundBounce": 0.9,
+        "sunGlint": 1.7,
+        "glintSpread": 3.4,
+        "bloom": 0,
+        "aerialHaze": 0
+      },
+      "voxel": {
+        "seed": 64916,
+        "resolution": 992,
+        "terraceStep": 0.5
+      },
+      "island": {
+        "radius": 1070,
+        "shape": 3,
+        "lowland": 38,
+        "massif": 470,
+        "massifSharpness": 1,
+        "massifOffsetX": 0,
+        "massifOffsetZ": 0,
+        "warp": 1.65,
+        "ridge": 0.55,
+        "beachWidth": 3,
+        "valleyDepth": 110,
+        "valleyWidth": 18
+      },
+      "seasons": {
+        "sweepDeg": 38,
+        "summerEnd": 0.26,
+        "autumnEnd": 0.5,
+        "coniferEnd": 0.79,
+        "borderWarp": 1.15,
+        "craggy": 0.4,
+        "fairway": 0.86,
+        "fairwayBand": 56,
+        "bunkerDensity": 0.3,
+        "bunkerSize": 22
+      },
+      "water": {
+        "enable": true,
+        "seaLevel": 32.5,
+        "floorDepth": 50,
+        "floorShape": 0.85,
+        "floorRoughness": 1,
+        "deltaFloor": 1,
+        "surfaceLift": 0.08,
+        "landMask": 1,
+        "debugView": 0,
+        "depthTint": 0.78,
+        "lagoonTint": 0.18,
+        "causticScale": 4.6,
+        "causticIntensity": 2.8,
+        "causticOpacity": 0,
+        "shoreGlow": 1.35,
+        "shoreGlowWidth": 1.3,
+        "shoreGlowFollow": 0,
+        "referenceBlocks": true
+      },
+      "waves": {
+        "waveSpeed": 2.7,
+        "glintSpeed": 3.5,
+        "glintScale": 1.34,
+        "waveScale": 0.0275,
+        "waveRotation": 143,
+        "surfaceOpacity": 0.55,
+        "waveHeight": 1.92,
+        "waveChoppy": 5.95,
+        "surfaceStage": 5,
+        "detailMix": 0.42,
+        "normalStrength": 0.4,
+        "refractionStrength": 0.18
+      },
+      "tree": {
+        "palmCount": 499,
+        "palmLine": 0.58,
+        "mixedTreeCount": 34,
+        "palmSway": 1
+      },
+      "shadows": {
+        "enable": true,
+        "primaryEnable": true,
+        "primarySize": 8192,
+        "primaryCoverage": 1.28,
+        "secondaryEnable": true,
+        "secondarySize": 2560,
+        "secondaryCoverage": 1,
+        "secondaryMix": 1,
+        "blendMode": 1,
+        "filterMode": 1,
+        "softness": 1.7,
+        "bias": -0.0006,
+        "normalBias": 2.2
+      },
+      "render": {
+        "fov": 81,
+        "exposure": 0.3,
+        "fogDensity": 0.0003,
+        "horizonWarp": true
+      },
+      "godrays": {
+        "enable": true,
+        "source": 1,
+        "intensity": 0.25,
+        "density": 0.86,
+        "decay": 0.915,
+        "weight": 2,
+        "exposure": 0.7,
+        "threshold": 0.62,
+        "groundMask": 0.5,
+        "reach": 1.45,
+        "warmth": 0.5,
+        "samples": 16,
+        "resScale": 0.25,
+        "sharp": 0.25,
+        "blurEnable": true,
+        "blurAmount": 1,
+        "blurRadius": 8,
+        "blurPasses": 1
+      },
+      "camera": {
+        "director": false,
+        "focusMountain": 0.35,
+        "focusSky": 0.18,
+        "focusGreenway": 0.16,
+        "focusMassif": 0.22,
+        "focusValley": 0.14,
+        "focusShoreline": 0.24,
+        "focusPalms": 0.12,
+        "focusWater": 0.16
+      },
+      "skyDiagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "cloudsRender": {
+        "mode": 0,
+        "atmosphere": true,
+        "clouds": true,
+        "aerialPerspective": true,
+        "quality": 2,
+        "resolutionScale": 0.75,
+        "temporalUpscale": true,
+        "exposure": 15
+      },
+      "takramAtmosphere": {
+        "sun": true,
+        "ground": true,
+        "groundAlbedo": 0.018,
+        "transmittance": true,
+        "inscatter": true,
+        "sunLight": true,
+        "skyLight": true,
+        "albedoScale": 1
+      },
+      "cloudWeather": {
+        "coverage": 0.4,
+        "weatherRepeatX": 100,
+        "weatherRepeatY": 100,
+        "weatherVelocityX": 0.001,
+        "weatherVelocityY": 0,
+        "shapeRepeat": 0.0003,
+        "detailRepeat": 0.006,
+        "turbulenceRepeat": 20,
+        "turbulenceDisplacement": 350
+      },
+      "cloudLayer0": {
+        "referenceStack": true,
+        "enabled": true,
+        "altitude": 750,
+        "height": 600,
+        "densityScale": 0.4,
+        "shapeAmount": 1,
+        "shapeDetailAmount": 0.8,
+        "weatherExponent": 1,
+        "shapeAlteringBias": 0.35,
+        "coverageFilterWidth": 0.6
+      },
+      "cloudLighting": {
+        "scatteringCoefficient": 1.5222677306879997,
+        "absorptionCoefficient": 0.72,
+        "skyLightScale": 1.3,
+        "groundBounceScale": 0.6,
+        "powderScale": 0.26,
+        "powderExponent": 150,
+        "anisotropy1": 0.7,
+        "anisotropy2": -0.2,
+        "anisotropyMix": 0.5,
+        "shapeDetail": true,
+        "turbulence": false,
+        "haze": true
+      },
+      "cloudShadows": {
+        "layerShadow": true,
+        "lightShafts": false,
+        "cascadeCount": 3,
+        "mapSize": 0,
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "cloudDebug": {
+        "mode": 0,
+        "primarySteps": 200,
+        "minStep": 80,
+        "maxStep": 1000,
+        "rayDistance": 120000
+      },
+      "cloudFinishing": {
+        "toneMapping": 0,
+        "dithering": true
+      }
+    },
+    "cam": {
+      "p": [
+        -881.128176839728,
+        335.64920297272636,
+        901.1382460037622
+      ],
+      "q": [
+        -0.09376463670010067,
+        -0.26934854867974406,
+        -0.026359715610369996,
+        0.9581047529480032
+      ]
+    },
+    "t": 1779722722017
+  },
+  "C4": {
+    "params": {
+      "orbitSweep": {
+        "enable": false,
+        "speed": 1,
+        "elevationDeg": 1.5,
+        "azimuthDeg": -47,
+        "elevationSpeed": 4,
+        "azimuthSpeed": 0.5,
+        "elevationRange": [
+          2,
+          50
+        ]
+      },
+      "sun": {
+        "elevationDeg": 1.5,
+        "azimuthDeg": -47,
+        "intensity": 60
+      },
+      "atmosphere": {
+        "rayleighMul": 0.05,
+        "mieBeta": 0,
+        "mieG": 0,
+        "ozoneMul": 3,
+        "planetRadiusKm": 6350
+      },
+      "lighting": {
+        "skyBounce": 1.38,
+        "bounceTint": 0.22,
+        "groundBounce": 0.9,
+        "sunGlint": 1.7,
+        "glintSpread": 3.4,
+        "bloom": 0,
+        "aerialHaze": 0
+      },
+      "voxel": {
+        "seed": 21155,
+        "resolution": 992,
+        "terraceStep": 0.5
+      },
+      "island": {
+        "radius": 1070,
+        "shape": 3,
+        "lowland": 38,
+        "massif": 470,
+        "massifSharpness": 1,
+        "massifOffsetX": 0,
+        "massifOffsetZ": 0,
+        "warp": 1.65,
+        "ridge": 0.55,
+        "beachWidth": 3,
+        "valleyDepth": 110,
+        "valleyWidth": 18
+      },
+      "seasons": {
+        "sweepDeg": 38,
+        "summerEnd": 0.26,
+        "autumnEnd": 0.5,
+        "coniferEnd": 0.79,
+        "borderWarp": 1.15,
+        "craggy": 0.4,
+        "fairway": 0.86,
+        "fairwayBand": 56,
+        "bunkerDensity": 0.3,
+        "bunkerSize": 22
+      },
+      "water": {
+        "enable": true,
+        "seaLevel": 32.5,
+        "floorDepth": 50,
+        "floorShape": 0.85,
+        "floorRoughness": 1,
+        "deltaFloor": 1,
+        "surfaceLift": 0.08,
+        "landMask": 1,
+        "debugView": 0,
+        "depthTint": 0.78,
+        "lagoonTint": 0.18,
+        "causticScale": 4.6,
+        "causticIntensity": 2.8,
+        "causticOpacity": 0,
+        "shoreGlow": 1.35,
+        "shoreGlowWidth": 1.3,
+        "shoreGlowFollow": 0,
+        "referenceBlocks": true
+      },
+      "waves": {
+        "waveSpeed": 2.7,
+        "glintSpeed": 3.5,
+        "glintScale": 1.34,
+        "waveScale": 0.0275,
+        "waveRotation": 143,
+        "surfaceOpacity": 0.55,
+        "waveHeight": 1.92,
+        "waveChoppy": 5.95,
+        "surfaceStage": 5,
+        "detailMix": 0.42,
+        "normalStrength": 0.4,
+        "refractionStrength": 0.18
+      },
+      "tree": {
+        "palmCount": 499,
+        "palmLine": 0.58,
+        "mixedTreeCount": 34,
+        "palmSway": 1
+      },
+      "shadows": {
+        "enable": true,
+        "primaryEnable": true,
+        "primarySize": 8192,
+        "primaryCoverage": 1.28,
+        "secondaryEnable": true,
+        "secondarySize": 2560,
+        "secondaryCoverage": 1,
+        "secondaryMix": 1,
+        "blendMode": 1,
+        "filterMode": 1,
+        "softness": 1.7,
+        "bias": -0.0006,
+        "normalBias": 2.2
+      },
+      "render": {
+        "fov": 81,
+        "exposure": 0.3,
+        "fogDensity": 0.0003,
+        "horizonWarp": true
+      },
+      "godrays": {
+        "enable": true,
+        "source": 1,
+        "intensity": 0.25,
+        "density": 0.86,
+        "decay": 0.915,
+        "weight": 2,
+        "exposure": 0.7,
+        "threshold": 0.62,
+        "groundMask": 0.5,
+        "reach": 1.45,
+        "warmth": 0.5,
+        "samples": 16,
+        "resScale": 0.25,
+        "sharp": 0.25,
+        "blurEnable": true,
+        "blurAmount": 1,
+        "blurRadius": 8,
+        "blurPasses": 1
+      },
+      "camera": {
+        "director": false,
+        "focusMountain": 0.35,
+        "focusSky": 0.18,
+        "focusGreenway": 0.16,
+        "focusMassif": 0.22,
+        "focusValley": 0.14,
+        "focusShoreline": 0.24,
+        "focusPalms": 0.12,
+        "focusWater": 0.16
+      },
+      "skyDiagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "cloudsRender": {
+        "mode": 0,
+        "atmosphere": true,
+        "clouds": true,
+        "aerialPerspective": true,
+        "quality": 2,
+        "resolutionScale": 0.75,
+        "temporalUpscale": true,
+        "exposure": 15
+      },
+      "takramAtmosphere": {
+        "sun": true,
+        "ground": true,
+        "groundAlbedo": 0.018,
+        "transmittance": true,
+        "inscatter": true,
+        "sunLight": true,
+        "skyLight": true,
+        "albedoScale": 1
+      },
+      "cloudWeather": {
+        "coverage": 0.4,
+        "weatherRepeatX": 100,
+        "weatherRepeatY": 100,
+        "weatherVelocityX": 0.001,
+        "weatherVelocityY": 0,
+        "shapeRepeat": 0.0003,
+        "detailRepeat": 0.006,
+        "turbulenceRepeat": 20,
+        "turbulenceDisplacement": 350
+      },
+      "cloudLayer0": {
+        "referenceStack": true,
+        "enabled": true,
+        "altitude": 750,
+        "height": 600,
+        "densityScale": 0.4,
+        "shapeAmount": 1,
+        "shapeDetailAmount": 0.8,
+        "weatherExponent": 1,
+        "shapeAlteringBias": 0.35,
+        "coverageFilterWidth": 0.6
+      },
+      "cloudLighting": {
+        "scatteringCoefficient": 1.5222677306879997,
+        "absorptionCoefficient": 0.72,
+        "skyLightScale": 1.3,
+        "groundBounceScale": 0.6,
+        "powderScale": 0.26,
+        "powderExponent": 150,
+        "anisotropy1": 0.7,
+        "anisotropy2": -0.2,
+        "anisotropyMix": 0.5,
+        "shapeDetail": true,
+        "turbulence": false,
+        "haze": true
+      },
+      "cloudShadows": {
+        "layerShadow": true,
+        "lightShafts": false,
+        "cascadeCount": 3,
+        "mapSize": 0,
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "cloudDebug": {
+        "mode": 0,
+        "primarySteps": 200,
+        "minStep": 80,
+        "maxStep": 1000,
+        "rayDistance": 120000
+      },
+      "cloudFinishing": {
+        "toneMapping": 0,
+        "dithering": true
+      }
+    },
+    "cam": {
+      "p": [
+        -334.19543361278653,
+        514.2531706192191,
+        -608.7048579979994
+      ],
+      "q": [
+        -0.023172935601031446,
+        -0.7093149285759852,
+        -0.02334377516519411,
+        0.7041238636176964
+      ]
+    },
+    "t": 1779723010061
+  },
+  "C5": {
+    "params": {
+      "orbitSweep": {
+        "enable": false,
+        "speed": 1,
+        "elevationDeg": 9.5,
+        "azimuthDeg": -151,
+        "elevationSpeed": 4,
+        "azimuthSpeed": 0.5,
+        "elevationRange": [
+          2,
+          50
+        ]
+      },
+      "sun": {
+        "elevationDeg": 9.5,
+        "azimuthDeg": -151,
+        "intensity": 60
+      },
+      "atmosphere": {
+        "rayleighMul": 4,
+        "mieBeta": 0.0395,
+        "mieG": 0.72,
+        "ozoneMul": 3,
+        "planetRadiusKm": 6350
+      },
+      "lighting": {
+        "skyBounce": 1.38,
+        "bounceTint": 0.22,
+        "groundBounce": 0.9,
+        "sunGlint": 1.7,
+        "glintSpread": 3.4,
+        "bloom": 0,
+        "aerialHaze": 0
+      },
+      "voxel": {
+        "seed": 64916,
+        "resolution": 992,
+        "terraceStep": 0.5
+      },
+      "island": {
+        "radius": 1070,
+        "shape": 3,
+        "lowland": 38,
+        "massif": 470,
+        "massifSharpness": 1,
+        "massifOffsetX": 0,
+        "massifOffsetZ": 0,
+        "warp": 1.65,
+        "ridge": 0.55,
+        "beachWidth": 3,
+        "valleyDepth": 110,
+        "valleyWidth": 18
+      },
+      "seasons": {
+        "sweepDeg": 38,
+        "summerEnd": 0.26,
+        "autumnEnd": 0.5,
+        "coniferEnd": 0.79,
+        "borderWarp": 1.15,
+        "craggy": 0.4,
+        "fairway": 0.86,
+        "fairwayBand": 56,
+        "bunkerDensity": 0.3,
+        "bunkerSize": 22
+      },
+      "water": {
+        "enable": true,
+        "seaLevel": 32.5,
+        "floorDepth": 95,
+        "floorShape": 1.15,
+        "floorRoughness": 2.4,
+        "deltaFloor": 1,
+        "surfaceLift": 0.08,
+        "landMask": 1,
+        "debugView": 0,
+        "depthTint": 0.78,
+        "lagoonTint": 0.18,
+        "causticScale": 4.6,
+        "causticIntensity": 2.8,
+        "causticOpacity": 0,
+        "shoreGlow": 1.35,
+        "shoreGlowWidth": 1.3,
+        "shoreGlowFollow": 0,
+        "referenceBlocks": true
+      },
+      "waves": {
+        "waveSpeed": 2.7,
+        "glintSpeed": 3.5,
+        "glintScale": 1.34,
+        "waveScale": 0.0275,
+        "waveRotation": 143,
+        "surfaceOpacity": 0.55,
+        "waveHeight": 1.92,
+        "waveChoppy": 5.95,
+        "surfaceStage": 5,
+        "detailMix": 0.42,
+        "normalStrength": 0.4,
+        "refractionStrength": 0.18
+      },
+      "tree": {
+        "palmCount": 499,
+        "palmLine": 0.58,
+        "mixedTreeCount": 34,
+        "palmSway": 1
+      },
+      "shadows": {
+        "enable": true,
+        "primaryEnable": true,
+        "primarySize": 8192,
+        "primaryCoverage": 1.28,
+        "secondaryEnable": true,
+        "secondarySize": 2560,
+        "secondaryCoverage": 1,
+        "secondaryMix": 1,
+        "blendMode": 1,
+        "filterMode": 1,
+        "softness": 1.7,
+        "bias": -0.0006,
+        "normalBias": 2.2
+      },
+      "render": {
+        "fov": 40,
+        "exposure": 2.48,
+        "fogDensity": 0,
+        "horizonWarp": true
+      },
+      "godrays": {
+        "enable": true,
+        "source": 1,
+        "intensity": 0.25,
+        "density": 0.86,
+        "decay": 0.915,
+        "weight": 2,
+        "exposure": 0.7,
+        "threshold": 0.62,
+        "groundMask": 0.5,
+        "reach": 1.45,
+        "warmth": 0.5,
+        "samples": 16,
+        "resScale": 0.25,
+        "sharp": 0.25,
+        "blurEnable": true,
+        "blurAmount": 1,
+        "blurRadius": 8,
+        "blurPasses": 1
+      },
+      "camera": {
+        "director": false,
+        "focusMountain": 0.35,
+        "focusSky": 0.18,
+        "focusGreenway": 0.16,
+        "focusMassif": 0.22,
+        "focusValley": 0.14,
+        "focusShoreline": 0.24,
+        "focusPalms": 0.12,
+        "focusWater": 0.16
+      },
+      "skyDiagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "cloudsRender": {
+        "mode": 0,
+        "atmosphere": true,
+        "clouds": true,
+        "aerialPerspective": true,
+        "quality": 2,
+        "resolutionScale": 0.75,
+        "temporalUpscale": true,
+        "exposure": 7.85
+      },
+      "takramAtmosphere": {
+        "sun": true,
+        "ground": true,
+        "groundAlbedo": 0.018,
+        "transmittance": true,
+        "inscatter": true,
+        "sunLight": true,
+        "skyLight": true,
+        "albedoScale": 1
+      },
+      "cloudWeather": {
+        "coverage": 0.4,
+        "weatherRepeatX": 100,
+        "weatherRepeatY": 100,
+        "weatherVelocityX": 0.001,
+        "weatherVelocityY": 0,
+        "shapeRepeat": 0.0003,
+        "detailRepeat": 0.006,
+        "turbulenceRepeat": 20,
+        "turbulenceDisplacement": 350
+      },
+      "cloudLayer0": {
+        "referenceStack": true,
+        "enabled": true,
+        "altitude": 750,
+        "height": 600,
+        "densityScale": 0.4,
+        "shapeAmount": 1,
+        "shapeDetailAmount": 0.8,
+        "weatherExponent": 1,
+        "shapeAlteringBias": 0.35,
+        "coverageFilterWidth": 0.6
+      },
+      "cloudLighting": {
+        "scatteringCoefficient": 2.2635229601280002,
+        "absorptionCoefficient": 0,
+        "skyLightScale": 1,
+        "groundBounceScale": 1,
+        "powderScale": 0.8,
+        "powderExponent": 150,
+        "anisotropy1": 0.7,
+        "anisotropy2": -0.2,
+        "anisotropyMix": 0.5,
+        "shapeDetail": true,
+        "turbulence": false,
+        "haze": true
+      },
+      "cloudShadows": {
+        "layerShadow": true,
+        "lightShafts": false,
+        "cascadeCount": 3,
+        "mapSize": 0,
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "cloudDebug": {
+        "mode": 0,
+        "primarySteps": 200,
+        "minStep": 80,
+        "maxStep": 1000,
+        "rayDistance": 120000
+      },
+      "cloudFinishing": {
+        "toneMapping": 0,
+        "dithering": true
+      }
+    },
+    "cam": {
+      "p": [
+        -699.6134348652071,
+        299.77600772662606,
+        1499.682052313712
+      ],
+      "q": [
+        -0.022946356590295352,
+        -0.12940965724845963,
+        -0.002995477425583323,
+        0.9913211550476768
+      ]
+    },
+    "t": 1779728573133
+  },
+  "A6": {
+    "params": {
+      "orbitSweep": {
+        "enable": false,
+        "speed": 1,
+        "elevationDeg": 12,
+        "azimuthDeg": 117,
+        "elevationSpeed": 4,
+        "azimuthSpeed": 0.5,
+        "elevationRange": [
+          2,
+          50
+        ]
+      },
+      "sun": {
+        "elevationDeg": 12,
+        "azimuthDeg": 117,
+        "intensity": 33.5
+      },
+      "atmosphere": {
+        "rayleighMul": 0.55,
+        "mieBeta": 0,
+        "mieG": 0,
+        "ozoneMul": 3,
+        "planetRadiusKm": 6350
+      },
+      "lighting": {
+        "skyBounce": 1.6,
+        "bounceTint": 0.22,
+        "groundBounce": 0.9,
+        "sunElevationGain": 1,
+        "sunFloor": 4,
+        "sunCeiling": 5,
+        "secondaryEnergy": 0.49,
+        "sunGlint": 1.7,
+        "glintSpread": 3.4,
+        "bloom": 0,
+        "aerialHaze": 0
+      },
+      "voxel": {
+        "seed": 64916,
+        "resolution": 992,
+        "terraceStep": 0.5
+      },
+      "island": {
+        "radius": 1070,
+        "shape": 3,
+        "lowland": 38,
+        "massif": 280,
+        "massifSharpness": 1,
+        "massifOffsetX": 0,
+        "massifOffsetZ": 0,
+        "warp": 1.65,
+        "ridge": 0.55,
+        "beachWidth": 3,
+        "valleyDepth": 110,
+        "valleyWidth": 18
+      },
+      "lagoon": {
+        "enable": true,
+        "x": 0.24,
+        "z": -0.12,
+        "radiusX": 230,
+        "radiusZ": 135,
+        "rotation": -24,
+        "depth": 1.4,
+        "lowlandCap": 54,
+        "inlet": 0.12,
+        "apronWidth": 42,
+        "whiteSand": 0.9,
+        "treeAttraction": 1.1
+      },
+      "seasons": {
+        "sweepDeg": 38,
+        "summerEnd": 0.26,
+        "autumnEnd": 0.5,
+        "coniferEnd": 0.79,
+        "borderWarp": 1.15,
+        "craggy": 0.4,
+        "fairway": 0.86,
+        "fairwayBand": 56,
+        "bunkerDensity": 0.3,
+        "bunkerSize": 22
+      },
+      "water": {
+        "enable": true,
+        "seaLevel": 32.5,
+        "floorDepth": 50,
+        "floorShape": 0.85,
+        "floorRoughness": 1,
+        "deltaFloor": 1,
+        "surfaceLift": 0.08,
+        "landMask": 1,
+        "debugView": 0,
+        "depthTint": 0.78,
+        "lagoonTint": 0.18,
+        "causticScale": 4.6,
+        "causticIntensity": 2.8,
+        "causticOpacity": 0,
+        "shoreGlow": 1.35,
+        "shoreGlowWidth": 1.3,
+        "shoreGlowFollow": 0
+      },
+      "waves": {
+        "waveSpeed": 2.7,
+        "glintSpeed": 3.5,
+        "glintScale": 1.34,
+        "waveScale": 0.0275,
+        "waveRotation": 143,
+        "surfaceOpacity": 0.55,
+        "waveHeight": 1.92,
+        "waveChoppy": 5.95,
+        "surfaceStage": 5,
+        "detailMix": 0.42,
+        "normalStrength": 0.4,
+        "refractionStrength": 0.18
+      },
+      "tree": {
+        "enable": true,
+        "totalCount": 1300,
+        "globalScale": 1.35,
+        "spacing": 9,
+        "clusterBias": 1,
+        "autumnWeight": 1.55,
+        "summerWeight": 0.95,
+        "spruceWeight": 0.75,
+        "palmWeight": 0.25,
+        "palmTarget": 400,
+        "peakSparse": 0.08,
+        "openCuts": 0.6,
+        "autumnScale": 1.3,
+        "spruceScale": 1.22,
+        "palmScale": 0.9
+      },
+      "shadows": {
+        "enable": true,
+        "primaryEnable": true,
+        "primarySize": 8192,
+        "primaryCoverage": 1.28,
+        "secondaryEnable": true,
+        "secondarySize": 2560,
+        "secondaryCoverage": 1,
+        "secondaryMix": 1,
+        "blendMode": 1,
+        "filterMode": 1,
+        "softness": 1.7,
+        "bias": -0.0006,
+        "normalBias": 2.2
+      },
+      "render": {
+        "fov": 65,
+        "exposure": 0.2,
+        "fogDensity": 0,
+        "horizonWarp": true
+      },
+      "godrays": {
+        "enable": true,
+        "source": 1,
+        "intensity": 0.25,
+        "density": 0.86,
+        "decay": 0.915,
+        "weight": 2,
+        "exposure": 0.7,
+        "threshold": 0.62,
+        "groundMask": 0.5,
+        "reach": 1.45,
+        "warmth": 0.5,
+        "samples": 16,
+        "resScale": 0.25,
+        "sharp": 0.25,
+        "blurEnable": true,
+        "blurAmount": 1,
+        "blurRadius": 8,
+        "blurPasses": 1
+      },
+      "camera": {
+        "director": false,
+        "focusMountain": 0.35,
+        "focusSky": 0.18,
+        "focusGreenway": 0.16,
+        "focusMassif": 0.22,
+        "focusValley": 0.14,
+        "focusShoreline": 0.24,
+        "focusPalms": 0.12,
+        "focusWater": 0.16
+      },
+      "cloudFinishing": {
+        "toneMapping": 0,
+        "dithering": true
+      },
+      "skyDiagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "takramAtmosphere": {
+        "sunLight": true,
+        "skyLight": true,
+        "ground": true,
+        "groundAlbedo": 0.35,
+        "albedoScale": 0.22,
+        "sun": true,
+        "transmittance": true,
+        "inscatter": true
+      },
+      "cloudWeather": {
+        "coverage": 0.35,
+        "weatherRepeatX": 77,
+        "weatherRepeatY": 100,
+        "weatherVelocityX": -0.0002,
+        "weatherVelocityY": -0.00225,
+        "shapeRepeat": 0.0003,
+        "detailRepeat": 0.006,
+        "turbulenceRepeat": 20,
+        "turbulenceDisplacement": 350
+      },
+      "cloudLighting": {
+        "scatteringCoefficient": 3,
+        "groundBounceScale": 2.02,
+        "skyLightScale": 2.82,
+        "powderScale": 0,
+        "absorptionCoefficient": 0,
+        "powderExponent": 150,
+        "anisotropy1": 0.7,
+        "anisotropy2": -0.2,
+        "anisotropyMix": 0.5,
+        "shapeDetail": true,
+        "turbulence": false,
+        "haze": true
+      },
+      "cloudShadows": {
+        "layerShadow": true,
+        "lightShafts": false,
+        "cascadeCount": 3,
+        "mapSize": 0,
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "cloudsRender": {
+        "exposure": 4.85,
+        "mode": 0,
+        "atmosphere": true,
+        "clouds": true,
+        "aerialPerspective": true,
+        "quality": 2,
+        "resolutionScale": 0.75,
+        "temporalUpscale": true
+      },
+      "cloudLayer0": {
+        "referenceStack": true,
+        "enabled": true,
+        "altitude": 750,
+        "height": 600,
+        "densityScale": 0.4,
+        "shapeAmount": 1,
+        "shapeDetailAmount": 0.8,
+        "weatherExponent": 1,
+        "shapeAlteringBias": 0.35,
+        "coverageFilterWidth": 0.6
+      },
+      "cloudDebug": {
+        "mode": 0,
+        "primarySteps": 200,
+        "minStep": 80,
+        "maxStep": 1000,
+        "rayDistance": 120000
+      }
+    },
+    "cam": {
+      "p": [
+        310.40960259863385,
+        348.26284257903166,
+        1093.707084587267
+      ],
+      "q": [
+        -0.07650459229554686,
+        0.17711185722604506,
+        0.013810677618667801,
+        0.981115539868443
+      ]
+    },
+    "t": 1779859980963
+  },
+  "A8": {
+    "params": {
+      "orbitSweep": {
+        "enable": false,
+        "speed": 1,
+        "elevationDeg": 58,
+        "azimuthDeg": 117,
+        "elevationSpeed": 4,
+        "azimuthSpeed": 0.5,
+        "elevationRange": [
+          2,
+          50
+        ]
+      },
+      "sun": {
+        "elevationDeg": 58,
+        "azimuthDeg": 117,
+        "intensity": 33.5
+      },
+      "atmosphere": {
+        "rayleighMul": 1.06,
+        "mieBeta": 0.0095,
+        "mieG": 0,
+        "ozoneMul": 3,
+        "planetRadiusKm": 6350
+      },
+      "lighting": {
+        "skyBounce": 1.38,
+        "bounceTint": 0.22,
+        "groundBounce": 0.9,
+        "sunElevationGain": 1,
+        "sunFloor": 4,
+        "sunCeiling": 5,
+        "secondaryEnergy": 0.49,
+        "sunGlint": 1.7,
+        "glintSpread": 3.4,
+        "bloom": 0,
+        "aerialHaze": 0
+      },
+      "voxel": {
+        "seed": 64916,
+        "resolution": 992,
+        "terraceStep": 0.5
+      },
+      "island": {
+        "radius": 1070,
+        "shape": 3,
+        "lowland": 38,
+        "massif": 280,
+        "massifSharpness": 1,
+        "massifOffsetX": 0,
+        "massifOffsetZ": 0,
+        "warp": 1.65,
+        "ridge": 0.55,
+        "beachWidth": 3,
+        "valleyDepth": 110,
+        "valleyWidth": 18
+      },
+      "lagoon": {
+        "enable": true,
+        "x": 0.24,
+        "z": -0.12,
+        "radiusX": 230,
+        "radiusZ": 135,
+        "rotation": -24,
+        "depth": 1.4,
+        "lowlandCap": 54,
+        "inlet": 0.12,
+        "apronWidth": 42,
+        "whiteSand": 0.9,
+        "treeAttraction": 1.1
+      },
+      "seasons": {
+        "sweepDeg": 38,
+        "summerEnd": 0.26,
+        "autumnEnd": 0.5,
+        "coniferEnd": 0.79,
+        "borderWarp": 1.15,
+        "craggy": 0.4,
+        "fairway": 0.86,
+        "fairwayBand": 56,
+        "bunkerDensity": 0.3,
+        "bunkerSize": 22
+      },
+      "water": {
+        "enable": true,
+        "seaLevel": 32.5,
+        "floorDepth": 50,
+        "floorShape": 0.85,
+        "floorRoughness": 1,
+        "deltaFloor": 1,
+        "surfaceLift": 0.08,
+        "landMask": 1,
+        "debugView": 0,
+        "depthTint": 0.78,
+        "lagoonTint": 0.18,
+        "causticScale": 4.6,
+        "causticIntensity": 2.8,
+        "causticOpacity": 0,
+        "shoreGlow": 1.35,
+        "shoreGlowWidth": 1.3,
+        "shoreGlowFollow": 0
+      },
+      "waves": {
+        "waveSpeed": 2.7,
+        "glintSpeed": 3.5,
+        "glintScale": 1.34,
+        "waveScale": 0.0275,
+        "waveRotation": 143,
+        "surfaceOpacity": 0.55,
+        "waveHeight": 1.92,
+        "waveChoppy": 5.95,
+        "surfaceStage": 5,
+        "detailMix": 0.42,
+        "normalStrength": 0.4,
+        "refractionStrength": 0.18
+      },
+      "tree": {
+        "enable": true,
+        "totalCount": 1300,
+        "globalScale": 1.35,
+        "spacing": 9,
+        "clusterBias": 1,
+        "autumnWeight": 1.55,
+        "summerWeight": 0.95,
+        "spruceWeight": 0.75,
+        "palmWeight": 0.25,
+        "palmTarget": 400,
+        "peakSparse": 0.08,
+        "openCuts": 0.6,
+        "autumnScale": 1.3,
+        "spruceScale": 1.22,
+        "palmScale": 0.9
+      },
+      "shadows": {
+        "enable": true,
+        "primaryEnable": true,
+        "primarySize": 8192,
+        "primaryCoverage": 1.28,
+        "secondaryEnable": true,
+        "secondarySize": 2560,
+        "secondaryCoverage": 1,
+        "secondaryMix": 1,
+        "blendMode": 1,
+        "filterMode": 1,
+        "softness": 1.7,
+        "bias": -0.0006,
+        "normalBias": 2.2
+      },
+      "render": {
+        "fov": 65,
+        "exposure": 0.2,
+        "fogDensity": 0,
+        "horizonWarp": true
+      },
+      "godrays": {
+        "enable": true,
+        "source": 1,
+        "intensity": 0.25,
+        "density": 0.86,
+        "decay": 0.915,
+        "weight": 2,
+        "exposure": 0.7,
+        "threshold": 0.62,
+        "groundMask": 0.5,
+        "reach": 1.45,
+        "warmth": 0.5,
+        "samples": 16,
+        "resScale": 0.25,
+        "sharp": 0.25,
+        "blurEnable": true,
+        "blurAmount": 1,
+        "blurRadius": 8,
+        "blurPasses": 1
+      },
+      "camera": {
+        "director": false,
+        "focusMountain": 0.35,
+        "focusSky": 0.18,
+        "focusGreenway": 0.16,
+        "focusMassif": 0.22,
+        "focusValley": 0.14,
+        "focusShoreline": 0.24,
+        "focusPalms": 0.12,
+        "focusWater": 0.16
+      },
+      "cloudFinishing": {
+        "toneMapping": 0,
+        "dithering": true
+      },
+      "skyDiagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "takramAtmosphere": {
+        "sunLight": true,
+        "skyLight": true,
+        "ground": true,
+        "groundAlbedo": 0.11,
+        "albedoScale": 0.42,
+        "sun": true,
+        "transmittance": true,
+        "inscatter": true
+      },
+      "cloudWeather": {
+        "coverage": 0.52,
+        "weatherRepeatX": 77,
+        "weatherRepeatY": 100,
+        "weatherVelocityX": 0.001,
+        "weatherVelocityY": 0,
+        "shapeRepeat": 0.0003,
+        "detailRepeat": 0.006,
+        "turbulenceRepeat": 20,
+        "turbulenceDisplacement": 350
+      },
+      "cloudLighting": {
+        "scatteringCoefficient": 3,
+        "groundBounceScale": 2,
+        "skyLightScale": 0.28,
+        "powderScale": 0,
+        "absorptionCoefficient": 0,
+        "powderExponent": 150,
+        "anisotropy1": 0.7,
+        "anisotropy2": -0.2,
+        "anisotropyMix": 0.5,
+        "shapeDetail": true,
+        "turbulence": false,
+        "haze": true
+      },
+      "cloudShadows": {
+        "layerShadow": true,
+        "lightShafts": false,
+        "cascadeCount": 3,
+        "mapSize": 0,
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "cloudsRender": {
+        "exposure": 4.1,
+        "mode": 0,
+        "atmosphere": true,
+        "clouds": true,
+        "aerialPerspective": true,
+        "quality": 2,
+        "resolutionScale": 0.75,
+        "temporalUpscale": true
+      },
+      "cloudLayer0": {
+        "referenceStack": true,
+        "enabled": true,
+        "altitude": 750,
+        "height": 600,
+        "densityScale": 0.4,
+        "shapeAmount": 1,
+        "shapeDetailAmount": 0.8,
+        "weatherExponent": 1,
+        "shapeAlteringBias": 0.35,
+        "coverageFilterWidth": 0.6
+      },
+      "cloudDebug": {
+        "mode": 0,
+        "primarySteps": 200,
+        "minStep": 80,
+        "maxStep": 1000,
+        "rayDistance": 120000
+      }
+    },
+    "cam": {
+      "p": [
+        218.99074956785438,
+        356.5437799976012,
+        1124.118923585198
+      ],
+      "q": [
+        -0.09397914149189843,
+        0.16236341114842504,
+        0.01553652783083887,
+        0.9821225279911132
+      ]
+    },
+    "t": 1779937794462
+  },
+  "C6": {
+    "params": {
+      "orbitSweep": {
+        "enable": false,
+        "speed": 1,
+        "elevationDeg": -1.5,
+        "azimuthDeg": -113,
+        "elevationSpeed": 4,
+        "azimuthSpeed": 0.5,
+        "elevationRange": [
+          2,
+          50
+        ]
+      },
+      "sun": {
+        "elevationDeg": -1.5,
+        "azimuthDeg": -113,
+        "intensity": 60
+      },
+      "atmosphere": {
+        "rayleighMul": 4,
+        "mieBeta": 0.0465,
+        "mieG": 0,
+        "ozoneMul": 3,
+        "planetRadiusKm": 6350
+      },
+      "lighting": {
+        "skyBounce": 1.28,
+        "bounceTint": 0.92,
+        "groundBounce": 0.36,
+        "sunElevationGain": 0.45,
+        "sunFloor": 0.8,
+        "sunCeiling": 2,
+        "secondaryEnergy": 0.3,
+        "sunGlint": 1.05,
+        "glintSpread": 1.25,
+        "bloom": 1.5,
+        "aerialHaze": 0.86
+      },
+      "voxel": {
+        "seed": 21155,
+        "resolution": 992,
+        "terraceStep": 0.5
+      },
+      "island": {
+        "radius": 1070,
+        "shape": 3,
+        "lowland": 38,
+        "massif": 470,
+        "massifSharpness": 1,
+        "massifOffsetX": 0,
+        "massifOffsetZ": 0,
+        "warp": 1.65,
+        "ridge": 0.55,
+        "beachWidth": 3,
+        "valleyDepth": 110,
+        "valleyWidth": 18
+      },
+      "lagoon": {
+        "enable": true,
+        "x": 0.24,
+        "z": -0.12,
+        "radiusX": 230,
+        "radiusZ": 135,
+        "rotation": -24,
+        "depth": 1.4,
+        "lowlandCap": 54,
+        "inlet": 0.12,
+        "apronWidth": 42,
+        "whiteSand": 0.9,
+        "treeAttraction": 1.1
+      },
+      "seasons": {
+        "sweepDeg": 38,
+        "summerEnd": 0.26,
+        "autumnEnd": 0.5,
+        "coniferEnd": 0.79,
+        "borderWarp": 1.15,
+        "craggy": 0.4,
+        "fairway": 0.86,
+        "fairwayBand": 56,
+        "bunkerDensity": 0.3,
+        "bunkerSize": 22
+      },
+      "water": {
+        "enable": true,
+        "seaLevel": 32.5,
+        "floorDepth": 50,
+        "floorShape": 0.85,
+        "floorRoughness": 1,
+        "deltaFloor": 1,
+        "surfaceLift": 0.08,
+        "landMask": 1,
+        "debugView": 0,
+        "depthTint": 0.78,
+        "lagoonTint": 0.18,
+        "causticScale": 4.6,
+        "causticIntensity": 2.8,
+        "causticOpacity": 0,
+        "shoreGlow": 1.35,
+        "shoreGlowWidth": 1.3,
+        "shoreGlowFollow": 0
+      },
+      "waves": {
+        "waveSpeed": 3,
+        "glintSpeed": 5,
+        "glintScale": 1.34,
+        "waveScale": 0.017328903180189877,
+        "waveRotation": 141,
+        "surfaceOpacity": 0.91,
+        "waveHeight": 3,
+        "waveChoppy": 7.35,
+        "surfaceStage": 5,
+        "detailMix": 0.42,
+        "normalStrength": 2,
+        "refractionStrength": 0.18
+      },
+      "tree": {
+        "enable": true,
+        "totalCount": 1300,
+        "globalScale": 1.35,
+        "spacing": 9,
+        "clusterBias": 1,
+        "autumnWeight": 1.55,
+        "summerWeight": 0.95,
+        "spruceWeight": 0.75,
+        "palmWeight": 0.25,
+        "palmTarget": 400,
+        "peakSparse": 0.08,
+        "openCuts": 0.6,
+        "autumnScale": 1.3,
+        "spruceScale": 1.22,
+        "palmScale": 0.9
+      },
+      "shadows": {
+        "enable": false,
+        "primaryEnable": true,
+        "primarySize": 8192,
+        "primaryCoverage": 1.28,
+        "secondaryEnable": true,
+        "secondarySize": 2560,
+        "secondaryCoverage": 1,
+        "secondaryMix": 0.16,
+        "blendMode": 0,
+        "filterMode": 1,
+        "softness": 1.7,
+        "bias": -0.0006,
+        "normalBias": 2.2
+      },
+      "render": {
+        "fov": 81,
+        "exposure": 0.3,
+        "fogDensity": 0.0003,
+        "horizonWarp": true
+      },
+      "godrays": {
+        "enable": true,
+        "source": 1,
+        "intensity": 0.25,
+        "density": 0.86,
+        "decay": 0.915,
+        "weight": 2,
+        "exposure": 0.7,
+        "threshold": 0.62,
+        "groundMask": 0.5,
+        "reach": 1.45,
+        "warmth": 0.5,
+        "samples": 16,
+        "resScale": 0.25,
+        "sharp": 0.25,
+        "blurEnable": true,
+        "blurAmount": 1,
+        "blurRadius": 8,
+        "blurPasses": 1
+      },
+      "camera": {
+        "director": false,
+        "focusMountain": 0.35,
+        "focusSky": 0.18,
+        "focusGreenway": 0.16,
+        "focusMassif": 0.22,
+        "focusValley": 0.14,
+        "focusShoreline": 0.24,
+        "focusPalms": 0.12,
+        "focusWater": 0.16
+      },
+      "cloudFinishing": {
+        "toneMapping": 0,
+        "dithering": true
+      },
+      "skyDiagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "takramAtmosphere": {
+        "sunLight": true,
+        "skyLight": true,
+        "ground": true,
+        "groundAlbedo": 0,
+        "albedoScale": 2,
+        "sun": true,
+        "transmittance": true,
+        "inscatter": true
+      },
+      "cloudWeather": {
+        "coverage": 0.4,
+        "weatherRepeatX": 100,
+        "weatherRepeatY": 100,
+        "weatherVelocityX": 0.001,
+        "weatherVelocityY": 0,
+        "shapeRepeat": 0.0003,
+        "detailRepeat": 0.006,
+        "turbulenceRepeat": 20,
+        "turbulenceDisplacement": 350
+      },
+      "cloudLighting": {
+        "scatteringCoefficient": 1.5222677306879997,
+        "groundBounceScale": 0.6,
+        "skyLightScale": 1.3,
+        "powderScale": 0,
+        "absorptionCoefficient": 0.72,
+        "powderExponent": 150,
+        "anisotropy1": -0.95,
+        "anisotropy2": -0.2,
+        "anisotropyMix": 0.5,
+        "shapeDetail": true,
+        "turbulence": false,
+        "haze": true
+      },
+      "cloudShadows": {
+        "layerShadow": true,
+        "cascadeCount": 3,
+        "mapSize": 0,
+        "temporalPass": true,
+        "temporalSmoothing": 0.999,
+        "varianceGamma": 1,
+        "temporalJitter": false,
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "lightShafts": false,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "cloudsRender": {
+        "exposure": 20,
+        "mode": 0,
+        "atmosphere": true,
+        "clouds": true,
+        "aerialPerspective": true,
+        "quality": 2,
+        "resolutionScale": 0.75,
+        "temporalUpscale": true
+      },
+      "cloudLayer0": {
+        "referenceStack": true,
+        "enabled": true,
+        "altitude": 750,
+        "height": 600,
+        "densityScale": 0.4,
+        "shapeAmount": 1,
+        "shapeDetailAmount": 0.8,
+        "weatherExponent": 1,
+        "shapeAlteringBias": 0.35,
+        "coverageFilterWidth": 0.6
+      },
+      "cloudDebug": {
+        "mode": 0,
+        "primarySteps": 200,
+        "minStep": 80,
+        "maxStep": 1000,
+        "rayDistance": 120000
+      }
+    },
+    "cam": {
+      "p": [
+        -168.75333076061136,
+        241.50915197580557,
+        383.9515611159394
+      ],
+      "q": [
+        0.021779180441607905,
+        -0.13823883220822353,
+        0.0030406645457124455,
+        0.9901547590796698
+      ]
+    },
+    "t": 1780027033753
+  },
+  "C7": {
+    "params": {
+      "orbitSweep": {
+        "enable": false,
+        "speed": 1,
+        "elevationDeg": 1,
+        "azimuthDeg": -47,
+        "elevationSpeed": 4,
+        "azimuthSpeed": 0.5,
+        "elevationRange": [
+          2,
+          50
+        ]
+      },
+      "sun": {
+        "elevationDeg": 1,
+        "azimuthDeg": -47,
+        "intensity": 60
+      },
+      "atmosphere": {
+        "rayleighMul": 0.05,
+        "mieBeta": 0,
+        "mieG": 0,
+        "ozoneMul": 3,
+        "planetRadiusKm": 6350
+      },
+      "lighting": {
+        "skyBounce": 1.38,
+        "bounceTint": 0.22,
+        "groundBounce": 0.9,
+        "sunElevationGain": 0.45,
+        "sunFloor": 0.8,
+        "sunCeiling": 2,
+        "secondaryEnergy": 0.55,
+        "sunGlint": 1.7,
+        "glintSpread": 3.4,
+        "bloom": 0,
+        "aerialHaze": 0
+      },
+      "voxel": {
+        "seed": 21155,
+        "resolution": 992,
+        "terraceStep": 0.5
+      },
+      "island": {
+        "radius": 1070,
+        "shape": 3,
+        "lowland": 38,
+        "massif": 470,
+        "massifSharpness": 1,
+        "massifOffsetX": 0,
+        "massifOffsetZ": 0,
+        "warp": 1.65,
+        "ridge": 0.55,
+        "beachWidth": 3,
+        "valleyDepth": 110,
+        "valleyWidth": 18
+      },
+      "lagoon": {
+        "enable": true,
+        "x": 0.24,
+        "z": -0.12,
+        "radiusX": 230,
+        "radiusZ": 135,
+        "rotation": -24,
+        "depth": 1.4,
+        "lowlandCap": 54,
+        "inlet": 0.12,
+        "apronWidth": 42,
+        "whiteSand": 0.9,
+        "treeAttraction": 1.1
+      },
+      "seasons": {
+        "sweepDeg": 38,
+        "summerEnd": 0.26,
+        "autumnEnd": 0.5,
+        "coniferEnd": 0.79,
+        "borderWarp": 1.15,
+        "craggy": 0.4,
+        "fairway": 0.86,
+        "fairwayBand": 56,
+        "bunkerDensity": 0.3,
+        "bunkerSize": 22
+      },
+      "water": {
+        "enable": true,
+        "seaLevel": 32.5,
+        "floorDepth": 50,
+        "floorShape": 0.85,
+        "floorRoughness": 1,
+        "deltaFloor": 1,
+        "surfaceLift": 0.08,
+        "landMask": 1,
+        "debugView": 0,
+        "depthTint": 0.78,
+        "lagoonTint": 0.18,
+        "causticScale": 4.6,
+        "causticIntensity": 2.8,
+        "causticOpacity": 0,
+        "shoreGlow": 1.35,
+        "shoreGlowWidth": 1.3,
+        "shoreGlowFollow": 0
+      },
+      "waves": {
+        "waveSpeed": 3,
+        "glintSpeed": 5,
+        "glintScale": 1.34,
+        "waveScale": 0.017328903180189877,
+        "waveRotation": 141,
+        "surfaceOpacity": 0.91,
+        "waveHeight": 3,
+        "waveChoppy": 7.35,
+        "surfaceStage": 5,
+        "detailMix": 0.42,
+        "normalStrength": 2,
+        "refractionStrength": 0.18
+      },
+      "tree": {
+        "enable": true,
+        "totalCount": 1300,
+        "globalScale": 1.35,
+        "spacing": 9,
+        "clusterBias": 1,
+        "autumnWeight": 1.55,
+        "summerWeight": 0.95,
+        "spruceWeight": 0.75,
+        "palmWeight": 0.25,
+        "palmTarget": 400,
+        "peakSparse": 0.08,
+        "openCuts": 0.6,
+        "autumnScale": 1.3,
+        "spruceScale": 1.22,
+        "palmScale": 0.9
+      },
+      "shadows": {
+        "enable": true,
+        "primaryEnable": true,
+        "primarySize": 8192,
+        "primaryCoverage": 1.28,
+        "secondaryEnable": true,
+        "secondarySize": 2560,
+        "secondaryCoverage": 1,
+        "secondaryMix": 1,
+        "blendMode": 1,
+        "filterMode": 1,
+        "softness": 1.7,
+        "bias": -0.0006,
+        "normalBias": 2.2
+      },
+      "render": {
+        "fov": 81,
+        "exposure": 0.3,
+        "fogDensity": 0.0003,
+        "horizonWarp": true
+      },
+      "godrays": {
+        "enable": true,
+        "source": 1,
+        "intensity": 0.25,
+        "density": 0.86,
+        "decay": 0.915,
+        "weight": 2,
+        "exposure": 0.7,
+        "threshold": 0.62,
+        "groundMask": 0.5,
+        "reach": 1.45,
+        "warmth": 0.5,
+        "samples": 16,
+        "resScale": 0.25,
+        "sharp": 0.25,
+        "blurEnable": true,
+        "blurAmount": 1,
+        "blurRadius": 8,
+        "blurPasses": 1
+      },
+      "camera": {
+        "director": false,
+        "focusMountain": 0.35,
+        "focusSky": 0.18,
+        "focusGreenway": 0.16,
+        "focusMassif": 0.22,
+        "focusValley": 0.14,
+        "focusShoreline": 0.24,
+        "focusPalms": 0.12,
+        "focusWater": 0.16
+      },
+      "cloudFinishing": {
+        "toneMapping": 0,
+        "dithering": true
+      },
+      "skyDiagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "takramAtmosphere": {
+        "sunLight": true,
+        "skyLight": true,
+        "ground": true,
+        "groundAlbedo": 0,
+        "albedoScale": 2,
+        "sun": true,
+        "transmittance": true,
+        "inscatter": true
+      },
+      "cloudWeather": {
+        "coverage": 0.4,
+        "weatherRepeatX": 100,
+        "weatherRepeatY": 100,
+        "weatherVelocityX": 0.001,
+        "weatherVelocityY": 0,
+        "shapeRepeat": 0.0003,
+        "detailRepeat": 0.006,
+        "turbulenceRepeat": 20,
+        "turbulenceDisplacement": 350
+      },
+      "cloudLighting": {
+        "scatteringCoefficient": 1.5222677306879997,
+        "groundBounceScale": 0.6,
+        "skyLightScale": 1.3,
+        "powderScale": 0.26,
+        "absorptionCoefficient": 0.72,
+        "powderExponent": 150,
+        "anisotropy1": 0.7,
+        "anisotropy2": -0.2,
+        "anisotropyMix": 0.5,
+        "shapeDetail": true,
+        "turbulence": false,
+        "haze": true
+      },
+      "cloudShadows": {
+        "layerShadow": true,
+        "cascadeCount": 3,
+        "mapSize": 0,
+        "temporalPass": true,
+        "temporalSmoothing": 0.999,
+        "varianceGamma": 1,
+        "temporalJitter": false,
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "lightShafts": false,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "cloudsRender": {
+        "exposure": 15,
+        "mode": 0,
+        "atmosphere": true,
+        "clouds": true,
+        "aerialPerspective": true,
+        "quality": 2,
+        "resolutionScale": 0.75,
+        "temporalUpscale": true
+      },
+      "cloudLayer0": {
+        "referenceStack": true,
+        "enabled": true,
+        "altitude": 750,
+        "height": 600,
+        "densityScale": 0.4,
+        "shapeAmount": 1,
+        "shapeDetailAmount": 0.8,
+        "weatherExponent": 1,
+        "shapeAlteringBias": 0.35,
+        "coverageFilterWidth": 0.6
+      },
+      "cloudDebug": {
+        "mode": 0,
+        "primarySteps": 200,
+        "minStep": 80,
+        "maxStep": 1000,
+        "rayDistance": 120000
+      }
+    },
+    "cam": {
+      "p": [
+        -294.0572749941984,
+        450.79642025763286,
+        51.87136799023397
+      ],
+      "q": [
+        -0.06076709810653683,
+        -0.47994491427486624,
+        -0.03334819135026459,
+        0.8745559657237884
+      ]
+    },
+    "t": 1780025988472
+  },
+  "C8": {
+    "params": {
+      "orbitSweep": {
+        "enable": false,
+        "speed": 1,
+        "elevationDeg": 1,
+        "azimuthDeg": -47,
+        "elevationSpeed": 4,
+        "azimuthSpeed": 0.5,
+        "elevationRange": [
+          2,
+          50
+        ]
+      },
+      "sun": {
+        "elevationDeg": 1,
+        "azimuthDeg": -47,
+        "intensity": 60
+      },
+      "atmosphere": {
+        "rayleighMul": 4,
+        "mieBeta": 0.0465,
+        "mieG": 0,
+        "ozoneMul": 3,
+        "planetRadiusKm": 6350
+      },
+      "lighting": {
+        "skyBounce": 1.28,
+        "bounceTint": 0.92,
+        "groundBounce": 0.36,
+        "sunElevationGain": 0.45,
+        "sunFloor": 0.8,
+        "sunCeiling": 2,
+        "secondaryEnergy": 0.3,
+        "sunGlint": 1.05,
+        "glintSpread": 1.25,
+        "bloom": 0,
+        "aerialHaze": 0
+      },
+      "voxel": {
+        "seed": 21155,
+        "resolution": 992,
+        "terraceStep": 0.5
+      },
+      "island": {
+        "radius": 1070,
+        "shape": 3,
+        "lowland": 38,
+        "massif": 470,
+        "massifSharpness": 1,
+        "massifOffsetX": 0,
+        "massifOffsetZ": 0,
+        "warp": 1.65,
+        "ridge": 0.55,
+        "beachWidth": 3,
+        "valleyDepth": 110,
+        "valleyWidth": 18
+      },
+      "lagoon": {
+        "enable": true,
+        "x": 0.24,
+        "z": -0.12,
+        "radiusX": 230,
+        "radiusZ": 135,
+        "rotation": -24,
+        "depth": 1.4,
+        "lowlandCap": 54,
+        "inlet": 0.12,
+        "apronWidth": 42,
+        "whiteSand": 0.9,
+        "treeAttraction": 1.1
+      },
+      "seasons": {
+        "sweepDeg": 38,
+        "summerEnd": 0.26,
+        "autumnEnd": 0.5,
+        "coniferEnd": 0.79,
+        "borderWarp": 1.15,
+        "craggy": 0.4,
+        "fairway": 0.86,
+        "fairwayBand": 56,
+        "bunkerDensity": 0.3,
+        "bunkerSize": 22
+      },
+      "water": {
+        "enable": true,
+        "seaLevel": 32.5,
+        "floorDepth": 50,
+        "floorShape": 0.85,
+        "floorRoughness": 1,
+        "deltaFloor": 1,
+        "surfaceLift": 0.08,
+        "landMask": 1,
+        "debugView": 0,
+        "depthTint": 0.78,
+        "lagoonTint": 0.18,
+        "causticScale": 4.6,
+        "causticIntensity": 2.8,
+        "causticOpacity": 0,
+        "shoreGlow": 1.35,
+        "shoreGlowWidth": 1.3,
+        "shoreGlowFollow": 0
+      },
+      "waves": {
+        "waveSpeed": 3,
+        "glintSpeed": 5,
+        "glintScale": 1.34,
+        "waveScale": 0.017328903180189877,
+        "waveRotation": 141,
+        "surfaceOpacity": 0.91,
+        "waveHeight": 3,
+        "waveChoppy": 7.35,
+        "surfaceStage": 5,
+        "detailMix": 0.42,
+        "normalStrength": 2,
+        "refractionStrength": 0.18
+      },
+      "tree": {
+        "enable": true,
+        "totalCount": 1300,
+        "globalScale": 1.35,
+        "spacing": 9,
+        "clusterBias": 1,
+        "autumnWeight": 1.55,
+        "summerWeight": 0.95,
+        "spruceWeight": 0.75,
+        "palmWeight": 0.25,
+        "palmTarget": 400,
+        "peakSparse": 0.08,
+        "openCuts": 0.6,
+        "autumnScale": 1.3,
+        "spruceScale": 1.22,
+        "palmScale": 0.9
+      },
+      "shadows": {
+        "enable": true,
+        "primaryEnable": true,
+        "primarySize": 8192,
+        "primaryCoverage": 1.28,
+        "secondaryEnable": true,
+        "secondarySize": 2560,
+        "secondaryCoverage": 1,
+        "secondaryMix": 0.16,
+        "blendMode": 0,
+        "filterMode": 1,
+        "softness": 1.7,
+        "bias": -0.0006,
+        "normalBias": 2.2
+      },
+      "render": {
+        "fov": 81,
+        "exposure": 0.3,
+        "fogDensity": 0.0003,
+        "horizonWarp": true
+      },
+      "godrays": {
+        "enable": true,
+        "source": 1,
+        "intensity": 0.25,
+        "density": 0.86,
+        "decay": 0.915,
+        "weight": 2,
+        "exposure": 0.7,
+        "threshold": 0.62,
+        "groundMask": 0.5,
+        "reach": 1.45,
+        "warmth": 0.5,
+        "samples": 16,
+        "resScale": 0.25,
+        "sharp": 0.25,
+        "blurEnable": true,
+        "blurAmount": 1,
+        "blurRadius": 8,
+        "blurPasses": 1
+      },
+      "camera": {
+        "director": false,
+        "focusMountain": 0.35,
+        "focusSky": 0.18,
+        "focusGreenway": 0.16,
+        "focusMassif": 0.22,
+        "focusValley": 0.14,
+        "focusShoreline": 0.24,
+        "focusPalms": 0.12,
+        "focusWater": 0.16
+      },
+      "cloudFinishing": {
+        "toneMapping": 0,
+        "dithering": true
+      },
+      "skyDiagnosis": {
+        "skyOnly": false,
+        "fastSkyBoot": false,
+        "hideIsland": false,
+        "seaOnlyStub": false,
+        "floorOnlyStub": false,
+        "magentaClear": false,
+        "disableHorizonWarp": false,
+        "forceBelowHorizonFog": false
+      },
+      "takramAtmosphere": {
+        "sunLight": true,
+        "skyLight": true,
+        "ground": true,
+        "groundAlbedo": 0,
+        "albedoScale": 2,
+        "sun": true,
+        "transmittance": true,
+        "inscatter": true
+      },
+      "cloudWeather": {
+        "coverage": 0.4,
+        "weatherRepeatX": 100,
+        "weatherRepeatY": 100,
+        "weatherVelocityX": 0.001,
+        "weatherVelocityY": 0,
+        "shapeRepeat": 0.0003,
+        "detailRepeat": 0.006,
+        "turbulenceRepeat": 20,
+        "turbulenceDisplacement": 350
+      },
+      "cloudLighting": {
+        "scatteringCoefficient": 1.5222677306879997,
+        "groundBounceScale": 0.6,
+        "skyLightScale": 1.3,
+        "powderScale": 0.26,
+        "absorptionCoefficient": 0.72,
+        "powderExponent": 150,
+        "anisotropy1": 0.7,
+        "anisotropy2": -0.2,
+        "anisotropyMix": 0.5,
+        "shapeDetail": true,
+        "turbulence": false,
+        "haze": true
+      },
+      "cloudShadows": {
+        "layerShadow": true,
+        "cascadeCount": 3,
+        "mapSize": 0,
+        "temporalPass": true,
+        "temporalSmoothing": 0.999,
+        "varianceGamma": 1,
+        "temporalJitter": false,
+        "shadowIterations": 50,
+        "shadowStep": 100,
+        "lightShafts": false,
+        "shadowLengthIterations": 180,
+        "shadowLengthStep": 80,
+        "shadowLengthDistance": 120000
+      },
+      "cloudsRender": {
+        "exposure": 15,
+        "mode": 0,
+        "atmosphere": true,
+        "clouds": true,
+        "aerialPerspective": true,
+        "quality": 2,
+        "resolutionScale": 0.75,
+        "temporalUpscale": true
+      },
+      "cloudLayer0": {
+        "referenceStack": true,
+        "enabled": true,
+        "altitude": 750,
+        "height": 600,
+        "densityScale": 0.4,
+        "shapeAmount": 1,
+        "shapeDetailAmount": 0.8,
+        "weatherExponent": 1,
+        "shapeAlteringBias": 0.35,
+        "coverageFilterWidth": 0.6
+      },
+      "cloudDebug": {
+        "mode": 0,
+        "primarySteps": 200,
+        "minStep": 80,
+        "maxStep": 1000,
+        "rayDistance": 120000
+      }
+    },
+    "cam": {
+      "p": [
+        -347.3173827496333,
+        457.60073332158254,
+        85.67665758134044
+      ],
+      "q": [
+        -0.05052139653147836,
+        -0.46610688814374157,
+        -0.026672162330154597,
+        0.8828819587431269
+      ]
+    },
+    "t": 1780026025890
   }
 }
