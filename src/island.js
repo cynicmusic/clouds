@@ -641,7 +641,7 @@ function makeWorkshopSchema() {
       varianceGamma: { type: 'float', label: 'History clamp', min: 0, max: 6, step: 0.05, default: 1, hint: 'variance clipping width; higher keeps more history, lower rejects ghosting sooner' },
       temporalJitter: { type: 'bool', label: 'Jitter', default: false, hint: 'structured temporal sampling in the Beer shadow march; off is calmer for 256-map island shadows' },
       shadowIterations: { type: 'int', label: 'Shadow steps', min: 8, max: 160, step: 1, default: 50 },
-      shadowStep: { type: 'float', label: 'Shadow min step', min: 5, max: 500, step: 1, default: 100, unit: 'm' },
+      shadowStep: { type: 'float', label: 'Shadow min step', min: 0.1, max: 500, step: 0.1, precision: 1, default: 100, curve: 5, uiStep: 0.001, unit: 'm', hint: 'curved: most travel lives below ~72 m; far right still reaches 300-500 m for quick cloud repositioning' },
     },
   };
   out.cloudDebug = {
